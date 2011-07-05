@@ -1,0 +1,5 @@
+As a passenger I need a button so that I can click on it to open elevator's door.
+
+Test list
++ press button - open door
+- door is already open
