@@ -1,21 +1,11 @@
 package com.globallogic.training;
 
-import org.junit.Test;
-
-import java.util.ListIterator;
-
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
+public abstract class LiftTest {
 
 
-public class LiftTest {
 
-	@Test
-	public void shouldOpenDoorWhenClickButton() {
-        Lift lift = new Lift();
+    protected abstract Lift getLiftWithClosedDoor();
 
-        lift.pressButton();
+    protected abstract Lift getLiftWithOpenDoor();
 
-        assertTrue(lift.doorIsOpen());
-    }
 }
