@@ -4,6 +4,7 @@ import java.awt.font.OpenType;
 
 public class Lift {
     private boolean open;
+    private int currentFloor;
 
     public void pressButton() {
         open = true;
@@ -15,5 +16,10 @@ public class Lift {
 
     public void gotoFloor(int floor) {
         open = false;
+        this.currentFloor = floor;
+    }
+
+    public int getCurrentFloor() {
+        return currentFloor;
     }
 }

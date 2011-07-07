@@ -3,8 +3,7 @@ package com.globallogic.training;
 import org.junit.Before;
 import org.junit.Test;
 
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
 
 public class SimpleLiftTest extends LiftTest {
 
@@ -29,6 +28,10 @@ public class SimpleLiftTest extends LiftTest {
         assertTrue(lift.doorIsOpen());
     }
 
+    private void assertDoorIsClosed(Lift lift) {
+        assertFalse(lift.doorIsOpen());
+    }
+
     @Test
 	public void shouldOpenDoorWhenClickButtonAgain() {
         liftWithOpenDoor.pressButton();
@@ -42,13 +45,26 @@ public class SimpleLiftTest extends LiftTest {
 
         liftWithOpenDoor.gotoFloor(SOME_FLOOR);
 
-        assertFalse(liftWithOpenDoor.doorIsOpen());
+        assertDoorIsClosed(liftWithOpenDoor);
     }
 
 //    @Test
 //    public void shouldDoorBeOpenIfSameFloorIsSelected(){
+//        final int SAME_FLOOR = 4;       // TODO extract me
+//        liftWithOpenDoor.gotoFloor(SAME_FLOOR);
 //
+//        liftWithOpenDoor.gotoFloor(SAME_FLOOR);
+//        assertDoorIsOpen(liftWithOpenDoor);
 //    }
+
+    @Test
+    public void shouldDoorOpenOnSpecifiedFloor(){
+        final int FLOOR = 34;
+
+        liftWithOpenDoor.gotoFloor(FLOOR);
+
+        assertEquals(FLOOR, liftWithOpenDoor.getCurrentFloor());
+    }
 
     protected Lift getLiftWithOpenDoor() {
         Lift lift = new Lift();
