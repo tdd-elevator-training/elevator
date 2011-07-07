@@ -1,11 +1,19 @@
 package com.globallogic.training;
 
-public class Lift {
-    public void pressButton() {
+import java.awt.font.OpenType;
 
+public class Lift {
+    private boolean open;
+
+    public void pressButton() {
+        open = true;
     }
 
     public boolean doorIsOpen() {
-        return true;
+        return open;
+    }
+
+    public void gotoFloor(int floor) {
+        open = false;
     }
 }
