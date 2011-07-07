@@ -9,38 +9,36 @@ import static junit.framework.Assert.assertTrue;
 public class SimpleLiftTest extends LiftTest {
 
     private final static int SOME_FLOOR = 2;
-    private Lift lift;
+    private Lift liftWithClosedDoor;
+    private Lift liftWithOpenDoor;
 
     @Before
     public void setUp() throws Exception {
-        lift = new Lift();
+        liftWithClosedDoor = getLiftWithClosedDoor();
+        liftWithOpenDoor = getLiftWithOpenDoor();
     }
 
     @Test
 	public void shouldOpenDoorWhenClickButton() {
-        Lift lift = getLiftWithClosedDoor();
+        liftWithClosedDoor.pressButton();
 
-        lift.pressButton();
-
-        assertTrue(lift.doorIsOpen());
+        assertTrue(liftWithClosedDoor.doorIsOpen());
     }
 
     @Test
 	public void shouldOpenDoorWhenClickButtonAgain() {
-        Lift lift = getLiftWithOpenDoor();
+        liftWithOpenDoor.pressButton();
 
-        lift.pressButton();
-
-        assertTrue(lift.doorIsOpen());
+        assertTrue(liftWithOpenDoor.doorIsOpen());
     }
 
     @Test
     public void shouldDoorBeClosedAfterSelectingFloor(){
-        Lift lift = getLiftWithOpenDoor();
+        liftWithOpenDoor.pressButton();
 
-        lift.gotoFloor(SOME_FLOOR);
+        liftWithOpenDoor.gotoFloor(SOME_FLOOR);
 
-        assertFalse(lift.doorIsOpen());
+        assertFalse(liftWithOpenDoor.doorIsOpen());
     }
 
 //    @Test
@@ -49,11 +47,13 @@ public class SimpleLiftTest extends LiftTest {
 //    }
 
     protected Lift getLiftWithOpenDoor() {
+        Lift lift = new Lift();
         lift.pressButton();
         return lift;
     }
 
     protected Lift getLiftWithClosedDoor() {
+        Lift lift = new Lift();
         return lift;
     }
 }
