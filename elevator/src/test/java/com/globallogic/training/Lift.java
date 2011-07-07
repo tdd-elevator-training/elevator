@@ -1,7 +1,5 @@
 package com.globallogic.training;
 
-import java.awt.font.OpenType;
-
 public class Lift {
     private boolean open;
     private int currentFloor;

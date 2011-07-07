@@ -64,6 +64,8 @@ public class SimpleLiftTest extends LiftTest {
         liftWithOpenDoor.gotoFloor(FLOOR);
 
         assertEquals(FLOOR, liftWithOpenDoor.getCurrentFloor());
+//TODO implement this
+//        assertDoorIsOpen(liftWithOpenDoor);
     }
 
     protected Lift getLiftWithOpenDoor() {
