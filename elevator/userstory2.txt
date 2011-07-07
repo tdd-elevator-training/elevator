@@ -2,10 +2,10 @@ as a passenger I need to select desired floor so that have ability to get into s
 
 test list
 + door should be closed after selecting floor
-- same floor is selected - door should be open
++ same floor is selected - door should be open
 + door should open on specified floor
 - selected floor is out of building floors range - exception expected
 + два поля liftWithOpenDoor liftWithClosedDoor, чтобы не копипастить
 + extract assertTrue(doorisOpen) aasertFalse(doorisOpen)
-- решить проблему с "assertDoorIsClosed(liftWithOpenDoor);"
-- выделить класс Door
++ решить проблему с "assertDoorIsClosed(liftWithOpenDoor);"
++ выделить класс Door

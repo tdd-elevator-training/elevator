@@ -1,20 +1,27 @@
 package com.globallogic.training;
 
 public class Lift {
-    private boolean open;
     private int currentFloor;
+    private final Door door;
 
-    public void pressButton() {
-        open = true;
+    public Lift(Door door) {
+        this.door = door;
     }
 
-    public boolean doorIsOpen() {
-        return open;
+    public void pressButton() {
+        if (door.isOpen()) {
+            return;
+        }
+        door.open();
     }
 
     public void gotoFloor(int floor) {
-        open = false;
+        if (floor == currentFloor) {
+            return;
+        }
+        door.close();
         this.currentFloor = floor;
+        door.open();
     }
 
     public int getCurrentFloor() {

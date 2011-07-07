@@ -3,79 +3,143 @@ package com.globallogic.training;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 import static junit.framework.Assert.*;
 
-public class SimpleLiftTest extends LiftTest {
+public class SimpleLiftTest {
 
     private final static int SOME_FLOOR = 2;
-    private Lift liftWithClosedDoor;
-    private Lift liftWithOpenDoor;
+    private Lift lift;
+    private MockDoor door;
 
     @Before
     public void setUp() throws Exception {
-        liftWithClosedDoor = getLiftWithClosedDoor();
-        liftWithOpenDoor = getLiftWithOpenDoor();
+        door = new MockDoor();
     }
 
     @Test
-	public void shouldOpenDoorWhenClickButton() {
-        liftWithClosedDoor.pressButton();
+    public void shouldOpenDoorWhenClickButton() {
+        lift = getLiftWithClosedDoor();
 
-        assertDoorIsOpen(liftWithClosedDoor);
-    }
-
-    private void assertDoorIsOpen(Lift lift) {
-        assertTrue(lift.doorIsOpen());
-    }
-
-    private void assertDoorIsClosed(Lift lift) {
-        assertFalse(lift.doorIsOpen());
+        lift.pressButton();
+        assertDoorWasOpened();
+        assertDoorIsOpen();
     }
 
     @Test
-	public void shouldOpenDoorWhenClickButtonAgain() {
-        liftWithOpenDoor.pressButton();
+    public void shouldOpenDoorWhenClickButtonAgain() {
+        lift = getLiftWithOpenDoor();
 
-        assertDoorIsOpen(liftWithOpenDoor);
+        assertDoorWasNotChanged();
+        assertDoorIsOpen();
     }
 
     @Test
-    public void shouldDoorBeClosedAfterSelectingFloor(){
-        liftWithOpenDoor.pressButton();
+    public void shouldDoorBeClosedAfterSelectingFloor() {
+        lift = getLiftWithOpenDoor();
 
-        liftWithOpenDoor.gotoFloor(SOME_FLOOR);
-
-        assertDoorIsClosed(liftWithOpenDoor);
+        lift.gotoFloor(SOME_FLOOR);
+        assertDoorWasClosed();
+        assertDoorWasOpened();
+        assertDoorIsOpen();
     }
 
-//    @Test
-//    public void shouldDoorBeOpenIfSameFloorIsSelected(){
-//        final int SAME_FLOOR = 4;       // TODO extract me
-//        liftWithOpenDoor.gotoFloor(SAME_FLOOR);
-//
-//        liftWithOpenDoor.gotoFloor(SAME_FLOOR);
-//        assertDoorIsOpen(liftWithOpenDoor);
-//    }
+    @Test
+    public void shouldDoorBeOpenIfSameFloorIsSelected(){
+        lift = getLiftWithOpenDoor();
+        final int SAME_FLOOR = 4;
+        lift.gotoFloor(SAME_FLOOR);
+        assertDoorWasClosed();
+        assertDoorWasOpened();
+
+        lift.gotoFloor(SAME_FLOOR);
+        assertDoorWasNotChanged();
+        assertDoorIsOpen();
+    }
 
     @Test
-    public void shouldDoorOpenOnSpecifiedFloor(){
+    public void shouldDoorOpenOnSpecifiedFloor() {
+        lift = getLiftWithOpenDoor();
+
         final int FLOOR = 34;
 
-        liftWithOpenDoor.gotoFloor(FLOOR);
+        lift.gotoFloor(FLOOR);
+        assertDoorWasClosed();
+        assertDoorWasOpened();
+        assertDoorIsOpen();
 
-        assertEquals(FLOOR, liftWithOpenDoor.getCurrentFloor());
-//TODO implement this
-//        assertDoorIsOpen(liftWithOpenDoor);
+        assertEquals(FLOOR, lift.getCurrentFloor());
+        assertDoorWasNotChanged();
+        assertDoorIsOpen();
     }
 
-    protected Lift getLiftWithOpenDoor() {
-        Lift lift = new Lift();
+    private void assertDoorIsOpen() {
+        assertTrue("Expected door is open but was close", door.isOpen);
+    }
+
+    private void assertDoorIsClosed() {
+        assertFalse("Expected door is close but was open", door.isOpen);
+    }
+
+    private void assertDoorWasOpened() {
+        assertTrue("Expected door was opened but was closed", door.popState());
+    }
+
+    private void assertDoorWasClosed() {
+        assertFalse("Expected door was closed but was opened", door.popState());
+    }
+
+    private void assertDoorWasNotChanged() {
+        assertEquals(0, door.stateStack.size());
+    }
+
+    private Lift getLiftWithOpenDoor() {
+        Lift lift = new Lift(door);
         lift.pressButton();
+        door.clearStates();
         return lift;
     }
 
-    protected Lift getLiftWithClosedDoor() {
-        Lift lift = new Lift();
+    private Lift getLiftWithClosedDoor() {
+        Lift lift = new Lift(door);
+        door.clearStates();
         return lift;
+    }
+
+    private static class MockDoor implements Door {
+        private Queue<Boolean> stateStack;
+        private boolean isOpen;
+
+        private MockDoor() {
+            isOpen = false;
+            stateStack = new LinkedList<Boolean>();
+        }
+
+        void clearStates() {
+            stateStack.clear();
+        }
+
+        @Override
+        public void open() {
+            isOpen = true;
+            stateStack.add(true);
+        }
+
+        @Override
+        public void close() {
+            isOpen = false;
+            stateStack.add(false);
+        }
+
+        @Override
+        public boolean isOpen() {
+            return isOpen;
+        }
+
+        boolean popState() {
+            return stateStack.poll();
+        }
     }
 }
