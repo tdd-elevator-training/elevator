@@ -22,14 +22,18 @@ public class SimpleLiftTest extends LiftTest {
 	public void shouldOpenDoorWhenClickButton() {
         liftWithClosedDoor.pressButton();
 
-        assertTrue(liftWithClosedDoor.doorIsOpen());
+        assertDoorIsOpen(liftWithClosedDoor);
+    }
+
+    private void assertDoorIsOpen(Lift lift) {
+        assertTrue(lift.doorIsOpen());
     }
 
     @Test
 	public void shouldOpenDoorWhenClickButtonAgain() {
         liftWithOpenDoor.pressButton();
 
-        assertTrue(liftWithOpenDoor.doorIsOpen());
+        assertDoorIsOpen(liftWithOpenDoor);
     }
 
     @Test

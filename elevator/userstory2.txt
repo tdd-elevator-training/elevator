@@ -6,4 +6,4 @@ test list
 - door should open on specified floor
 - selected floor is out of building floors range - exception expected
 + два поля liftWithOpenDoor liftWithClosedDoor, чтобы не копипастить
-- extract assertTrue(doorisOpen) aasertFalse(doorisOpen)
++ extract assertTrue(doorisOpen) aasertFalse(doorisOpen)
