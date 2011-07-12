@@ -3,6 +3,7 @@ package com.globallogic.training;
 public class Lift {
     private int currentFloor;
     private final Door door;
+    private int floorsCount;
 
     public Lift(Door door) {
         this.door = door;
@@ -15,7 +16,10 @@ public class Lift {
         door.open();
     }
 
-    public void gotoFloor(int floor) {
+    public void gotoFloor(int floor) throws ElevatorException {
+        if (floor > 99) {
+            throw new ElevatorException(99, currentFloor);
+        }
         if (floor == currentFloor) {
             return;
         }
@@ -27,4 +31,10 @@ public class Lift {
     public int getCurrentFloor() {
         return currentFloor;
     }
+
+    public void setFloorsCount(int floorsCount) {
+        this.floorsCount = floorsCount;
+    }
+
+
 }

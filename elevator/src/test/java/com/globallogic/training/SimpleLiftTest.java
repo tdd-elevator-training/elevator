@@ -32,12 +32,14 @@ public class SimpleLiftTest {
     public void shouldOpenDoorWhenClickButtonAgain() {
         lift = getLiftWithOpenDoor();
 
+        lift.pressButton();
+
         assertDoorWasNotChanged();
         assertDoorIsOpen();
     }
 
     @Test
-    public void shouldDoorBeClosedAfterSelectingFloor() {
+    public void shouldDoorBeClosedAfterSelectingFloor() throws ElevatorException {
         lift = getLiftWithOpenDoor();
 
         lift.gotoFloor(SOME_FLOOR);
@@ -47,40 +49,50 @@ public class SimpleLiftTest {
     }
 
     @Test
-    public void shouldDoorBeOpenIfSameFloorIsSelected(){
+    public void shouldDoorBeOpenIfSameFloorIsSelected( ) throws ElevatorException {
         lift = getLiftWithOpenDoor();
-        final int SAME_FLOOR = 4;
-        lift.gotoFloor(SAME_FLOOR);
+        lift.gotoFloor(4);
         assertDoorWasClosed();
         assertDoorWasOpened();
 
-        lift.gotoFloor(SAME_FLOOR);
+        lift.gotoFloor(4);
         assertDoorWasNotChanged();
         assertDoorIsOpen();
     }
 
     @Test
-    public void shouldDoorOpenOnSpecifiedFloor() {
+    public void shouldDoorOpenOnSpecifiedFloor() throws ElevatorException {
         lift = getLiftWithOpenDoor();
 
-        final int FLOOR = 34;
-
-        lift.gotoFloor(FLOOR);
+        lift.gotoFloor(34);
         assertDoorWasClosed();
         assertDoorWasOpened();
         assertDoorIsOpen();
 
-        assertEquals(FLOOR, lift.getCurrentFloor());
+        assertEquals(34, lift.getCurrentFloor());
         assertDoorWasNotChanged();
         assertDoorIsOpen();
     }
 
-    private void assertDoorIsOpen() {
-        assertTrue("Expected door is open but was close", door.isOpen);
+    @Test
+    public void shouldThrowExceprtionWhenFloorNumberIsOutOfRange() throws ElevatorException {
+        lift = getLiftWithOpenDoor();
+
+        lift.gotoFloor(99 - 1);
+        lift.setFloorsCount(99);
+        try {
+            lift.gotoFloor(99 + 1);
+
+            fail("Expected exception");
+        } catch (ElevatorException exception) {
+            assertEquals(99, exception.getSelectedFloor());
+            assertEquals(99 - 1, exception.getCurrentFloor());
+        }
     }
 
-    private void assertDoorIsClosed() {
-        assertFalse("Expected door is close but was open", door.isOpen);
+
+    private void assertDoorIsOpen() {
+        assertTrue("Expected door is open but was close", door.isOpen);
     }
 
     private void assertDoorWasOpened() {
