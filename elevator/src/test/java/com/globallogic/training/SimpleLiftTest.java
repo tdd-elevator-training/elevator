@@ -11,7 +11,6 @@ import static junit.framework.Assert.*;
 public class SimpleLiftTest {
 
     private final static int SOME_FLOOR = 2;
-    private Lift lift;
     private MockDoor door;
 
     @Before
@@ -21,28 +20,39 @@ public class SimpleLiftTest {
 
     @Test
     public void shouldOpenDoorWhenClickButton() {
-        lift = getLiftWithClosedDoor();
+        // given
+        Lift lift = getLiftWithClosedDoor();
 
+        // when
         lift.pressButton();
+
+        // then
         assertDoorWasOpened();
         assertDoorIsOpen();
     }
 
     @Test
     public void shouldOpenDoorWhenClickButtonAgain() {
-        lift = getLiftWithOpenDoor();
+        // given
+        Lift lift = getLiftWithOpenDoor();
 
+        // when
         lift.pressButton();
 
+        // then
         assertDoorWasNotChanged();
         assertDoorIsOpen();
     }
 
     @Test
     public void shouldDoorBeClosedAfterSelectingFloor() throws ElevatorException {
-        lift = getLiftWithOpenDoor();
+        //given
+        Lift lift = getLiftWithOpenDoor();
 
+        // when
         lift.gotoFloor(SOME_FLOOR);
+
+        //then
         assertDoorWasClosed();
         assertDoorWasOpened();
         assertDoorIsOpen();
@@ -50,40 +60,52 @@ public class SimpleLiftTest {
 
     @Test
     public void shouldDoorBeOpenIfSameFloorIsSelected( ) throws ElevatorException {
-        lift = getLiftWithOpenDoor();
-        lift.gotoFloor(4);
+        //given
+        Lift lift = getLiftWithOpenDoor();
+
+        lift.gotoFloor(SOME_FLOOR);
         assertDoorWasClosed();
         assertDoorWasOpened();
 
-        lift.gotoFloor(4);
+        //when
+        lift.gotoFloor(SOME_FLOOR);
+
+        //then
         assertDoorWasNotChanged();
         assertDoorIsOpen();
     }
 
     @Test
     public void shouldDoorOpenOnSpecifiedFloor() throws ElevatorException {
-        lift = getLiftWithOpenDoor();
+        // given
+        Lift lift = getLiftWithOpenDoor();
 
-        lift.gotoFloor(34);
+        // when
+        lift.gotoFloor(SOME_FLOOR);
+
+        // then
         assertDoorWasClosed();
         assertDoorWasOpened();
         assertDoorIsOpen();
 
-        assertEquals(34, lift.getCurrentFloor());
+        assertEquals(SOME_FLOOR, lift.getCurrentFloor());
         assertDoorWasNotChanged();
         assertDoorIsOpen();
     }
 
     @Test
     public void shouldThrowExceprtionWhenFloorNumberIsOutOfRange() throws ElevatorException {
-        lift = getLiftWithOpenDoor(Lift.FLOOR_COUNT);
-
+        // given
+        Lift lift = getLiftWithOpenDoor(Lift.FLOOR_COUNT);
         lift.gotoFloor(Lift.FLOOR_COUNT - 1);
+
         try {
+            // when
             lift.gotoFloor(Lift.FLOOR_COUNT + 1);
 
             fail("Expected exception");
         } catch (ElevatorException exception) {
+            // then
             assertEquals(Lift.FLOOR_COUNT, exception.getSelectedFloor());
             assertEquals(Lift.FLOOR_COUNT - 1, exception.getCurrentFloor());
         }
@@ -91,31 +113,28 @@ public class SimpleLiftTest {
 
     @Test
     public void shouldThrowExceptionWhenSelectingNegativeFloor() throws ElevatorException {
-        lift = getLiftWithOpenDoor(Lift.FLOOR_COUNT);
-
+        // given
+        Lift lift = getLiftWithOpenDoor();
         lift.gotoFloor(SOME_FLOOR);
+
         try {
+            // when
             lift.gotoFloor(-1);
 
             fail("Expected exception");
         } catch (ElevatorException exception) {
+            // then
             assertEquals(SOME_FLOOR, exception.getSelectedFloor());
-            assertEquals(- 1, exception.getCurrentFloor());
+            assertEquals(-1, exception.getCurrentFloor());
         }
 
     }
 
-    private Lift getLiftWithOpenDoor(int maxFloorcount) {
-        Lift lift = new Lift(maxFloorcount, door);
+    private Lift getLiftWithOpenDoor(int maxFloorCount) {
+        Lift lift = new Lift(maxFloorCount, door);
         lift.pressButton();
         door.clearStates();
         return lift;
-    }
-
-
-    @Test
-    public void test(){
-
     }
 
     private void assertDoorIsOpen() {
