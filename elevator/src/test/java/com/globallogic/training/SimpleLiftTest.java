@@ -76,20 +76,47 @@ public class SimpleLiftTest {
 
     @Test
     public void shouldThrowExceprtionWhenFloorNumberIsOutOfRange() throws ElevatorException {
-        lift = getLiftWithOpenDoor();
+        lift = getLiftWithOpenDoor(Lift.FLOOR_COUNT);
 
-        lift.gotoFloor(99 - 1);
-        lift.setFloorsCount(99);
+        lift.gotoFloor(Lift.FLOOR_COUNT - 1);
         try {
-            lift.gotoFloor(99 + 1);
+            lift.gotoFloor(Lift.FLOOR_COUNT + 1);
 
             fail("Expected exception");
         } catch (ElevatorException exception) {
-            assertEquals(99, exception.getSelectedFloor());
-            assertEquals(99 - 1, exception.getCurrentFloor());
+            assertEquals(Lift.FLOOR_COUNT, exception.getSelectedFloor());
+            assertEquals(Lift.FLOOR_COUNT - 1, exception.getCurrentFloor());
         }
     }
 
+    @Test
+    public void shouldThrowExceptionWhenSelectingNegativeFloor() throws ElevatorException {
+        lift = getLiftWithOpenDoor(Lift.FLOOR_COUNT);
+
+        lift.gotoFloor(SOME_FLOOR);
+        try {
+            lift.gotoFloor(-1);
+
+            fail("Expected exception");
+        } catch (ElevatorException exception) {
+            assertEquals(SOME_FLOOR, exception.getSelectedFloor());
+            assertEquals(- 1, exception.getCurrentFloor());
+        }
+
+    }
+
+    private Lift getLiftWithOpenDoor(int maxFloorcount) {
+        Lift lift = new Lift(maxFloorcount, door);
+        lift.pressButton();
+        door.clearStates();
+        return lift;
+    }
+
+
+    @Test
+    public void test(){
+
+    }
 
     private void assertDoorIsOpen() {
         assertTrue("Expected door is open but was close", door.isOpen);
@@ -108,14 +135,11 @@ public class SimpleLiftTest {
     }
 
     private Lift getLiftWithOpenDoor() {
-        Lift lift = new Lift(door);
-        lift.pressButton();
-        door.clearStates();
-        return lift;
+        return getLiftWithOpenDoor(Lift.FLOOR_COUNT);
     }
 
     private Lift getLiftWithClosedDoor() {
-        Lift lift = new Lift(door);
+        Lift lift = new Lift(Lift.FLOOR_COUNT, door);
         door.clearStates();
         return lift;
     }
