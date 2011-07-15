@@ -28,8 +28,8 @@ public class SimpleLiftTest {
         lift.call(SOME_FLOOR);
 
         // then
-        assertDoorWasOpened();
-        assertDoorIsOpen();
+        door.assertWasOpened();
+        door.assertIsOpen();
     }
 
     @Test
@@ -41,8 +41,8 @@ public class SimpleLiftTest {
         lift.call(SOME_FLOOR);
 
         // then
-        assertDoorWasNotChanged();
-        assertDoorIsOpen();
+        door.assertWasNotChanged();
+        door.assertIsOpen();
     }
 
     @Test
@@ -54,9 +54,9 @@ public class SimpleLiftTest {
         lift.moveTo(SOME_FLOOR);
 
         //then
-        assertDoorWasClosed();
-        assertDoorWasOpened();
-        assertDoorIsOpen();
+        door.assertWasClosed();
+        door.assertWasOpened();
+        door.assertIsOpen();
     }
 
     @Test
@@ -68,8 +68,8 @@ public class SimpleLiftTest {
         lift.moveTo(SOME_FLOOR);
 
         //then
-        assertDoorWasNotChanged();
-        assertDoorIsOpen();
+        door.assertWasNotChanged();
+        door.assertIsOpen();
     }
 
     @Test
@@ -81,13 +81,13 @@ public class SimpleLiftTest {
         lift.moveTo(SOME_FLOOR);
 
         // then
-        assertDoorWasClosed();
-        assertDoorWasOpened();
-        assertDoorIsOpen();
+        door.assertWasClosed();
+        door.assertWasOpened();
+        door.assertIsOpen();
 
         assertEquals(SOME_FLOOR, lift.getPosition());
-        assertDoorWasNotChanged();
-        assertDoorIsOpen();
+        door.assertWasNotChanged();
+        door.assertIsOpen();
     }
 
     @Test
@@ -126,7 +126,7 @@ public class SimpleLiftTest {
     }
 
     @Test
-    public void shouldLiftGoToFloorIfCallItFromAnother() {
+    public void shouldLiftGoToFloorIfCallItFromAnother_liftWithClosedDoor() {
         // given
         Lift lift = getLiftWithClosedDoor(FLOOR_COUNT);
 
@@ -134,12 +134,30 @@ public class SimpleLiftTest {
         lift.call(SOME_FLOOR);
 
         // then
-        assertDoorWasOpened();
-        assertDoorIsOpen();
+        door.assertWasOpened();
+        door.assertIsOpen();
 
         assertEquals(SOME_FLOOR, lift.getPosition());
-        assertDoorWasNotChanged();
-        assertDoorIsOpen();
+        door.assertWasNotChanged();
+        door.assertIsOpen();
+    }
+
+     @Test
+    public void shouldLiftGoToFloorIfCallItFromAnother_liftWithOpenedDoor() {
+        // given
+        Lift lift = getLiftWithOpenDoor(FLOOR_COUNT);
+
+        // when
+        lift.call(SOME_FLOOR);
+
+        // then
+        door.assertWasClosed();
+        door.assertWasOpened();
+        door.assertIsOpen();
+
+        assertEquals(SOME_FLOOR, lift.getPosition());
+        door.assertWasNotChanged();
+        door.assertIsOpen();
     }
 
     private Lift getLiftWithOpenDoor(int position) {
@@ -153,23 +171,6 @@ public class SimpleLiftTest {
         Lift lift = new Lift(position, FLOOR_COUNT, door);
         door.clearStates();
         return lift;
-    }
-
-
-    private void assertDoorIsOpen() {
-        assertTrue("Expected door is open but was close", door.isOpen);
-    }
-
-    private void assertDoorWasOpened() {
-        assertTrue("Expected door was opened but was closed", door.popState());
-    }
-
-    private void assertDoorWasClosed() {
-        assertFalse("Expected door was closed but was opened", door.popState());
-    }
-
-    private void assertDoorWasNotChanged() {
-        assertEquals(0, door.stateStack.size());
     }
 
     private static class MockDoor implements Door {
@@ -202,8 +203,26 @@ public class SimpleLiftTest {
             return isOpen;
         }
 
-        boolean popState() {
-            return stateStack.poll();
+        void assertIsOpen() {
+            assertTrue("Expected door is open but was close", isOpen);
+        }
+
+        void assertWasOpened() {
+            if (stateStack.size() == 0) {
+                fail("Expected door was opened but was no changes");
+            }
+            assertTrue("Expected door was opened but was closed", stateStack.poll());
+        }
+
+        void assertWasClosed() {
+            if (stateStack.size() == 0) {
+                fail("Expected door was closed but was no changes");
+            }
+            assertFalse("Expected door was closed but was opened", stateStack.poll());
+        }
+
+        void assertWasNotChanged() {
+            assertEquals("Expected door has no changes", 0, stateStack.size());
         }
     }
 }

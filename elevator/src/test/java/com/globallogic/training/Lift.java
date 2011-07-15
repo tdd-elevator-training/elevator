@@ -11,20 +11,15 @@ public class Lift {
         this.door = door;
     }
 
-    public void call() {
-        if (door.isOpen()) {
+    public void call(int floor) {
+        if (door.isOpen() && floor == position) {
             return;
         }
-        door.open();
-    }
-
-    public void call(int floor) {
         if (door.isOpen()) {
-            return;
+            door.close();
         }
         position = floor;
         door.open();
-
     }
 
     public void moveTo(int floor) throws ElevatorException {
