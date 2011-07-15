@@ -13,6 +13,7 @@ public class SimpleLiftTest {
     private final static int SOME_FLOOR = 2;
     public static final int FLOOR_COUNT = 99;
     private MockDoor door;
+    private Lift lift;
 
     @Before
     public void setUp() throws Exception {
@@ -21,8 +22,7 @@ public class SimpleLiftTest {
 
     @Test
     public void shouldOpenDoorWhenClickButton() {
-        // given
-        Lift lift = getLiftWithClosedDoor(SOME_FLOOR);
+        givenLiftWithClosedDoor(SOME_FLOOR);
 
         // when
         lift.call(SOME_FLOOR);
@@ -34,8 +34,7 @@ public class SimpleLiftTest {
 
     @Test
     public void shouldOpenDoorWhenClickButtonAgain() {
-        // given
-        Lift lift = getLiftWithOpenDoor(SOME_FLOOR);
+        givenLiftWithOpenDoor(SOME_FLOOR);
 
         // when
         lift.call(SOME_FLOOR);
@@ -47,8 +46,7 @@ public class SimpleLiftTest {
 
     @Test
     public void shouldDoorBeClosedAfterSelectingFloor() throws ElevatorException {
-        //given
-        Lift lift = getLiftWithOpenDoor(FLOOR_COUNT);
+        givenLiftWithOpenDoor(FLOOR_COUNT);
 
         // when
         lift.moveTo(SOME_FLOOR);
@@ -61,8 +59,7 @@ public class SimpleLiftTest {
 
     @Test
     public void shouldDoorBeOpenIfSameFloorIsSelected( ) throws ElevatorException {
-        //given
-        Lift lift = getLiftWithOpenDoor(SOME_FLOOR);
+        givenLiftWithOpenDoor(SOME_FLOOR);
 
         //when
         lift.moveTo(SOME_FLOOR);
@@ -74,8 +71,7 @@ public class SimpleLiftTest {
 
     @Test
     public void shouldDoorOpenOnSpecifiedFloor() throws ElevatorException {
-        // given
-        Lift lift = getLiftWithOpenDoor(FLOOR_COUNT);
+        givenLiftWithOpenDoor(FLOOR_COUNT);
 
         // when
         lift.moveTo(SOME_FLOOR);
@@ -85,15 +81,14 @@ public class SimpleLiftTest {
         door.assertWasOpened();
         door.assertIsOpen();
 
-        assertEquals(SOME_FLOOR, lift.getPosition());
+        assertLiftAt(SOME_FLOOR);
         door.assertWasNotChanged();
         door.assertIsOpen();
     }
 
     @Test
-    public void shouldThrowExceprtionWhenFloorNumberIsOutOfRange() throws ElevatorException {
-        // given
-        Lift lift = getLiftWithOpenDoor(FLOOR_COUNT - 1);
+    public void shouldBeExceprtionWhenFloorNumberIsOutOfRange() throws ElevatorException {
+        givenLiftWithOpenDoor(FLOOR_COUNT - 1);
 
         try {
             // when
@@ -108,9 +103,8 @@ public class SimpleLiftTest {
     }
 
     @Test
-    public void shouldThrowExceptionWhenSelectingNegativeFloor() throws ElevatorException {
-        // given
-        Lift lift = getLiftWithOpenDoor(SOME_FLOOR);
+    public void shouldBeExceptionWhenSelectingNegativeFloor() throws ElevatorException {
+        givenLiftWithOpenDoor(SOME_FLOOR);
 
         try {
             // when
@@ -126,9 +120,8 @@ public class SimpleLiftTest {
     }
 
     @Test
-    public void shouldLiftGoToFloorIfCallItFromAnother_liftWithClosedDoor() {
-        // given
-        Lift lift = getLiftWithClosedDoor(FLOOR_COUNT);
+    public void shouldLiftGoToFloorIfCallItFromAnotherFloor() {
+        givenLiftWithClosedDoor(FLOOR_COUNT);
 
         // when
         lift.call(SOME_FLOOR);
@@ -137,15 +130,14 @@ public class SimpleLiftTest {
         door.assertWasOpened();
         door.assertIsOpen();
 
-        assertEquals(SOME_FLOOR, lift.getPosition());
+        assertLiftAt(SOME_FLOOR);
         door.assertWasNotChanged();
         door.assertIsOpen();
     }
 
-     @Test
-    public void shouldLiftGoToFloorIfCallItFromAnother_liftWithOpenedDoor() {
-        // given
-        Lift lift = getLiftWithOpenDoor(FLOOR_COUNT);
+    @Test
+    public void shouldLiftMovedWithClosedDoorIfCallIt() {
+        givenLiftWithOpenDoor(FLOOR_COUNT);
 
         // when
         lift.call(SOME_FLOOR);
@@ -155,22 +147,22 @@ public class SimpleLiftTest {
         door.assertWasOpened();
         door.assertIsOpen();
 
-        assertEquals(SOME_FLOOR, lift.getPosition());
+        assertLiftAt(SOME_FLOOR);
         door.assertWasNotChanged();
         door.assertIsOpen();
     }
 
-    private Lift getLiftWithOpenDoor(int position) {
-        Lift lift = new Lift(position, FLOOR_COUNT, door);
-        lift.call(position);
-        door.clearStates();
-        return lift;
+    private void assertLiftAt(int position) {
+        assertEquals(position, lift.getPosition());
     }
 
-    private Lift getLiftWithClosedDoor(int position) {
-        Lift lift = new Lift(position, FLOOR_COUNT, door);
-        door.clearStates();
-        return lift;
+    private void givenLiftWithOpenDoor(int position) {
+        lift = new Lift(position, FLOOR_COUNT, door);
+        door.isOpen = true;
+    }
+
+    private void givenLiftWithClosedDoor(int position) {
+        lift = new Lift(position, FLOOR_COUNT, door);
     }
 
     private static class MockDoor implements Door {
@@ -180,10 +172,6 @@ public class SimpleLiftTest {
         private MockDoor() {
             isOpen = false;
             stateStack = new LinkedList<Boolean>();
-        }
-
-        void clearStates() {
-            stateStack.clear();
         }
 
         @Override
