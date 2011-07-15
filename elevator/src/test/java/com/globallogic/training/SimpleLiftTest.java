@@ -25,7 +25,7 @@ public class SimpleLiftTest {
         Lift lift = getLiftWithClosedDoor();
 
         // when
-        lift.pressButton();
+        lift.call();
 
         // then
         assertDoorWasOpened();
@@ -38,7 +38,7 @@ public class SimpleLiftTest {
         Lift lift = getLiftWithOpenDoor();
 
         // when
-        lift.pressButton();
+        lift.call();
 
         // then
         assertDoorWasNotChanged();
@@ -51,7 +51,7 @@ public class SimpleLiftTest {
         Lift lift = getLiftWithOpenDoor();
 
         // when
-        lift.gotoFloor(SOME_FLOOR);
+        lift.moveTo(SOME_FLOOR);
 
         //then
         assertDoorWasClosed();
@@ -64,12 +64,12 @@ public class SimpleLiftTest {
         //given
         Lift lift = getLiftWithOpenDoor();
 
-        lift.gotoFloor(SOME_FLOOR);
+        lift.moveTo(SOME_FLOOR);
         assertDoorWasClosed();
         assertDoorWasOpened();
 
         //when
-        lift.gotoFloor(SOME_FLOOR);
+        lift.moveTo(SOME_FLOOR);
 
         //then
         assertDoorWasNotChanged();
@@ -82,14 +82,14 @@ public class SimpleLiftTest {
         Lift lift = getLiftWithOpenDoor();
 
         // when
-        lift.gotoFloor(SOME_FLOOR);
+        lift.moveTo(SOME_FLOOR);
 
         // then
         assertDoorWasClosed();
         assertDoorWasOpened();
         assertDoorIsOpen();
 
-        assertEquals(SOME_FLOOR, lift.getCurrentFloor());
+        assertEquals(SOME_FLOOR, lift.getPosition());
         assertDoorWasNotChanged();
         assertDoorIsOpen();
     }
@@ -98,11 +98,11 @@ public class SimpleLiftTest {
     public void shouldThrowExceprtionWhenFloorNumberIsOutOfRange() throws ElevatorException {
         // given
         Lift lift = getLiftWithOpenDoor(FLOOR_COUNT);
-        lift.gotoFloor(FLOOR_COUNT - 1);
+        lift.moveTo(FLOOR_COUNT - 1);
 
         try {
             // when
-            lift.gotoFloor(FLOOR_COUNT + 1);
+            lift.moveTo(FLOOR_COUNT + 1);
 
             fail("Expected exception");
         } catch (ElevatorException exception) {
@@ -116,11 +116,11 @@ public class SimpleLiftTest {
     public void shouldThrowExceptionWhenSelectingNegativeFloor() throws ElevatorException {
         // given
         Lift lift = getLiftWithOpenDoor();
-        lift.gotoFloor(SOME_FLOOR);
+        lift.moveTo(SOME_FLOOR);
 
         try {
             // when
-            lift.gotoFloor(-1);
+            lift.moveTo(-1);
 
             fail("Expected exception");
         } catch (ElevatorException exception) {
@@ -133,7 +133,7 @@ public class SimpleLiftTest {
 
     private Lift getLiftWithOpenDoor(int maxFloorCount) {
         Lift lift = new Lift(maxFloorCount, door);
-        lift.pressButton();
+        lift.call();
         door.clearStates();
         return lift;
     }

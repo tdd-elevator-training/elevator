@@ -1,7 +1,7 @@
 package com.globallogic.training;
 
 public class Lift {
-    private int currentFloor;
+    private int position;
     private final Door door;
     private int floorsCount;
 
@@ -11,31 +11,31 @@ public class Lift {
         this.door = door;
     }
 
-    public void pressButton() {
+    public void call() {
         if (door.isOpen()) {
             return;
         }
         door.open();
     }
 
-    public void gotoFloor(int floor) throws ElevatorException {
+    public void moveTo(int floor) throws ElevatorException {
         if (floor < 0) {
-            throw new ElevatorException(floor, currentFloor);
+            throw new ElevatorException(floor, position);
         }
 
         if (floor > floorsCount) {
-            throw new ElevatorException(floor, currentFloor);
+            throw new ElevatorException(floor, position);
         }
-        if (floor == currentFloor) {
+        if (floor == position) {
             return;
         }
         door.close();
-        this.currentFloor = floor;
+        this.position = floor;
         door.open();
     }
 
-    public int getCurrentFloor() {
-        return currentFloor;
+    public int getPosition() {
+        return position;
     }
 
 }
