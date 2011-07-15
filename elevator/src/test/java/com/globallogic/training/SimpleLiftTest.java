@@ -11,6 +11,7 @@ import static junit.framework.Assert.*;
 public class SimpleLiftTest {
 
     private final static int SOME_FLOOR = 2;
+    public static final int FLOOR_COUNT = 99;
     private MockDoor door;
 
     @Before
@@ -96,18 +97,18 @@ public class SimpleLiftTest {
     @Test
     public void shouldThrowExceprtionWhenFloorNumberIsOutOfRange() throws ElevatorException {
         // given
-        Lift lift = getLiftWithOpenDoor(Lift.FLOOR_COUNT);
-        lift.gotoFloor(Lift.FLOOR_COUNT - 1);
+        Lift lift = getLiftWithOpenDoor(FLOOR_COUNT);
+        lift.gotoFloor(FLOOR_COUNT - 1);
 
         try {
             // when
-            lift.gotoFloor(Lift.FLOOR_COUNT + 1);
+            lift.gotoFloor(FLOOR_COUNT + 1);
 
             fail("Expected exception");
         } catch (ElevatorException exception) {
             // then
-            assertEquals(Lift.FLOOR_COUNT, exception.getSelectedFloor());
-            assertEquals(Lift.FLOOR_COUNT - 1, exception.getCurrentFloor());
+            assertEquals(FLOOR_COUNT + 1, exception.getSelectedFloor());
+            assertEquals(FLOOR_COUNT - 1, exception.getCurrentFloor());
         }
     }
 
@@ -124,8 +125,8 @@ public class SimpleLiftTest {
             fail("Expected exception");
         } catch (ElevatorException exception) {
             // then
-            assertEquals(SOME_FLOOR, exception.getSelectedFloor());
-            assertEquals(-1, exception.getCurrentFloor());
+            assertEquals(-1, exception.getSelectedFloor());
+            assertEquals(SOME_FLOOR, exception.getCurrentFloor());
         }
 
     }
@@ -154,11 +155,11 @@ public class SimpleLiftTest {
     }
 
     private Lift getLiftWithOpenDoor() {
-        return getLiftWithOpenDoor(Lift.FLOOR_COUNT);
+        return getLiftWithOpenDoor(FLOOR_COUNT);
     }
 
     private Lift getLiftWithClosedDoor() {
-        Lift lift = new Lift(Lift.FLOOR_COUNT, door);
+        Lift lift = new Lift(FLOOR_COUNT, door);
         door.clearStates();
         return lift;
     }

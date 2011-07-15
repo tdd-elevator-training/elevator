@@ -1,14 +1,13 @@
 package com.globallogic.training;
 
 public class Lift {
-    public static final int FLOOR_COUNT = 99;
     private int currentFloor;
     private final Door door;
     private int floorsCount;
 
 
     public Lift(int maxFloorcount, Door door) {
-
+        this.floorsCount = maxFloorcount;
         this.door = door;
     }
 
@@ -20,12 +19,12 @@ public class Lift {
     }
 
     public void gotoFloor(int floor) throws ElevatorException {
-        if (floor == -1) {
-            throw new ElevatorException(2, -1);
+        if (floor < 0) {
+            throw new ElevatorException(floor, currentFloor);
         }
 
-        if (floor > FLOOR_COUNT) {
-            throw new ElevatorException(FLOOR_COUNT, currentFloor);
+        if (floor > floorsCount) {
+            throw new ElevatorException(floor, currentFloor);
         }
         if (floor == currentFloor) {
             return;
@@ -38,9 +37,5 @@ public class Lift {
     public int getCurrentFloor() {
         return currentFloor;
     }
-    public void setFloorsCount(int floorsCount) {
-        this.floorsCount = floorsCount;
-    }
-
 
 }
