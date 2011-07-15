@@ -22,10 +22,10 @@ public class SimpleLiftTest {
     @Test
     public void shouldOpenDoorWhenClickButton() {
         // given
-        Lift lift = getLiftWithClosedDoor();
+        Lift lift = getLiftWithClosedDoor(SOME_FLOOR);
 
         // when
-        lift.call();
+        lift.call(SOME_FLOOR);
 
         // then
         assertDoorWasOpened();
@@ -35,10 +35,10 @@ public class SimpleLiftTest {
     @Test
     public void shouldOpenDoorWhenClickButtonAgain() {
         // given
-        Lift lift = getLiftWithOpenDoor();
+        Lift lift = getLiftWithOpenDoor(SOME_FLOOR);
 
         // when
-        lift.call();
+        lift.call(SOME_FLOOR);
 
         // then
         assertDoorWasNotChanged();
@@ -48,7 +48,7 @@ public class SimpleLiftTest {
     @Test
     public void shouldDoorBeClosedAfterSelectingFloor() throws ElevatorException {
         //given
-        Lift lift = getLiftWithOpenDoor();
+        Lift lift = getLiftWithOpenDoor(FLOOR_COUNT);
 
         // when
         lift.moveTo(SOME_FLOOR);
@@ -62,11 +62,7 @@ public class SimpleLiftTest {
     @Test
     public void shouldDoorBeOpenIfSameFloorIsSelected( ) throws ElevatorException {
         //given
-        Lift lift = getLiftWithOpenDoor();
-
-        lift.moveTo(SOME_FLOOR);
-        assertDoorWasClosed();
-        assertDoorWasOpened();
+        Lift lift = getLiftWithOpenDoor(SOME_FLOOR);
 
         //when
         lift.moveTo(SOME_FLOOR);
@@ -79,7 +75,7 @@ public class SimpleLiftTest {
     @Test
     public void shouldDoorOpenOnSpecifiedFloor() throws ElevatorException {
         // given
-        Lift lift = getLiftWithOpenDoor();
+        Lift lift = getLiftWithOpenDoor(FLOOR_COUNT);
 
         // when
         lift.moveTo(SOME_FLOOR);
@@ -97,8 +93,7 @@ public class SimpleLiftTest {
     @Test
     public void shouldThrowExceprtionWhenFloorNumberIsOutOfRange() throws ElevatorException {
         // given
-        Lift lift = getLiftWithOpenDoor(FLOOR_COUNT);
-        lift.moveTo(FLOOR_COUNT - 1);
+        Lift lift = getLiftWithOpenDoor(FLOOR_COUNT - 1);
 
         try {
             // when
@@ -115,8 +110,7 @@ public class SimpleLiftTest {
     @Test
     public void shouldThrowExceptionWhenSelectingNegativeFloor() throws ElevatorException {
         // given
-        Lift lift = getLiftWithOpenDoor();
-        lift.moveTo(SOME_FLOOR);
+        Lift lift = getLiftWithOpenDoor(SOME_FLOOR);
 
         try {
             // when
@@ -131,12 +125,36 @@ public class SimpleLiftTest {
 
     }
 
-    private Lift getLiftWithOpenDoor(int maxFloorCount) {
-        Lift lift = new Lift(maxFloorCount, door);
-        lift.call();
+    @Test
+    public void shouldLiftGoToFloorIfCallItFromAnother() {
+        // given
+        Lift lift = getLiftWithClosedDoor(FLOOR_COUNT);
+
+        // when
+        lift.call(SOME_FLOOR);
+
+        // then
+        assertDoorWasOpened();
+        assertDoorIsOpen();
+
+        assertEquals(SOME_FLOOR, lift.getPosition());
+        assertDoorWasNotChanged();
+        assertDoorIsOpen();
+    }
+
+    private Lift getLiftWithOpenDoor(int position) {
+        Lift lift = new Lift(position, FLOOR_COUNT, door);
+        lift.call(position);
         door.clearStates();
         return lift;
     }
+
+    private Lift getLiftWithClosedDoor(int position) {
+        Lift lift = new Lift(position, FLOOR_COUNT, door);
+        door.clearStates();
+        return lift;
+    }
+
 
     private void assertDoorIsOpen() {
         assertTrue("Expected door is open but was close", door.isOpen);
@@ -152,16 +170,6 @@ public class SimpleLiftTest {
 
     private void assertDoorWasNotChanged() {
         assertEquals(0, door.stateStack.size());
-    }
-
-    private Lift getLiftWithOpenDoor() {
-        return getLiftWithOpenDoor(FLOOR_COUNT);
-    }
-
-    private Lift getLiftWithClosedDoor() {
-        Lift lift = new Lift(FLOOR_COUNT, door);
-        door.clearStates();
-        return lift;
     }
 
     private static class MockDoor implements Door {

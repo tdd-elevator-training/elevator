@@ -1,5 +1,7 @@
 As an lift owner I want lift to pick passengers in optimal way so that I won't overpay for electricity
 
 cases
-- passenger presses lift button and lift comes
++ passenger presses lift button and lift comes
 - GIVE lift at the 5. WHEN press button at the 2. press button at the 3. goto 1. THEN. door open at the 3. door open at the 2.
+- Floors numeration starts from 1 (0 is invalid selection, position == maxFloorscount is valid)
+- лифт не может ехать с открітіми дверьми
