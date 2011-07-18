@@ -19,7 +19,7 @@ public class Lift {
             door.close();
         }
         position = floor;
-        door.open();
+        door.open(position);
     }
 
     public void moveTo(int floor) throws ElevatorException {
@@ -35,10 +35,7 @@ public class Lift {
         }
         door.close();
         this.position = floor;
-        door.open();
+        door.open(position);
     }
 
-    public int getPosition() {
-        return position;
-    }
 }

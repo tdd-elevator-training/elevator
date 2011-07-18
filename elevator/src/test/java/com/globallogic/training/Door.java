@@ -1,7 +1,8 @@
 package com.globallogic.training;
 
 public interface Door {
-    void open();
+
+    void open(int floor);
 
     void close();
 

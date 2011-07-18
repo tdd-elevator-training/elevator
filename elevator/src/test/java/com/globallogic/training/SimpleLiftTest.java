@@ -28,7 +28,7 @@ public class SimpleLiftTest {
         lift.call(SOME_FLOOR);
 
         // then
-        door.assertWasOpened();
+        door.assertWasOpened(SOME_FLOOR);
         door.assertIsOpen();
     }
 
@@ -53,7 +53,7 @@ public class SimpleLiftTest {
 
         //then
         door.assertWasClosed();
-        door.assertWasOpened();
+        door.assertWasOpened(SOME_FLOOR);
         door.assertIsOpen();
     }
 
@@ -78,11 +78,7 @@ public class SimpleLiftTest {
 
         // then
         door.assertWasClosed();
-        door.assertWasOpened();
-        door.assertIsOpen();
-
-        assertLiftAt(SOME_FLOOR);
-        door.assertWasNotChanged();
+        door.assertWasOpened(SOME_FLOOR);
         door.assertIsOpen();
     }
 
@@ -127,11 +123,7 @@ public class SimpleLiftTest {
         lift.call(SOME_FLOOR);
 
         // then
-        door.assertWasOpened();
-        door.assertIsOpen();
-
-        assertLiftAt(SOME_FLOOR);
-        door.assertWasNotChanged();
+        door.assertWasOpened(SOME_FLOOR);
         door.assertIsOpen();
     }
 
@@ -144,16 +136,8 @@ public class SimpleLiftTest {
 
         // then
         door.assertWasClosed();
-        door.assertWasOpened();
+        door.assertWasOpened(SOME_FLOOR);
         door.assertIsOpen();
-
-        assertLiftAt(SOME_FLOOR);
-        door.assertWasNotChanged();
-        door.assertIsOpen();
-    }
-
-    private void assertLiftAt(int position) {
-        assertEquals(position, lift.getPosition());
     }
 
     private void givenLiftWithOpenDoor(int position) {
@@ -165,25 +149,38 @@ public class SimpleLiftTest {
         lift = new Lift(position, FLOOR_COUNT, door);
     }
 
+    private static class LiftState {
+
+        boolean isOpen;
+        int floor;
+
+        LiftState(boolean isOpen, int floor) {
+            this.isOpen = isOpen;
+            this.floor = floor;
+        }
+
+    }
+
     private static class MockDoor implements Door {
-        private Queue<Boolean> stateStack;
+        private Queue<LiftState> stateStack;
         private boolean isOpen;
+        private static final int FLOOR_NOT_CHECKS = 111;  // TODO remove me
 
         private MockDoor() {
             isOpen = false;
-            stateStack = new LinkedList<Boolean>();
+            stateStack = new LinkedList<LiftState>();
         }
 
         @Override
-        public void open() {
+        public void open(int floor) {
             isOpen = true;
-            stateStack.add(true);
+            stateStack.add(new LiftState(true, floor));
         }
 
         @Override
         public void close() {
             isOpen = false;
-            stateStack.add(false);
+            stateStack.add(new LiftState(false, FLOOR_NOT_CHECKS));
         }
 
         @Override
@@ -195,18 +192,20 @@ public class SimpleLiftTest {
             assertTrue("Expected door is open but was close", isOpen);
         }
 
-        void assertWasOpened() {
+        void assertWasOpened(int floor) {
             if (stateStack.size() == 0) {
                 fail("Expected door was opened but was no changes");
             }
-            assertTrue("Expected door was opened but was closed", stateStack.poll());
+            LiftState state = stateStack.poll();
+            assertTrue("Expected door was opened but was closed", state.isOpen);
+            assertEquals("Expected door was opened but was closed", floor, state.floor);
         }
 
         void assertWasClosed() {
             if (stateStack.size() == 0) {
                 fail("Expected door was closed but was no changes");
             }
-            assertFalse("Expected door was closed but was opened", stateStack.poll());
+            assertFalse("Expected door was closed but was opened", stateStack.poll().isOpen);
         }
 
         void assertWasNotChanged() {
