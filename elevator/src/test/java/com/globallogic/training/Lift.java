@@ -1,14 +1,13 @@
 package com.globallogic.training;
 
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 public class Lift {
 
     private int position;
     private final Door door;
     private int floorsCount;
-    private Queue<Integer> floorQueue;
+    private List<Integer> floorQueue;
 
     public Lift(int position, int floorsCount, Door door) {
         this.position = position;
@@ -23,10 +22,17 @@ public class Lift {
         }
 
         floorQueue.add(floor);
-        processQueue();
     }
 
-    private void processQueue() {
+    void processQueue() {
+        Collections.sort(floorQueue, new Comparator<Integer>() {
+
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o2 - o1;
+            }
+
+        });
         for (Integer floor : floorQueue) {
             if (door.isOpen()) {
                 door.close();
@@ -49,7 +55,6 @@ public class Lift {
         }
 
         floorQueue.add(floor);
-        processQueue();
     }
 
 }

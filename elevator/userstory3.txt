@@ -5,8 +5,8 @@ cases
 - Floors numeration starts from 1 (0 is invalid selection, position == maxFloorscount is valid)
 + добавляем номер этажа для двери open(int floor)
 - GIVE лифт на 3, WHEN два кола на 1 и 2, когда сел на 2м и нажал вверх. THEN остановка вначале на 1м, потом на верхнем
-- Lift at 4, calls from 2 and 3, when user at 3 moves to 1 should pick all users
-- Lift at 4, calls from 2 and 3, when user at 3 moves to 1 should move to 1
++ Lift at 4, calls from 2 and 3, when user at 3 moves to 1 should pick all users and move to 1
+- Lift at 1, calls from 3 and 2, when user at 2 moves to 4 should pick all users and move to 4
 TODO maybe floor listener? - Lift at 3, calls from 2 and 4
 - моки сильно зависят от того, как их используют - порефакторить.
 - дверь закрыта но мы находимся в лифте и жмем MoveTo на какой-то єтаж

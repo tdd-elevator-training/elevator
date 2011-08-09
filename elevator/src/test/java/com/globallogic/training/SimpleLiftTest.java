@@ -27,6 +27,7 @@ public class SimpleLiftTest {
 
         // when
         lift.call(SOME_FLOOR);
+        lift.processQueue();
 
         // then
         door.assertWasOpened(SOME_FLOOR);
@@ -39,6 +40,7 @@ public class SimpleLiftTest {
 
         // when
         lift.call(SOME_FLOOR);
+        lift.processQueue();
 
         // then
         door.assertWasNotChanged();
@@ -51,6 +53,7 @@ public class SimpleLiftTest {
 
         // when
         lift.moveTo(SOME_FLOOR);
+        lift.processQueue();
 
         //then
         door.assertWasClosed();
@@ -64,6 +67,7 @@ public class SimpleLiftTest {
 
         //when
         lift.moveTo(SOME_FLOOR);
+        lift.processQueue();
 
         //then
         door.assertWasNotChanged();
@@ -76,6 +80,7 @@ public class SimpleLiftTest {
 
         // when
         lift.moveTo(SOME_FLOOR);
+        lift.processQueue();
 
         // then
         door.assertWasClosed();
@@ -90,6 +95,7 @@ public class SimpleLiftTest {
         try {
             // when
             lift.moveTo(FLOOR_COUNT + 1);
+            lift.processQueue();
 
             fail("Expected exception");
         } catch (ElevatorException exception) {
@@ -106,6 +112,7 @@ public class SimpleLiftTest {
         try {
             // when
             lift.moveTo(-1);
+            lift.processQueue();
 
             fail("Expected exception");
         } catch (ElevatorException exception) {
@@ -122,6 +129,7 @@ public class SimpleLiftTest {
 
         // when
         lift.call(SOME_FLOOR);
+        lift.processQueue();
 
         // then
         door.assertWasOpened(SOME_FLOOR);
@@ -134,6 +142,7 @@ public class SimpleLiftTest {
 
         // when
         lift.call(SOME_FLOOR);
+        lift.processQueue();
 
         // then
         door.assertWasClosed();
@@ -142,30 +151,18 @@ public class SimpleLiftTest {
     }
 
     @Test
-    @Ignore
     public void shouldPickAllUsers() throws ElevatorException {
         givenLiftWithClosedDoor(4);
 
         // when
-        lift.call(3);
         lift.call(2);
-        door.assertWasOpened(3);
-        door.assertWasNotChanged();
+        lift.call(3);
         lift.moveTo(1);
-        door.assertWasClosed();
-
-
-
-
-/*
-        // when2
-        lift.add(new CallFrom(2));
-        lift.add(new MoveTo(1));
-        lift.weAt(3);
-        lift.run();
-*/
+        lift.processQueue();
 
         // then
+        door.assertWasOpened(3);
+        door.assertWasClosed();
         door.assertWasOpened(2);
         door.assertWasClosed();
         door.assertWasOpened(1);
