@@ -151,7 +151,7 @@ public class SimpleLiftTest {
     }
 
     @Test
-    public void shouldPickAllUsers() throws ElevatorException {
+    public void shouldPickAllUsersDown() throws ElevatorException {
         givenLiftWithClosedDoor(4);
 
         // when
@@ -166,6 +166,25 @@ public class SimpleLiftTest {
         door.assertWasOpened(2);
         door.assertWasClosed();
         door.assertWasOpened(1);
+        door.assertIsOpen();
+    }
+
+    @Test
+    public void shouldPickAllUsersUp() throws ElevatorException {
+        givenLiftWithClosedDoor(1);
+
+        // when
+        lift.call(3);
+        lift.call(2);
+        lift.moveTo(4);
+        lift.processQueue();
+
+        // then
+        door.assertWasOpened(2);
+        door.assertWasClosed();
+        door.assertWasOpened(3);
+        door.assertWasClosed();
+        door.assertWasOpened(4);
         door.assertIsOpen();
     }
 

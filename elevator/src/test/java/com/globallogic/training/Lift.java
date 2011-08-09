@@ -25,11 +25,13 @@ public class Lift {
     }
 
     void processQueue() {
+        final boolean direction = getDirection();
+
         Collections.sort(floorQueue, new Comparator<Integer>() {
 
             @Override
-            public int compare(Integer o1, Integer o2) {
-                return o2 - o1;
+            public int compare(Integer from, Integer to) {
+                return (direction) ? (to - from) : (from - to);
             }
 
         });
@@ -40,6 +42,15 @@ public class Lift {
             position = floor;
             door.open(position);
         }
+    }
+
+    private boolean getDirection() {
+        for (Integer floor : floorQueue) {
+            if (floor < position) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void moveTo(int floor) throws ElevatorException {
