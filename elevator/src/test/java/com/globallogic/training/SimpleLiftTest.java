@@ -1,6 +1,7 @@
 package com.globallogic.training;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.LinkedList;
@@ -137,6 +138,37 @@ public class SimpleLiftTest {
         // then
         door.assertWasClosed();
         door.assertWasOpened(SOME_FLOOR);
+        door.assertIsOpen();
+    }
+
+    @Test
+    @Ignore
+    public void shouldPickAllUsers() throws ElevatorException {
+        givenLiftWithClosedDoor(4);
+
+        // when
+        lift.call(3);
+        lift.call(2);
+        door.assertWasOpened(3);
+        door.assertWasNotChanged();
+        lift.moveTo(1);
+        door.assertWasClosed();
+
+
+
+
+/*
+        // when2
+        lift.add(new CallFrom(2));
+        lift.add(new MoveTo(1));
+        lift.weAt(3);
+        lift.run();
+*/
+
+        // then
+        door.assertWasOpened(2);
+        door.assertWasClosed();
+        door.assertWasOpened(1);
         door.assertIsOpen();
     }
 
