@@ -1,13 +1,15 @@
 package com.globallogic.training;
 
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
 
 import java.util.LinkedList;
 import java.util.Queue;
 
-import static junit.framework.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
 
 public class SimpleLiftTest {
 
@@ -188,6 +190,94 @@ public class SimpleLiftTest {
         door.assertIsOpen();
     }
 
+    @Test
+    public void shouldLiftGoesDownFirstly() throws ElevatorException {
+        givenLiftWithClosedDoor(4);
+
+        // when
+        lift.call(2);
+        lift.call(6);
+        lift.moveTo(1);
+        lift.processQueue();
+
+        // then
+        door.assertWasOpened(2);
+        door.assertWasClosed();
+        door.assertWasOpened(1);
+        door.assertWasClosed();
+        door.assertWasOpened(6);
+        door.assertIsOpen();
+    }
+
+    @Test
+    public void shouldLiftGoesUpFirsltyThenPickAllUsersDown() throws ElevatorException {
+        givenLiftWithClosedDoor(4);
+
+        // when
+        lift.call(9);
+        lift.call(2);
+        lift.moveTo(1);
+        lift.processQueue();
+
+        // then
+        door.assertWasOpened(9);
+        door.assertWasClosed();
+        door.assertWasOpened(2);
+        door.assertWasClosed();
+        door.assertWasOpened(1);
+        door.assertIsOpen();
+    }
+
+    @Test
+    public void shouldLiftGoesDownFirsltyThenPickAllUsersUp() throws ElevatorException {
+        givenLiftWithClosedDoor(3);
+
+        // when
+        lift.call(2);
+        lift.call(9);
+        lift.moveTo(4);
+        lift.processQueue();
+
+        // then
+        door.assertWasOpened(2);
+        door.assertWasClosed();
+        door.assertWasOpened(4);
+        door.assertWasClosed();
+        door.assertWasOpened(9);
+        door.assertIsOpen();
+    }
+
+    @Test
+    public void shouldLiftMoveToSameFloor() throws ElevatorException {
+        givenLiftWithClosedDoor(3);
+
+        // when
+        lift.call(4);
+        lift.moveTo(3);
+        lift.processQueue();
+
+        // then
+        door.assertWasOpened(3);
+        door.assertWasClosed();
+        door.assertWasOpened(4);
+        door.assertIsOpen();
+    }
+
+    @Test
+    public void shouldLiftCallToSameFloor() throws ElevatorException {
+        givenLiftWithOpenDoor(3);
+
+        // when
+        lift.moveTo(4);
+        lift.call(3);
+        lift.processQueue();
+
+        // then
+        door.assertWasClosed();
+        door.assertWasOpened(4);
+        door.assertIsOpen();
+    }
+
     private void givenLiftWithOpenDoor(int position) {
         lift = new Lift(position, FLOOR_COUNT, door);
         door.isOpen = true;
@@ -219,19 +309,16 @@ public class SimpleLiftTest {
             stateStack = new LinkedList<LiftState>();
         }
 
-        @Override
         public void open(int floor) {
             isOpen = true;
             stateStack.add(new LiftState(true, floor));
         }
 
-        @Override
         public void close() {
             isOpen = false;
             stateStack.add(new LiftState(false, FLOOR_NOT_CHECKS));
         }
 
-        @Override
         public boolean isOpen() {
             return isOpen;
         }
@@ -246,7 +333,7 @@ public class SimpleLiftTest {
             }
             LiftState state = stateStack.poll();
             assertTrue("Expected door was opened but was closed", state.isOpen);
-            assertEquals("Expected door was opened but was closed", floor, state.floor);
+            assertEquals("opened at:", floor, state.floor);
         }
 
         void assertWasClosed() {
