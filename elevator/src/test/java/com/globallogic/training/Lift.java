@@ -4,13 +4,13 @@ public class Lift {
 	private int position;
     private final Door door;
     private int floorsCount;
-    private final FloorQueue floorQueue;
+    private final FloorQueue queue;
 
     public Lift(int position, int floorsCount, Door door) {
         this.position = position;
         this.floorsCount = floorsCount;
         this.door = door;
-        this.floorQueue = new FloorQueue();
+        this.queue = new FloorQueue();
     }
 
     public void call(int floor) {
@@ -18,12 +18,12 @@ public class Lift {
             return;
         }
 
-        floorQueue.addFloor(floor);
+        queue.addFloor(floor);
     }
-    
-    void processQueue() {
-        while (!floorQueue.isEmpty()) {
-            moveLift(floorQueue.getNextFloor(position));
+
+    protected void processQueue() {
+        while (!queue.isEmpty()) {
+            moveLift(queue.getNextFloor(position));
         }
     }
 
@@ -32,11 +32,11 @@ public class Lift {
             throw new ElevatorException(floor, position);
         }
 
-        if (floor == position && floorQueue.isEmpty()) {
+        if (floor == position && queue.isEmpty()) {
             return;
         }
 
-        floorQueue.addFloor(floor);
+        queue.addFloor(floor);
     }
 
     private void moveLift(int floor) {
