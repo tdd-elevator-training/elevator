@@ -2,12 +2,14 @@ package com.globallogic.elevator;
 
 public class Lift {
     private int position;
+    private boolean isOpen;
 
     public Lift(int position) {
         this.position = position;
     }
 
     public void callTo(int floorNumber) {
+        isOpen = true;
         position = floorNumber;
     }
 
@@ -16,6 +18,6 @@ public class Lift {
     }
 
     public boolean isOpenDoor() {
-        return true;
+        return isOpen;
     }
 }

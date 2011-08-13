@@ -8,5 +8,6 @@ As a passenger I need to call lift so that lift come to me.
 - check invalid floor number
 + what if lift on the same floor?
 - lift should come to any valid floor
-- lift should close doors when moving
++ lift should close doors when moving
 - do we need to create lift anytime in tests?
+- initial state of lift - position

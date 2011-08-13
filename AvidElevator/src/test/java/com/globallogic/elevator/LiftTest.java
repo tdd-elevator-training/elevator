@@ -1,9 +1,9 @@
 package com.globallogic.elevator;
 
-import org.easymock.internal.matchers.EndsWith;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
 public class LiftTest {
@@ -32,5 +32,12 @@ public class LiftTest {
         lift.callTo(4);
 
         assertTrue(lift.isOpenDoor());
+    }
+
+    @Test
+    public void shouldDoorBeClosedWhenMoving(){
+        Lift lift = new Lift(2);
+
+        assertFalse(lift.isOpenDoor());
     }
 }
