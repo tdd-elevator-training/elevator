@@ -1,15 +1,17 @@
 package com.globallogic.elevator;
 
 public class Lift {
-    public Lift(int position) {
+    private int position;
 
+    public Lift(int position) {
+        this.position = position;
     }
 
     public void callTo(int floorNumber) {
-
+        position = floorNumber;
     }
 
     public int getPosition() {
-        return 3;
+        return position;
     }
 }

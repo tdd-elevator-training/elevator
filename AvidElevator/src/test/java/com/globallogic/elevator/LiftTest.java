@@ -13,4 +13,13 @@ public class LiftTest {
 
         assertEquals(3, lift.getPosition());
     }
+
+    @Test
+    public void shouldLiftBeOnTheSameFloorWhenCalledFromThisFloor() {  // TODO same as shouldLiftComeWhenICallit
+        Lift lift = new Lift(7);
+
+        lift.callTo(7);
+
+        assertEquals(7, lift.getPosition());
+    }
 }
