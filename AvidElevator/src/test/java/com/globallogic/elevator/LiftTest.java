@@ -40,4 +40,9 @@ public class LiftTest {
 
         assertFalse(lift.isOpenDoor());
     }
+
+    @Test
+    public void shouldStayOnStartPositionWhenCreated() {
+        assertEquals(4, new Lift(4).getPosition());
+    }
 }
