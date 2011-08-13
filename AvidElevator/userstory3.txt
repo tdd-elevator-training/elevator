@@ -1,0 +1,1 @@
+As an lift owner I want lift to pick passengers in optimal way so that I won't overpay for electricity
