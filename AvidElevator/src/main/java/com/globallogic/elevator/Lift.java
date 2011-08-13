@@ -14,4 +14,8 @@ public class Lift {
     public int getPosition() {
         return position;
     }
+
+    public boolean isOpenDoor() {
+        return true;
+    }
 }
