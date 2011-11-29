@@ -1,91 +1,108 @@
 package com.globallogic.training;
 
+import com.google.testing.threadtester.*;
 import org.easymock.Capture;
 import org.easymock.CaptureType;
 import org.easymock.EasyMock;
-import org.easymock.IAnswer;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 
 public class MultithreadedLiftTest {
 
-    private int countOpened = 0;
-    public MultithreadedLift lift;
-    public Door door;
-    public Capture<Integer> openDoorCapture;
-
-    @Before
-    public void init() {
-        door = EasyMock.createMock(Door.class);
-        openDoorCapture = new Capture<Integer>(CaptureType.ALL);
-    }
+    private ThreadedTestRunner runner = new ThreadedTestRunner();
 
     @Test
-    public void testConcurrentInvocation() {
-        lift = new MultithreadedLift(7, 10, door);
+    public void testThreadedTests() {
+      runner.runTests(getClass(), Lift.class);
+    }
 
-        door.open(EasyMock.capture(openDoorCapture));
-        EasyMock.expectLastCall().andAnswer(new IAnswer<Object>() {
-            @Override
-            public Object answer() throws Throwable {
-                sleep(100);
+    @ThreadedTest
+    public void runConcurrentInvocation() {
+        CodePosition beforeDoorOpenedAt5 = makeBreakpoint();
 
-                if (countOpened == 0) {
-                    casualCall(6);
-                    casualCall(7);
-                }
+        RunResult result = InterleavedRunner.interleave(new MainThread(),
+                new SecondaryThread(), Arrays.asList(beforeDoorOpenedAt5));
+        result.throwExceptionsIfAny();
+    }
 
-                countOpened++;
-                return null;
-            }
-        }).anyTimes();
+    private CodePosition makeBreakpoint() {
+        MethodRecorder<Lift> recorder = new MethodRecorder<Lift>(Lift.class);
+        Lift lift = recorder.getControl();
+        lift.moveLift(5);
+        recorder.inLastMethod();
+        Door door = recorder.createTarget(Door.class);
+        door.open(5);
+        return recorder.beforeCallingLastMethod().position();
+    }
 
-        EasyMock.expect(door.isOpen()).andReturn(false).anyTimes();
-        EasyMock.replay(door);
+    private static class SecondaryThread extends SecondaryRunnableImpl<Lift, MainThread> {
+        private Lift lift;
 
-        lift.start();
-
-        casualCall(3);
-        casualCall(5);
-
-        int counter = 0;
-        while (counter < 10) {
-            sleep(100);
-//            lift.processQueue();
-            counter++;
+        @Override
+        public void initialize(MainThread main) throws Exception {
+            lift = main.getMainObject();
         }
 
-        assertListWasAtFloors(5, 3, 6, 7);
-    }
-
-    private void assertListWasAtFloors(Integer... expectedFloors) {
-        assertEquals(Arrays.asList(expectedFloors),
-                openDoorCapture.getValues());
-    }
-
-    private void casualCall(final int floor) {
-        sleep(10);
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                sleep(10);
-                lift.call(floor);
-            }
-
-        }).start();
-    }
-
-    private void sleep(int millis) {
-        try {
-            Thread.sleep(millis);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+        @Override
+        public void run() throws Exception {
+            lift.call(6);
+            lift.call(7);
+            lift.stop();
         }
+    }
+
+    private class MainThread extends MainRunnableImpl<Lift> {
+        private Lift lift;
+        private Door door;
+        public Capture<Integer> openDoorCapture;
+
+        @Override
+        public Class<Lift> getClassUnderTest() {
+            return Lift.class;
+        }
+
+        @Override
+        public Lift getMainObject() {
+            return lift;
+        }
+
+        @Override
+        public void initialize() throws Exception {
+            door = EasyMock.createMock(Door.class);
+            openDoorCapture = setupDoorOpenCapture();
+            lift = new Lift(7, 10, door);
+
+            EasyMock.replay(door);
+        }
+
+        private Capture<Integer> setupDoorOpenCapture() {
+            Capture<Integer> capture = new Capture<Integer>(CaptureType.ALL);
+            door.open(EasyMock.capture(capture));
+            EasyMock.expectLastCall().anyTimes();
+            EasyMock.expect(door.isOpen()).andReturn(false).anyTimes();
+
+            return capture;
+        }
+
+        @Override
+        public void run() throws Exception {
+            lift.call(5);
+            lift.call(3);
+            lift.run();
+        }
+
+        @Override
+        public void terminate() throws Exception {
+            assertListWasAtFloors(5, 3, 6, 7);
+        }
+
+        private void assertListWasAtFloors(Integer... expectedFloors) {
+            assertEquals(Arrays.asList(expectedFloors),
+                    openDoorCapture.getValues());
+        }
+
     }
 }

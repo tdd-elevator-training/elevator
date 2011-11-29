@@ -1,10 +1,11 @@
 package com.globallogic.training;
 
 public class Lift {
-	private int position;
+    private int position;
     private final Door door;
     private int floorsCount;
     private final FloorQueue queue;
+    private boolean started;
 
     public Lift(int position, int floorsCount, Door door) {
         this.position = position;
@@ -17,7 +18,6 @@ public class Lift {
         if (door.isOpen() && floor == position) {
             return;
         }
-
         queue.addFloor(floor);
     }
 
@@ -39,11 +39,22 @@ public class Lift {
         queue.addFloor(floor);
     }
 
-    private void moveLift(int floor) {
+    public void moveLift(int floor) {
         if (door.isOpen()) {
             door.close();
         }
         position = floor;
         door.open(position);
+    }
+
+    public void run() {
+        started = true;
+        while (started) {
+            processQueue();
+        }
+    }
+
+    public void stop() {
+        started = false;
     }
 }
