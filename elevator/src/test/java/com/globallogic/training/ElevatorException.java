@@ -1,6 +1,6 @@
 package com.globallogic.training;
 
-public class ElevatorException extends Exception {
+public class ElevatorException extends RuntimeException {
 
     private int selectedFloor;
     private int currentFloor;

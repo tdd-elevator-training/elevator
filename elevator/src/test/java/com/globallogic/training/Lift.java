@@ -27,7 +27,7 @@ public class Lift {
         }
     }
 
-    public void moveTo(int floor) throws ElevatorException {
+    public void moveTo(int floor) {
         if (floor < 0 || floor > floorsCount) {
             throw new ElevatorException(floor, position);
         }
@@ -47,7 +47,7 @@ public class Lift {
         door.open(position);
     }
 
-    public void run() {
+    public void start() {
         started = true;
         while (started) {
             processQueue();
@@ -56,5 +56,9 @@ public class Lift {
 
     public void stop() {
         started = false;
+    }
+
+    public int getPosition() {
+        return position;
     }
 }

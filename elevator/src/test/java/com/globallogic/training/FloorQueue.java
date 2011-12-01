@@ -100,4 +100,10 @@ public class FloorQueue {
             direction = (queue.get(0) - fromFloor > 0) ? Direction.UP : Direction.DOWN;
         }
     }
+
+    @Override
+    public String toString() {
+        return String.format("[%s: (direction:%s, queue:%s)]",
+                getClass().getSimpleName(), direction, queue);
+    }
 }

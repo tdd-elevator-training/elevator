@@ -1,108 +1,148 @@
 package com.globallogic.training;
 
-import com.google.testing.threadtester.*;
-import org.easymock.Capture;
-import org.easymock.CaptureType;
-import org.easymock.EasyMock;
+import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 
 public class MultithreadedLiftTest {
 
-    private ThreadedTestRunner runner = new ThreadedTestRunner();
+    private LiftPool lift;
+    private Door door = new MockDoor();
+    private boolean liftStoped = false;
+    private List<Integer> wasAt = new LinkedList<Integer>();
+    private Collection<OpenAction> actions = new LinkedList<OpenAction>();
+
+    abstract class OpenAction {
+
+        private int weAt;
+
+        public OpenAction(int weAt) {
+            this.weAt = weAt;
+        }
+
+        public void action(int floor) {
+            if (floor == weAt) {
+                open(floor);
+            }
+        }
+
+        public abstract void open(int floor);
+    }
+
+    class MockDoor implements Door {
+
+        @Override
+        public void open(int floor) {
+            wasAt.add(floor);
+            for (OpenAction action : actions) {
+                action.action(floor);
+            }
+        }
+
+        @Override
+        public void close() {
+        }
+
+        @Override
+        public boolean isOpen() {
+            return false;
+        }
+    }
 
     @Test
-    public void testThreadedTests() {
-      runner.runTests(getClass(), Lift.class);
+    public void testConcurrentInvocation() {
+        lift = new LiftPool(7, 10, door);
+
+        callFrom(3);
+        callFrom(5);
+
+        whenWeAt(5).moveTo(7, 6);
+        whenWeAt(7).stopLiftAndCheckThatWeWasAt(5, 3, 6, 7);
+
+        lift.start();
+
+        waitForListStops();
     }
 
-    @ThreadedTest
-    public void runConcurrentInvocation() {
-        CodePosition beforeDoorOpenedAt5 = makeBreakpoint();
-
-        RunResult result = InterleavedRunner.interleave(new MainThread(),
-                new SecondaryThread(), Arrays.asList(beforeDoorOpenedAt5));
-        result.throwExceptionsIfAny();
+    private void waitForListStops() {
+        while (!liftStoped) {}
     }
 
-    private CodePosition makeBreakpoint() {
-        MethodRecorder<Lift> recorder = new MethodRecorder<Lift>(Lift.class);
-        Lift lift = recorder.getControl();
-        lift.moveLift(5);
-        recorder.inLastMethod();
-        Door door = recorder.createTarget(Door.class);
-        door.open(5);
-        return recorder.beforeCallingLastMethod().position();
+    private Checker whenWeAt(int floor) {
+        Checker checker = new Checker();
+        checker.addWeAtFloor(floor);
+        return checker;
     }
 
-    private static class SecondaryThread extends SecondaryRunnableImpl<Lift, MainThread> {
-        private Lift lift;
+    class Checker {
 
-        @Override
-        public void initialize(MainThread main) throws Exception {
-            lift = main.getMainObject();
+        private int weAt;
+
+        public void addWeAtFloor(int floor) {
+            weAt = floor;
         }
 
-        @Override
-        public void run() throws Exception {
-            lift.call(6);
-            lift.call(7);
-            lift.stop();
-        }
-    }
-
-    private class MainThread extends MainRunnableImpl<Lift> {
-        private Lift lift;
-        private Door door;
-        public Capture<Integer> openDoorCapture;
-
-        @Override
-        public Class<Lift> getClassUnderTest() {
-            return Lift.class;
+        public void moveTo(final Integer... floors) {
+            addAction(new OpenAction(weAt) {
+                @Override
+                public void open(int floor) {
+                    for (int fl : floors) {
+                        MultithreadedLiftTest.this.moveTo(fl);
+                        sleep(10); // TODO если заремарить это то будет валиться тест, почему?
+                    }
+                }
+            });
         }
 
-        @Override
-        public Lift getMainObject() {
-            return lift;
-        }
-
-        @Override
-        public void initialize() throws Exception {
-            door = EasyMock.createMock(Door.class);
-            openDoorCapture = setupDoorOpenCapture();
-            lift = new Lift(7, 10, door);
-
-            EasyMock.replay(door);
-        }
-
-        private Capture<Integer> setupDoorOpenCapture() {
-            Capture<Integer> capture = new Capture<Integer>(CaptureType.ALL);
-            door.open(EasyMock.capture(capture));
-            EasyMock.expectLastCall().anyTimes();
-            EasyMock.expect(door.isOpen()).andReturn(false).anyTimes();
-
-            return capture;
-        }
-
-        @Override
-        public void run() throws Exception {
-            lift.call(5);
-            lift.call(3);
-            lift.run();
-        }
-
-        @Override
-        public void terminate() throws Exception {
-            assertListWasAtFloors(5, 3, 6, 7);
-        }
-
-        private void assertListWasAtFloors(Integer... expectedFloors) {
-            assertEquals(Arrays.asList(expectedFloors),
-                    openDoorCapture.getValues());
+        public void stopLiftAndCheckThatWeWasAt(final Integer... floors) {
+            addAction(new OpenAction(weAt) {
+                @Override
+                public void open(int floor) {
+                    lift.stop();
+                    assertListWasAtFloors(floors);
+                    liftStoped = true;
+                }
+            });
         }
 
     }
+
+    private void addAction(OpenAction actions) {
+        this.actions.add(actions);
+    }
+
+    private void assertListWasAtFloors(Integer... expectedFloors) {
+        assertEquals(Arrays.asList(expectedFloors).toString(),
+                wasAt.toString());
+    }
+
+    private void callFrom(final int floor) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                lift.call(floor);
+            }
+        }).start();
+    }
+
+    private void moveTo(final int floor) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                lift.moveTo(floor);
+            }
+        }).start();
+    }
+
+    private void sleep(long mills) {
+        try {
+            Thread.sleep(mills);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
