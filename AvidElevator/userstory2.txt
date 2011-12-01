@@ -1,4 +1,0 @@
-as a passenger I need to select desired floor
-so that have ability to get into specified floor.
-- door should not be closed before passanger selects floor
-- cancel order
