@@ -19,10 +19,11 @@ public class ElevatorSettingsController {
                 elevatorSettingsForm.negativeInteger();
                 return;
             }
+
             elevatorService.createElevator(floorsCount, new AsyncCallback<Void>() {
 
                 public void onFailure(Throwable caught) {
-
+                    elevatorSettingsForm.serverCallFailed(caught);
                 }
 
                 public void onSuccess(Void result) {

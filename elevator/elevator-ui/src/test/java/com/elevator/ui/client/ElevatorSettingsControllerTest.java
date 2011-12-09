@@ -2,7 +2,6 @@ package com.elevator.ui.client;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static junit.framework.Assert.*;
@@ -76,17 +75,27 @@ public class ElevatorSettingsControllerTest {
     }
 
     @Test
-    @Ignore
     public void shouldSayErrorWhenCallOnServerFailed() {
+        IllegalArgumentException raisedException = new IllegalArgumentException();
+        elevatorService.serverFailure = raisedException;
+        elevatorSettingsForm.setFloorsCount("1");
 
+        controller.sendButtonClicked();
+
+        assertEquals(raisedException, elevatorSettingsForm.serverCallFailed);
     }
 
     private static class MockElevatorServiceAsync implements ElevatorServiceAsync {
         private Integer floorsCount;
+        public Throwable serverFailure;
 
         public void createElevator(int floorsCount, AsyncCallback<Void> callback) {
             this.floorsCount = floorsCount;
-            callback.onSuccess(null);
+            if (serverFailure == null) {
+                callback.onSuccess(null);
+            } else {
+                callback.onFailure(serverFailure);
+            }
         }
     }
 
@@ -95,6 +104,7 @@ public class ElevatorSettingsControllerTest {
         private boolean elevatorCreatedCalled;
         private boolean invalidIntegerValidation;
         public boolean negativeIntegerValidation;
+        public Throwable serverCallFailed;
 
         public void setFloorsCount(String floorsCount) {
             this.floorsCount = floorsCount;
@@ -114,6 +124,10 @@ public class ElevatorSettingsControllerTest {
 
         public void negativeInteger() {
             negativeIntegerValidation = true;
+        }
+
+        public void serverCallFailed(Throwable caught) {
+            serverCallFailed = caught;
         }
     }
 }

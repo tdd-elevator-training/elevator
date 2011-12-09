@@ -8,4 +8,6 @@ public interface ElevatorSettingsForm {
     void invalidInteger();
 
     void negativeInteger();
+
+    void serverCallFailed(Throwable caught);
 }
