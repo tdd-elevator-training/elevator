@@ -1,9 +1,11 @@
 package com.globallogic.training;
 
-import org.junit.Before;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -132,7 +134,11 @@ public class MultithreadedLiftTest {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                lift.moveTo(floor);
+                try {
+                    lift.moveTo(floor);
+                } catch (ElevatorException e) {
+
+                }
             }
         }).start();
     }

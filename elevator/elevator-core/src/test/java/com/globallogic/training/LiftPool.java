@@ -17,19 +17,20 @@ public class LiftPool implements Runnable {
 
     @Override
     public void run() {
-        lift.start();
+        lift.setStarted(true);
+        lift.run();
     }
 
     public void call(int floor) {
         lift.call(floor);
     }
 
-    public void moveTo(int floor) {
+    public void moveTo(int floor) throws ElevatorException {
         lift.moveTo(floor);
     }
 
     public void stop() {
-        lift.stop();
+        lift.setStarted(false);
     }
 
 }

@@ -50,7 +50,7 @@ public class ThredweaverMultithreadedLiftTest {
         public void run() throws Exception {
             lift.call(6);
             lift.call(7);
-            lift.stop();
+            lift.setStarted(false);
         }
     }
 
@@ -91,7 +91,8 @@ public class ThredweaverMultithreadedLiftTest {
         public void run() throws Exception {
             lift.call(5);
             lift.call(3);
-            lift.start();
+            lift.setStarted(true);
+            lift.run();
         }
 
         @Override
