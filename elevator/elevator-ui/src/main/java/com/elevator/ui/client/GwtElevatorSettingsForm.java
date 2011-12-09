@@ -11,23 +11,25 @@ public class GwtElevatorSettingsForm extends Composite implements ElevatorSettin
     private TextBox textBox;
     private Label validationLabel;
     private DialogBox dialogBox;
+    private HTML dialogBoxMessage;
+
 
     public GwtElevatorSettingsForm(final ElevatorSettingsController controller, Messages messages) {
         this.messages = messages;
 
         LayoutPanel layoutPanel = new LayoutPanel();
-		initWidget(layoutPanel);
-		layoutPanel.setSize("416px", "322px");
-		
-		Label label = new Label(messages.floorsCount());
-		layoutPanel.add(label);
-		layoutPanel.setWidgetLeftWidth(label, 91.0, Unit.PX, 134.0, Unit.PX);
-		layoutPanel.setWidgetTopHeight(label, 94.0, Unit.PX, 18.0, Unit.PX);
+        initWidget(layoutPanel);
+        layoutPanel.setSize("416px", "322px");
+
+        Label label = new Label(messages.floorsCount());
+        layoutPanel.add(label);
+        layoutPanel.setWidgetLeftWidth(label, 91.0, Unit.PX, 134.0, Unit.PX);
+        layoutPanel.setWidgetTopHeight(label, 94.0, Unit.PX, 18.0, Unit.PX);
 
         textBox = new TextBox();
-		layoutPanel.add(textBox);
-		layoutPanel.setWidgetLeftWidth(textBox, 231.0, Unit.PX, 151.0, Unit.PX);
-		layoutPanel.setWidgetTopHeight(textBox, 86.0, Unit.PX, 26.0, Unit.PX);
+        layoutPanel.add(textBox);
+        layoutPanel.setWidgetLeftWidth(textBox, 231.0, Unit.PX, 151.0, Unit.PX);
+        layoutPanel.setWidgetTopHeight(textBox, 86.0, Unit.PX, 26.0, Unit.PX);
 
         validationLabel = new Label();
         layoutPanel.add(validationLabel);
@@ -36,17 +38,29 @@ public class GwtElevatorSettingsForm extends Composite implements ElevatorSettin
         validationLabel.setStyleName("validationLabelError");
         validationLabel.setVisible(false);
 
-		Button button = new Button(messages.createButton());
-		button.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
+        Button button = new Button(messages.createButton());
+        button.addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
                 validationLabel.setVisible(false);
                 controller.sendButtonClicked();
-			}
-		});
-		layoutPanel.add(button);
-		layoutPanel.setWidgetLeftWidth(button, 305.0, Unit.PX, 78.0, Unit.PX);
-		layoutPanel.setWidgetTopHeight(button, 167.0, Unit.PX, 24.0, Unit.PX);
-        dialogBox = new DialogBox(true, true);
+            }
+        });
+        layoutPanel.add(button);
+        layoutPanel.setWidgetLeftWidth(button, 305.0, Unit.PX, 78.0, Unit.PX);
+        layoutPanel.setWidgetTopHeight(button, 167.0, Unit.PX, 24.0, Unit.PX);
+        dialogBox = new DialogBox(false);
+        VerticalPanel dialogBoxContents = new VerticalPanel();
+        dialogBoxMessage = new HTML("Click 'Close' to close");
+        button = new Button("Close", new ClickHandler() {
+            public void onClick(ClickEvent event) {
+                dialogBox.hide();
+            }
+        });
+        SimplePanel holder = new SimplePanel();
+        holder.add(button);
+        dialogBoxContents.add(dialogBoxMessage);
+        dialogBoxContents.add(holder);
+        dialogBox.setWidget(dialogBoxContents);
     }
 
 
@@ -57,8 +71,9 @@ public class GwtElevatorSettingsForm extends Composite implements ElevatorSettin
     public void elevatorCreated() {
         validationLabel.setVisible(false);
         dialogBox.setTitle("Ok");
-        dialogBox.setText("Elevator created successfully");
-        dialogBox.show();
+        dialogBox.setText("Ok");
+        dialogBoxMessage.setText("Elevator created successfully");
+        dialogBox.center();
     }
 
     public void invalidInteger() {
@@ -73,7 +88,9 @@ public class GwtElevatorSettingsForm extends Composite implements ElevatorSettin
     }
 
     public void serverCallFailed(Throwable caught) {
-        dialogBox.setTitle("Server Error");
-        dialogBox.setText(caught.getMessage());
+        dialogBox.setTitle("Error");
+        dialogBox.setText("Error");
+        dialogBoxMessage.setText("Server Error: " + caught.getMessage());
+        dialogBox.center();
     }
 }

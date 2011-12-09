@@ -11,5 +11,6 @@ public class ElevatorServiceImpl extends RemoteServiceServlet implements
         ElevatorService {
 
   public void createElevator(int input) throws IllegalArgumentException {
+      System.out.println("input = " + input);
   }
 }
