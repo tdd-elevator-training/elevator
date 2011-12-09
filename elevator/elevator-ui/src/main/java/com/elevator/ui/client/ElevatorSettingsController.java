@@ -13,22 +13,21 @@ public class ElevatorSettingsController {
     }
 
     public void sendButtonClicked() {
-        int floorsCount = 0;
         try {
-            floorsCount = Integer.parseInt(elevatorSettingsForm.getFloorsCount());
+            int floorsCount = Integer.parseInt(elevatorSettingsForm.getFloorsCount());
+            elevatorService.createElevator(floorsCount, new AsyncCallback<Void>() {
+
+                public void onFailure(Throwable caught) {
+
+                }
+
+                public void onSuccess(Void result) {
+                    elevatorSettingsForm.elevatorCreated();
+                }
+            });
         } catch (NumberFormatException e) {
             elevatorSettingsForm.invalidInteger();
         }
 
-        elevatorService.createElevator(floorsCount, new AsyncCallback<Void>() {
-
-            public void onFailure(Throwable caught) {
-
-            }
-
-            public void onSuccess(Void result) {
-                elevatorSettingsForm.elevatorCreated();
-            }
-        });
     }
 }

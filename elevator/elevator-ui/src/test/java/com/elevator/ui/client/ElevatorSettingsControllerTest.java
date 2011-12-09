@@ -5,8 +5,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
 
 public class ElevatorSettingsControllerTest {
 
@@ -27,7 +26,7 @@ public class ElevatorSettingsControllerTest {
 
         controller.sendButtonClicked();
 
-        assertEquals(10, elevatorService.floorsCount);
+        assertEquals(10, elevatorService.floorsCount.intValue());
     }
 
     @Test
@@ -37,7 +36,7 @@ public class ElevatorSettingsControllerTest {
         controller.sendButtonClicked();
 
         assertTrue(elevatorSettingsForm.elevatorCreatedCalled);
-        assertEquals(9, elevatorService.floorsCount);
+        assertEquals(9, elevatorService.floorsCount.intValue());
     }
 
     @Test
@@ -47,6 +46,15 @@ public class ElevatorSettingsControllerTest {
         controller.sendButtonClicked();
 
         assertTrue(elevatorSettingsForm.invalidIntegerValidation);
+    }
+
+    @Test
+    public void shouldNotCallServiceOnValidationFailure() {
+        elevatorSettingsForm.setFloorsCount("invalid");
+
+        controller.sendButtonClicked();
+
+        assertNull(elevatorService.floorsCount);
     }
 
     @Test
@@ -62,7 +70,7 @@ public class ElevatorSettingsControllerTest {
     }
 
     private static class MockElevatorServiceAsync implements ElevatorServiceAsync {
-        private int floorsCount;
+        private Integer floorsCount;
 
         public void createElevator(int floorsCount, AsyncCallback<Void> callback) {
             this.floorsCount = floorsCount;
