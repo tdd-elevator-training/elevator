@@ -41,8 +41,17 @@ public class ElevatorSettingsControllerTest {
     }
 
     @Test
-    @Ignore
     public void shouldValidateNonDigitInputWhenSendButtonPressed() {
+        elevatorSettingsForm.setFloorsCount("lala");
+
+        controller.sendButtonClicked();
+
+        assertTrue(elevatorSettingsForm.invalidIntegerValidation);
+    }
+
+    @Test
+    @Ignore
+    public void shouldRejectNegativeNumbersWhenSendButtonPressed() {
 
     }
 
@@ -64,6 +73,7 @@ public class ElevatorSettingsControllerTest {
     private class MockElevatorSettingsForm implements ElevatorSettingsForm {
         private String floorsCount;
         private boolean elevatorCreatedCalled;
+        private boolean invalidIntegerValidation;
 
         public void setFloorsCount(String floorsCount) {
             this.floorsCount = floorsCount;
@@ -75,6 +85,10 @@ public class ElevatorSettingsControllerTest {
 
         public void elevatorCreated() {
             elevatorCreatedCalled = true;
+        }
+
+        public void invalidInteger() {
+            invalidIntegerValidation = true;
         }
     }
 }

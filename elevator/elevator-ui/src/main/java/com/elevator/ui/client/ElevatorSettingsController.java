@@ -13,7 +13,14 @@ public class ElevatorSettingsController {
     }
 
     public void sendButtonClicked() {
-        elevatorService.createElevator(Integer.parseInt(elevatorSettingsForm.getFloorsCount()), new AsyncCallback<Void>() {
+        int floorsCount = 0;
+        try {
+            floorsCount = Integer.parseInt(elevatorSettingsForm.getFloorsCount());
+        } catch (NumberFormatException e) {
+            elevatorSettingsForm.invalidInteger();
+        }
+
+        elevatorService.createElevator(floorsCount, new AsyncCallback<Void>() {
 
             public void onFailure(Throwable caught) {
 

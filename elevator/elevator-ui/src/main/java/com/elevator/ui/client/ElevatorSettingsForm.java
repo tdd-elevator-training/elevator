@@ -4,4 +4,6 @@ public interface ElevatorSettingsForm {
     String getFloorsCount();
 
     void elevatorCreated();
+
+    void invalidInteger();
 }
