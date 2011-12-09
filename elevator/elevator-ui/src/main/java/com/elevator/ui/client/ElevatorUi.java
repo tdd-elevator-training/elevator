@@ -19,7 +19,7 @@ public class ElevatorUi implements EntryPoint {
   /**
    * Create a remote service proxy to talk to the server-side Greeting service.
    */
-  private final GreetingServiceAsync greetingService = GWT.create(ElevatorService.class);
+  private final ElevatorServiceAsync elevatorService = GWT.create(ElevatorService.class);
 
   private final Messages messages = GWT.create(Messages.class);
 
@@ -27,6 +27,9 @@ public class ElevatorUi implements EntryPoint {
    * This is the entry point method.
    */
   public void onModuleLoad() {
-	  RootPanel.get().add(new GwtElevatorSettingsForm(messages));
+      ElevatorSettingsController controller = new ElevatorSettingsController(elevatorService);
+      GwtElevatorSettingsForm elevatorSettingsForm = new GwtElevatorSettingsForm(controller, messages);
+      controller.setElevatorSettingsForm(elevatorSettingsForm);
+      RootPanel.get().add(elevatorSettingsForm);
   }
 }

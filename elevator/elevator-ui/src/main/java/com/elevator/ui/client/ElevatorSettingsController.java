@@ -12,6 +12,10 @@ public class ElevatorSettingsController {
         this.elevatorSettingsForm = elevatorSettingsForm;
     }
 
+    public ElevatorSettingsController(ElevatorServiceAsync elevatorService) {
+        this(elevatorService, null);
+    }
+
     public void sendButtonClicked() {
         try {
             int floorsCount = Integer.parseInt(elevatorSettingsForm.getFloorsCount());
@@ -33,6 +37,9 @@ public class ElevatorSettingsController {
         } catch (NumberFormatException e) {
             elevatorSettingsForm.invalidInteger();
         }
+    }
 
+    public void setElevatorSettingsForm(ElevatorSettingsForm elevatorSettingsForm) {
+        this.elevatorSettingsForm = elevatorSettingsForm;
     }
 }
