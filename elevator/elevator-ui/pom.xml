@@ -9,9 +9,14 @@
     <groupId>com.elevator</groupId>
     <artifactId>elevator-ui</artifactId>
     <packaging>war</packaging>
-    <version>1.0-SNAPSHOT</version>
-    <name>GWT Maven Archetype</name>
-
+    <version>1.0.0-SNAPSHOT</version>
+    <name>elevator-ui</name>
+    <parent>
+        <groupId>com.elevator</groupId>
+        <artifactId>elevator-parent</artifactId>
+        <relativePath>../pom.xml</relativePath>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
     <properties>
         <!-- Convenience property to set the GWT version -->
         <gwtVersion>2.4.0</gwtVersion>
@@ -51,6 +56,11 @@
             <version>1.0.0.GA</version>
             <classifier>sources</classifier>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.elevator</groupId>
+            <artifactId>elevator-core</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

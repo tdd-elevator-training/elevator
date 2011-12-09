@@ -3,8 +3,15 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.elevator</groupId>
     <artifactId>elevator-core</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <name>elevator-core</name>
+    <parent>
+        <groupId>com.elevator</groupId>
+        <artifactId>elevator-parent</artifactId>
+        <relativePath>../pom.xml</relativePath>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
