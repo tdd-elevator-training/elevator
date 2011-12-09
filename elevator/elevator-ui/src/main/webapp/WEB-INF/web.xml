@@ -8,7 +8,7 @@
   <!-- Servlets -->
   <servlet>
     <servlet-name>greetServlet</servlet-name>
-    <servlet-class>com.elevator.ui.server.GreetingServiceImpl</servlet-class>
+    <servlet-class>com.elevator.ui.server.ElevatorServiceImpl</servlet-class>
   </servlet>
 
   <servlet-mapping>
