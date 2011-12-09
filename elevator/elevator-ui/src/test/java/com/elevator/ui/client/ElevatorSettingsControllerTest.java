@@ -58,9 +58,21 @@ public class ElevatorSettingsControllerTest {
     }
 
     @Test
-    @Ignore
     public void shouldRejectNegativeNumbersWhenSendButtonPressed() {
+        elevatorSettingsForm.setFloorsCount("-1");
 
+        controller.sendButtonClicked();
+
+        assertTrue(elevatorSettingsForm.negativeIntegerValidation);
+    }
+
+    @Test
+    public void shouldNotCallServiceWhenNegativeNumberEntered() {
+        elevatorSettingsForm.setFloorsCount("-2");
+
+        controller.sendButtonClicked();
+
+        assertNull(elevatorService.floorsCount);
     }
 
     @Test
@@ -82,6 +94,7 @@ public class ElevatorSettingsControllerTest {
         private String floorsCount;
         private boolean elevatorCreatedCalled;
         private boolean invalidIntegerValidation;
+        public boolean negativeIntegerValidation;
 
         public void setFloorsCount(String floorsCount) {
             this.floorsCount = floorsCount;
@@ -97,6 +110,10 @@ public class ElevatorSettingsControllerTest {
 
         public void invalidInteger() {
             invalidIntegerValidation = true;
+        }
+
+        public void negativeInteger() {
+            negativeIntegerValidation = true;
         }
     }
 }

@@ -15,6 +15,10 @@ public class ElevatorSettingsController {
     public void sendButtonClicked() {
         try {
             int floorsCount = Integer.parseInt(elevatorSettingsForm.getFloorsCount());
+            if (floorsCount < 0) {
+                elevatorSettingsForm.negativeInteger();
+                return;
+            }
             elevatorService.createElevator(floorsCount, new AsyncCallback<Void>() {
 
                 public void onFailure(Throwable caught) {

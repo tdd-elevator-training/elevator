@@ -6,4 +6,6 @@ public interface ElevatorSettingsForm {
     void elevatorCreated();
 
     void invalidInteger();
+
+    void negativeInteger();
 }
