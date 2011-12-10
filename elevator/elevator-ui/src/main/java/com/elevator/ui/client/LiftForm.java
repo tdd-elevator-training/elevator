@@ -3,8 +3,6 @@ package com.elevator.ui.client;
 public interface LiftForm {
     void liftCalled();
 
-    void setEnterButtonDown(boolean pressed);
-
     void setCallButtonEnabled(boolean enabled);
 
     void setCurrentFloor(int floorNumber);
@@ -14,4 +12,8 @@ public interface LiftForm {
     void buildIndicatorPane(int floorsCount);
 
     void buildButtonsPane(int floorsCount);
+
+    void setEnterButtonState(boolean enabled, boolean isDown);
+
+    void setButtonsPaneState(boolean visible, boolean enabled);
 }

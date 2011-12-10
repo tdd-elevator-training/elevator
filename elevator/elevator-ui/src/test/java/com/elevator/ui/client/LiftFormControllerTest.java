@@ -66,7 +66,7 @@ public class LiftFormControllerTest {
 
     @Test
     public void shouldHideWaitPaneWhenFirstSynchronized() {
-        controller.synchronize();
+        controller.synchronize(true, 0);
 
         assertFalse(form.waitPanelEnabled);
     }
@@ -85,7 +85,7 @@ public class LiftFormControllerTest {
 
     @Test
     public void shouldBeOutsideWhenInitializeAfterHidden() {
-        controller.synchronize();
+        controller.synchronize(true, 0);
         controller.onHide();
 
         controller.onShow();
@@ -95,12 +95,31 @@ public class LiftFormControllerTest {
 
     @Test
     public void shouldInitializeServerListnerWhenShowAfterHide() {
-        controller.synchronize();
+        controller.synchronize(true, 0);
         controller.onHide();
 
         controller.onShow();
 
         assertSame(controller, serverUpdater.listener);
+    }
+
+    @Test
+    public void shouldBeAbleToEnterAndCallWhenDoorIsOpenOnMyFloor(){
+        controller.synchronize(true, 0);
+
+        assertTrue(form.callButtonEnabled);
+        assertEnterButton(true, false);
+        assertButtonsPane(true, false);
+    }
+
+    private void assertButtonsPane(boolean visible, boolean enabled) {
+        assertEquals("Buttons pane visible", visible, form.buttonsPaneVisible);
+        assertEquals("Buttons pane enabled", enabled, form.buttonsPaneEnabled);
+    }
+
+    private void assertEnterButton(boolean enabled, boolean isDown) {
+        assertEquals("Enter button enabled", enabled,  form.enterButtonEnabled);
+        assertEquals("Enter button is down", isDown, form.enterButtonIsDown);
     }
 
     private void assertFormState(int expectedCurrentFloor, boolean enterButtonIsDown, boolean callButtonEnabled, boolean waitPanelEnabled) {
@@ -118,13 +137,12 @@ public class LiftFormControllerTest {
         public boolean waitPanelEnabled;
         public int indicatorBuiltNumber;
         public int buttonsPaneBuiltNumber;
+        public boolean enterButtonEnabled;
+        public boolean buttonsPaneVisible;
+        public boolean buttonsPaneEnabled;
 
         public void liftCalled() {
            liftCalled = true;
-        }
-
-        public void setEnterButtonDown(boolean down) {
-            enterButtonIsDown = down;
         }
 
         public void setCallButtonEnabled(boolean enabled) {
@@ -145,6 +163,16 @@ public class LiftFormControllerTest {
 
         public void buildButtonsPane(int floorsCount) {
             buttonsPaneBuiltNumber = floorsCount;
+        }
+
+        public void setEnterButtonState(boolean enabled, boolean isDown) {
+            enterButtonEnabled = enabled;
+            enterButtonIsDown = isDown;
+        }
+
+        public void setButtonsPaneState(boolean visible, boolean enabled) {
+            buttonsPaneVisible = visible;
+            buttonsPaneEnabled = enabled;
         }
     }
 }

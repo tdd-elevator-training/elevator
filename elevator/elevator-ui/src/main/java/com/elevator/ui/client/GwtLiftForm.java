@@ -14,10 +14,6 @@ public class GwtLiftForm extends Composite implements LiftForm {
         //will implement later
     }
 
-    public void setEnterButtonDown(boolean pressed) {
-
-    }
-
     public void setCallButtonEnabled(boolean enabled) {
 
     }
@@ -35,6 +31,14 @@ public class GwtLiftForm extends Composite implements LiftForm {
     }
 
     public void buildButtonsPane(int floorsCount) {
+
+    }
+
+    public void setEnterButtonState(boolean enabled, boolean isDown) {
+
+    }
+
+    public void setButtonsPaneState(boolean visible, boolean enabled) {
 
     }
 }

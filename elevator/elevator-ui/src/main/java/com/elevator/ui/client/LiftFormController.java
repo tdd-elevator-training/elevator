@@ -23,8 +23,10 @@ public class LiftFormController {
         });
     }
 
-    public void synchronize() {
+    public void synchronize(boolean doorIsOpen, int floorNumber) {
         form.setWaitPanelVisible(false);
+        form.setEnterButtonState(true, false);
+        form.setButtonsPaneState(true, false);
     }
 
     public void onHide() {
@@ -32,7 +34,7 @@ public class LiftFormController {
     }
 
     public void onShow() {
-        form.setEnterButtonDown(false);
+        form.setEnterButtonState(false, false);
         form.setCallButtonEnabled(true);
         form.setCurrentFloor(0);
         form.setWaitPanelVisible(true);
