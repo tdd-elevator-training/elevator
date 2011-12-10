@@ -3,7 +3,7 @@ package com.elevator.ui.client;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class StartScreenController {
-    private String currentScreen = "installQuestion";
+    private ScreenFlowManager.Form currentScreen = ScreenFlowManager.Form.INSTALL_LIFT_QUESTION;
     private ScreenFlowManager screenFlowManager;
     private ElevatorServiceAsync elevatorService;
 
@@ -19,8 +19,9 @@ public class StartScreenController {
 
             public void onSuccess(Boolean result) {
                 if (result) {
-                    screenFlowManager.nextScreen("liftForm");
+                    currentScreen = ScreenFlowManager.Form.LIFT_FORM;
                 }
+                screenFlowManager.nextScreen(currentScreen);
             }
         });
     }

@@ -7,12 +7,12 @@ import static junit.framework.Assert.assertEquals;
 
 public class InstallQuestionControllerTest {
 
-    private ScreenFlowManager screenFlowManager;
+    private MockScreenFlowManager screenFlowManager;
     private InstallQuestionController controller;
 
     @Before
     public void setUp() throws Exception {
-        screenFlowManager = new ScreenFlowManager(new MockElevatorServiceAsync());
+        screenFlowManager = new MockScreenFlowManager();
         controller = new InstallQuestionController(screenFlowManager);
     }
 
@@ -20,14 +20,14 @@ public class InstallQuestionControllerTest {
     public void shouldOpenElevatorFormWhenAgreedToInstall() {
         controller.agree();
 
-        assertEquals("elevatorSettingsForm", screenFlowManager.getNextScreen());
+        assertEquals(ScreenFlowManager.Form.LIFT_SETTINGS_FORM, screenFlowManager.getNextScreen());
     }
 
     @Test
     public void shouldOpenStartScreenFormWhenAgreedToInstall() {
         controller.disagree();
 
-        assertEquals("startScreen", screenFlowManager.getNextScreen());
+        assertEquals(ScreenFlowManager.Form.START_SCREEN, screenFlowManager.getNextScreen());
     }
 
 }

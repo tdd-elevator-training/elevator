@@ -27,9 +27,7 @@ public class ElevatorUi implements EntryPoint {
    * This is the entry point method.
    */
   public void onModuleLoad() {
-      ElevatorSettingsController controller = new ElevatorSettingsController(elevatorService);
-      GwtElevatorSettingsForm elevatorSettingsForm = new GwtElevatorSettingsForm(controller, messages);
-      controller.setElevatorSettingsForm(elevatorSettingsForm);
-      RootPanel.get().add(elevatorSettingsForm);
+      GwtScreenFlowManager screenFlowManager = new GwtScreenFlowManager(elevatorService, messages);
+      new StartScreenController(screenFlowManager, elevatorService).selectStartScreen();
   }
 }

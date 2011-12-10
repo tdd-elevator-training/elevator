@@ -9,13 +9,13 @@ import static junit.framework.Assert.assertTrue;
 public class StartScreenControllerTest {
 
     private MockElevatorServiceAsync elevatorService;
-    private ScreenFlowManager screenFlowManager;
+    private MockScreenFlowManager screenFlowManager;
     private StartScreenController controller;
 
     @Before
     public void setUp() throws Exception {
         elevatorService = new MockElevatorServiceAsync();
-        screenFlowManager = new ScreenFlowManager(elevatorService);
+        screenFlowManager = new MockScreenFlowManager();
         controller = new StartScreenController(screenFlowManager, elevatorService);
     }
 
@@ -25,13 +25,13 @@ public class StartScreenControllerTest {
 
         controller.selectStartScreen();
 
-        assertEquals("installQuestion", screenFlowManager.getNextScreen());
+        assertEquals(ScreenFlowManager.Form.INSTALL_LIFT_QUESTION, screenFlowManager.getNextScreen());
     }
 
     @Test
     public void shouldOpenLiftFormWhenLiftIsInstalled() {
         controller.selectStartScreen();
 
-        assertEquals("liftForm", screenFlowManager.getNextScreen());
+        assertEquals(ScreenFlowManager.Form.LIFT_FORM, screenFlowManager.getNextScreen());
     }
 }

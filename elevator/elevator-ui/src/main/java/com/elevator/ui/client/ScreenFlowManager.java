@@ -1,21 +1,7 @@
 package com.elevator.ui.client;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
+public interface ScreenFlowManager {
+    public enum Form {START_SCREEN, LIFT_FORM, INSTALL_LIFT_QUESTION, LIFT_SETTINGS_FORM}
 
-public class ScreenFlowManager {
-
-    private String currentScreen = "installQuestion";
-    private ElevatorServiceAsync elevatorService;
-
-    public ScreenFlowManager(ElevatorServiceAsync elevatorService) {
-        this.elevatorService = elevatorService;
-    }
-
-    public String getNextScreen() {
-        return currentScreen;
-    }
-
-    public void nextScreen(String screenName) {
-        currentScreen = screenName;
-    }
+    void nextScreen(Form form);
 }
