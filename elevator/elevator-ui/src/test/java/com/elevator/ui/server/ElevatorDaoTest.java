@@ -1,5 +1,6 @@
 package com.elevator.ui.server;
 
+import com.elevator.ui.shared.ElevatorPersistenceException;
 import com.globallogic.training.Lift;
 import com.globallogic.training.RealDoor;
 import org.apache.commons.io.FileUtils;
