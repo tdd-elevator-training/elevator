@@ -16,8 +16,15 @@ import java.io.*;
 public class ElevatorServiceImpl extends RemoteServiceServlet implements
         ElevatorService {
 
-  public void createElevator(int floorsCount) throws IllegalArgumentException {
-  }
+    private ElevatorDao dao;
+
+    public ElevatorServiceImpl(ElevatorDao dao) {
+        this.dao = dao;
+    }
+
+    public void createElevator(int floorsCount) throws IllegalArgumentException {
+        dao.store(new Lift(0, floorsCount, new RealDoor()));
+    }
 
     public boolean isElevatorInstalled() {
 //        return getElevatorFile().exists();
