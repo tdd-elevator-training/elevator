@@ -4,6 +4,7 @@ import com.elevator.ui.client.LiftService;
 import com.elevator.ui.shared.LiftAlreadyInstalledException;
 import com.elevator.ui.shared.LiftNotInstalledException;
 import com.elevator.ui.shared.LiftPersistenceException;
+import com.globallogic.training.ElevatorException;
 import com.globallogic.training.Lift;
 import com.globallogic.training.NativeCurrentThread;
 import com.globallogic.training.RealDoor;
@@ -59,8 +60,11 @@ public class LiftServiceImpl extends RemoteServiceServlet implements
         return lift.getFloorsCount();
     }
 
-    public void moveTo(int floorNumber) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void moveTo(int floorNumber) throws ElevatorException {
+        if (lift == null) {
+            return;
+        }
+        lift.moveTo(floorNumber);
     }
 
     public Lift getLift() {

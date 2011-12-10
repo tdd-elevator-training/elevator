@@ -3,9 +3,7 @@ package com.elevator.ui.server;
 import com.elevator.ui.shared.LiftAlreadyInstalledException;
 import com.elevator.ui.shared.LiftNotInstalledException;
 import com.elevator.ui.shared.LiftPersistenceException;
-import com.globallogic.training.Lift;
-import com.globallogic.training.NativeCurrentThread;
-import com.globallogic.training.RealDoor;
+import com.globallogic.training.*;
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.easymock.IExpectationSetters;
@@ -148,6 +146,15 @@ public class LiftServiceImplTest {
     @Test
     public void shouldReturn0WhenAskedFloorsCountAndLiftNotInstalled(){
         assertEquals(0, service.getFloorsCount());
+    }
+
+    @Test
+    public void shouldNotThrowExceptionWhenAskedMoveOnNonInstalledLift() throws LiftAlreadyInstalledException, LiftPersistenceException, ElevatorException {
+        try {
+            service.moveTo(11);
+        } catch (Exception e) {
+            fail();
+        }
     }
     
     private IExpectationSetters<Boolean> liftExists(boolean liftExists) {
