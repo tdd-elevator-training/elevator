@@ -1,5 +1,6 @@
 package com.elevator.ui.client;
 
+import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,7 +22,8 @@ public class LiftFormControllerTest {
         screenFlowManager = new MockScreenFlowManager();
         form = new MockLiftForm();
         serverUpdater = new ServerUpdater();
-        controller = new LiftFormController(service, screenFlowManager, form, serverUpdater);
+        controller = new LiftFormController(service, screenFlowManager, form, serverUpdater,
+                EasyMock.createMock(Messages.class));
         controller.onShow();
     }
 
@@ -48,7 +50,7 @@ public class LiftFormControllerTest {
     public void shouldBuildIndicationPaneWhenInitialized(){
         service.floorsCount = 10;
 
-        LiftFormController controller = new LiftFormController(service, screenFlowManager, form, serverUpdater);
+        LiftFormController controller = new LiftFormController(service, screenFlowManager, form, serverUpdater, EasyMock.createMock(Messages.class));
         controller.onShow();
         
         assertEquals(10, form.indicatorBuiltNumber);
@@ -58,7 +60,7 @@ public class LiftFormControllerTest {
     public void shouldBuildButtonsPaneWhenInitialized(){
         service.floorsCount = 11;
 
-        LiftFormController controller = new LiftFormController(service, screenFlowManager, form, serverUpdater);
+        LiftFormController controller = new LiftFormController(service, screenFlowManager, form, serverUpdater, EasyMock.createMock(Messages.class));
         controller.onShow();
         
         assertEquals(11, form.buttonsPaneBuiltNumber);
@@ -111,6 +113,77 @@ public class LiftFormControllerTest {
         assertEnterButton(true, false);
         assertButtonsPane(true, false);
     }
+
+    @Test
+    public void shouldBeOnlyAbleToCallWhenNotMyFloorOutside() {
+        controller.synchronize(true, 0 + 1);
+
+        assertTrue(form.callButtonEnabled);
+        assertEnterButton(false, false);
+        assertButtonsPane(false, false);
+    }
+
+    @Test
+    public void shouldBeAbleSelectFloorAndExitWhenInsideAndDoorIsOpen(){
+        controller.synchronize(true, 0);
+
+        controller.enterButtonClicked();
+
+        assertFalse(form.callButtonEnabled);
+        assertEnterButton(true, true);
+        assertButtonsPane(true, true);
+    }
+
+    @Test
+    public void shouldExitWhenExitButtonPressed(){
+        controller.synchronize(true, 0);
+        controller.enterButtonClicked();
+        
+        controller.enterButtonClicked();
+        
+        assertTrue(form.callButtonEnabled);
+        assertEnterButton(true, false);
+        assertButtonsPane(true, false);
+    } 
+    
+    @Test
+    public void shouldSayErrorWhenClickEnterButton_And_Outside(){
+        controller.synchronize(true, 0 +1);
+        
+        controller.enterButtonClicked();
+
+        assertTrue(screenFlowManager.userMessageShown);
+    }
+    
+    @Test
+    public void shouldSayErrorWhenClickEnterButton_And_DoorIsClosed() {
+        controller.synchronize(false, 0);
+        
+        controller.enterButtonClicked();
+
+        assertTrue(screenFlowManager.userMessageShown);
+    }
+
+    @Test
+    public void shouldBeOnlyAbleToCallWhenDoorIsClosed_Outside(){
+        controller.synchronize(false, 0);
+
+        assertTrue(form.callButtonEnabled);
+        assertEnterButton(false, false);
+        assertButtonsPane(false, false);
+    } 
+    
+    @Test
+    public void shouldBeOnlyAbleSelectFloorWhenInsideAndClosedDoor(){
+        controller.synchronize(true, 0);
+        controller.enterButtonClicked();
+        
+        controller.synchronize(false, 0);
+
+        assertFalse(form.callButtonEnabled);
+        assertEnterButton(false, true);
+        assertButtonsPane(true, true);
+    } 
 
     private void assertButtonsPane(boolean visible, boolean enabled) {
         assertEquals("Buttons pane visible", visible, form.buttonsPaneVisible);

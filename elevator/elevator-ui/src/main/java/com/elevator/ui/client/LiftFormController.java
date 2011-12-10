@@ -5,14 +5,19 @@ public class LiftFormController {
     private ScreenFlowManager screenFlowManager;
     private LiftForm form;
     private final ServerUpdater updater;
+    private boolean insideCabin;
+    private boolean isMyFloor;
+    private Messages messages;
+    private boolean doorIsOpen;
 
     public LiftFormController(LiftServiceAsync liftServiceAsync,
                               ScreenFlowManager screenFlowManager,
-                              final LiftForm form, ServerUpdater updater) {
+                              final LiftForm form, ServerUpdater updater, Messages messages) {
         this.liftServiceAsync = liftServiceAsync;
         this.screenFlowManager = screenFlowManager;
         this.form = form;
         this.updater = updater;
+        this.messages = messages;
     }
 
     public void callPressed() {
@@ -24,9 +29,11 @@ public class LiftFormController {
     }
 
     public void synchronize(boolean doorIsOpen, int floorNumber) {
+        this.doorIsOpen = doorIsOpen;
+        isMyFloor = floorNumber == 0;
         form.setWaitPanelVisible(false);
-        form.setEnterButtonState(true, false);
-        form.setButtonsPaneState(true, false);
+        form.setEnterButtonState(isMyFloor && doorIsOpen, insideCabin);
+        form.setButtonsPaneState(isMyFloor && doorIsOpen || insideCabin, insideCabin);
     }
 
     public void onHide() {
@@ -45,5 +52,16 @@ public class LiftFormController {
             }
         });
         this.updater.addListener(this);
+    }
+
+    public void enterButtonClicked() {
+        if (!isMyFloor || !doorIsOpen) {
+            screenFlowManager.showUserError(messages.unexpectedClickOnDisabledEnterButton());
+            return;
+        }
+        insideCabin = !insideCabin;
+        form.setCallButtonEnabled(!insideCabin);
+        form.setEnterButtonState(true, insideCabin);
+        form.setButtonsPaneState(true, insideCabin);
     }
 }

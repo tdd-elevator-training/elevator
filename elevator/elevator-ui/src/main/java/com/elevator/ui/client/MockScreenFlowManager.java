@@ -4,6 +4,7 @@ public class MockScreenFlowManager implements ScreenFlowManager {
     public Throwable serverCallFailed;
 
     private Form currentScreen;
+    public boolean userMessageShown;
 
     public Form getNextScreen() {
         return currentScreen;
@@ -15,6 +16,10 @@ public class MockScreenFlowManager implements ScreenFlowManager {
 
     public void serverCallFailed(Throwable caught) {
         serverCallFailed = caught;
+    }
+
+    public void showUserError(String html) {
+        userMessageShown = true;
     }
 
 }

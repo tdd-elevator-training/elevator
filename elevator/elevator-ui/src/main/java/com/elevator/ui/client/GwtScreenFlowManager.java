@@ -32,7 +32,14 @@ public class GwtScreenFlowManager implements ScreenFlowManager {
     public void serverCallFailed(Throwable caught) {
         dialogBox.setTitle("Error");
         dialogBox.setText("Error");
-        dialogBox.setText("Server Error: " + caught.getMessage());
+        dialogBox.setMessageText("Server Error: " + caught.getMessage());
+        dialogBox.center();
+    }
+
+    public void showUserError(String html) {
+        dialogBox.setTitle("Error");
+        dialogBox.setText("Error");
+        dialogBox.setMessageText(html);
         dialogBox.center();
     }
 
