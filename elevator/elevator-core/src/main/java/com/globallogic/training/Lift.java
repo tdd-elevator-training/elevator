@@ -1,11 +1,15 @@
 package com.globallogic.training;
 
-public class Lift {
+import java.io.Serializable;
+
+public class Lift implements Serializable {
+    private static final long serialVersionUID = 4646859136612305054L;
+
     private int position;
     private final Door door;
     private int floorsCount;
-    private final FloorQueue queue;
-    private boolean started;
+    private transient final FloorQueue queue;
+    private transient boolean started;
 
     public Lift(int position, int floorsCount, Door door) {
         this.position = position;
