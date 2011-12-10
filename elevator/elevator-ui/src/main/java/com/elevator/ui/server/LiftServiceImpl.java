@@ -1,6 +1,7 @@
 package com.elevator.ui.server;
 
 import com.elevator.ui.client.LiftService;
+import com.elevator.ui.shared.LiftAlreadyInstalledException;
 import com.elevator.ui.shared.LiftNotInstalledException;
 import com.elevator.ui.shared.LiftPersistenceException;
 import com.globallogic.training.Lift;
@@ -26,7 +27,10 @@ public class LiftServiceImpl extends RemoteServiceServlet implements
         this.dao = dao;
     }
 
-    public void createLift(int floorsCount) throws LiftPersistenceException {
+    public void createLift(int floorsCount) throws LiftPersistenceException, LiftAlreadyInstalledException {
+        if (lift != null) {
+            throw new LiftAlreadyInstalledException();
+        }
         lift = new Lift(0, floorsCount, new RealDoor());
         lift.setStarted(true);
         dao.store(lift);
@@ -57,5 +61,12 @@ public class LiftServiceImpl extends RemoteServiceServlet implements
         }
         lift = dao.loadLift();
         lift.setStarted(true);
+    }
+
+    public void stop() {
+        if (lift == null) {
+            return;
+        }
+        lift.setStarted(false);
     }
 }

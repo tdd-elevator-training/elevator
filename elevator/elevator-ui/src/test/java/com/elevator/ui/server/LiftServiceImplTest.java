@@ -1,5 +1,6 @@
 package com.elevator.ui.server;
 
+import com.elevator.ui.shared.LiftAlreadyInstalledException;
 import com.elevator.ui.shared.LiftNotInstalledException;
 import com.elevator.ui.shared.LiftPersistenceException;
 import com.globallogic.training.ElevatorException;
@@ -14,6 +15,7 @@ import org.junit.Test;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
 public class LiftServiceImplTest {
@@ -30,7 +32,7 @@ public class LiftServiceImplTest {
     }
 
     @Test
-    public void shouldCallDaoWhenCreate() throws LiftPersistenceException {
+    public void shouldCallDaoWhenCreate() throws LiftPersistenceException, LiftAlreadyInstalledException {
         dao.store(EasyMock.capture(liftCapture));
         EasyMock.replay(dao);
 
@@ -42,7 +44,7 @@ public class LiftServiceImplTest {
     }
     
     @Test
-    public void shouldStartLiftWhenInstalled() throws LiftPersistenceException {
+    public void shouldStartLiftWhenInstalled() throws LiftPersistenceException, LiftAlreadyInstalledException {
 
         service.createLift(123);
 
@@ -84,7 +86,7 @@ public class LiftServiceImplTest {
     } 
 
     @Test
-    public void shouldCallLiftWhenCalledByUser() throws LiftPersistenceException, LiftNotInstalledException {
+    public void shouldCallLiftWhenCalledByUser() throws LiftPersistenceException, LiftNotInstalledException, LiftAlreadyInstalledException {
         service.createLift(10);
 
         try {
@@ -95,13 +97,43 @@ public class LiftServiceImplTest {
     }
     
     @Test
-    public void shouldThrowExceptionWhenCalledFromNonExistentFloor() throws LiftNotInstalledException, LiftPersistenceException {
+    public void shouldThrowExceptionWhenCalledFromNonExistentFloor() throws LiftNotInstalledException, LiftPersistenceException, LiftAlreadyInstalledException {
         service.createLift(10);
         
         try {
             service.call(10 + 1);
             fail("IllegalArgumentException expected");
         } catch (IllegalArgumentException e) {
+
+        }
+    }
+    
+    @Test
+    public void shouldStopLiftWhenServiceStopped() throws LiftPersistenceException, LiftAlreadyInstalledException {
+        service.createLift(10);
+
+        service.stop();
+
+        assertFalse(service.getLift().isStarted());
+    } 
+
+    @Test
+    public void shouldNotStopNonExistentLiftWhenServiceStopped() throws LiftPersistenceException {
+        try {
+            service.stop();
+        } catch (Exception e) {
+            fail();
+        }
+    }
+    
+    @Test
+    public void shouldThrowExceptionWhenInstallingExistinLift() throws LiftPersistenceException, LiftAlreadyInstalledException {
+        service.createLift(123);
+
+        try {
+            service.createLift(345);
+            fail();
+        } catch (LiftAlreadyInstalledException e) {
 
         }
     } 
