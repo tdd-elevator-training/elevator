@@ -7,4 +7,6 @@ public interface LiftDao {
     void store(Lift lift) throws LiftPersistenceException;
 
     boolean elevatorExists();
+
+    Lift loadLift();
 }

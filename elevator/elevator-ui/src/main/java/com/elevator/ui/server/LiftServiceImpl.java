@@ -15,6 +15,7 @@ public class LiftServiceImpl extends RemoteServiceServlet implements
         LiftService {
 
     private LiftDao dao;
+    private Lift lift;
 
     public LiftServiceImpl() {
         this(new SerializationLiftDao(FileUtils.getUserDirectory()));
@@ -25,7 +26,9 @@ public class LiftServiceImpl extends RemoteServiceServlet implements
     }
 
     public void createLift(int floorsCount) throws LiftPersistenceException {
-        dao.store(new Lift(0, floorsCount, new RealDoor()));
+        lift = new Lift(0, floorsCount, new RealDoor());
+        lift.setStarted(true);
+        dao.store(lift);
     }
 
     public boolean liftExists() {
@@ -36,4 +39,12 @@ public class LiftServiceImpl extends RemoteServiceServlet implements
 
     }
 
+    public Lift getLift() {
+        return lift;
+    }
+
+    public void start() {
+        lift = dao.loadLift();
+        lift.setStarted(true);
+    }
 }

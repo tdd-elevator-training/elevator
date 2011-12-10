@@ -64,4 +64,8 @@ public class Lift implements Serializable {
     public int getFloorsCount() {
         return floorsCount;
     }
+
+    public boolean isStarted() {
+        return started;
+    }
 }
