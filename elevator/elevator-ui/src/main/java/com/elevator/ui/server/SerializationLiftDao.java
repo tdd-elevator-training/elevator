@@ -1,31 +1,31 @@
 package com.elevator.ui.server;
 
-import com.elevator.ui.shared.ElevatorPersistenceException;
+import com.elevator.ui.shared.LiftPersistenceException;
 import com.globallogic.training.Lift;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 
-public class SerializationElevatorDao implements ElevatorDao {
+public class SerializationLiftDao implements LiftDao {
     private File rootDataFolder;
 
-    public SerializationElevatorDao(File rootDataFolder) {
+    public SerializationLiftDao(File rootDataFolder) {
         this.rootDataFolder = rootDataFolder;
     }
 
-    public void store(Lift lift) throws ElevatorPersistenceException {
+    public void store(Lift lift) throws LiftPersistenceException {
         ObjectOutputStream outStream = null;
         try {
             outStream = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(getElevatorFile())));
             outStream.writeObject(lift);
         } catch (IOException e) {
-            throw new ElevatorPersistenceException("Unable to persist elevator to file " + getElevatorFile().getAbsolutePath(), e);
+            throw new LiftPersistenceException("Unable to persist elevator to file " + getElevatorFile().getAbsolutePath(), e);
         } finally {
             IOUtils.closeQuietly(outStream);
         }
     }
 
-    public boolean isElevatorInstalled() {
+    public boolean isLiftInstalled() {
         return getElevatorFile().exists();
     }
 

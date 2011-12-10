@@ -6,20 +6,20 @@ import org.junit.Test;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
-public class ElevatorFormControllerTest {
+public class LiftFormControllerTest {
 
 
-    private MockElevatorServiceAsync service;
+    private MockLiftServiceAsync service;
     private MockScreenFlowManager screenFlowManager;
-    private ElevatorFormController controller;
-    private MockElevatorForm form;
+    private LiftFormController controller;
+    private MockLiftForm form;
 
     @Before
     public void setUp() throws Exception {
-        service = new MockElevatorServiceAsync();
+        service = new MockLiftServiceAsync();
         screenFlowManager = new MockScreenFlowManager();
-        form = new MockElevatorForm();
-        controller = new ElevatorFormController(service, screenFlowManager, form);
+        form = new MockLiftForm();
+        controller = new LiftFormController(service, screenFlowManager, form);
     }
 
     @Test
@@ -36,7 +36,7 @@ public class ElevatorFormControllerTest {
         assertTrue(form.liftCalled);
     }
 
-    private class MockElevatorForm implements ElevatorForm {
+    private class MockLiftForm implements LiftForm {
         private boolean liftCalled;
 
         public void liftCalled() {

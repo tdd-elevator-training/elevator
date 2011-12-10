@@ -1,6 +1,6 @@
 package com.elevator.ui.server;
 
-import com.elevator.ui.shared.ElevatorPersistenceException;
+import com.elevator.ui.shared.LiftPersistenceException;
 import com.globallogic.training.Lift;
 import org.easymock.Capture;
 import org.easymock.EasyMock;
@@ -12,22 +12,22 @@ import static junit.framework.Assert.assertTrue;
 
 public class ElevatorServiceImplTest {
 
-    private ElevatorDao dao;
-    private ElevatorServiceImpl service;
+    private LiftDao dao;
+    private LiftServiceImpl service;
 
     @Before
     public void setUp() throws Exception {
-        dao = EasyMock.createMock(ElevatorDao.class);
-        service = new ElevatorServiceImpl(dao);
+        dao = EasyMock.createMock(LiftDao.class);
+        service = new LiftServiceImpl(dao);
     }
 
     @Test
-    public void shouldCallDaoWhenCreate() throws ElevatorPersistenceException {
+    public void shouldCallDaoWhenCreate() throws LiftPersistenceException {
         Capture<Lift> liftCapture = new Capture<Lift>();
         dao.store(EasyMock.capture(liftCapture));
         EasyMock.replay(dao);
 
-        service.createElevator(5);
+        service.createLift(5);
 
         Lift storedLift = liftCapture.getValue();
 

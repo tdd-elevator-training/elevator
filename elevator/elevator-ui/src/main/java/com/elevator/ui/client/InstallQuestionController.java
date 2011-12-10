@@ -9,7 +9,7 @@ public class InstallQuestionController {
     }
 
     public void agree() {
-        screenFlowManager.nextScreen(ScreenFlowManager.Form.ELEVATOR_SETTINGS_FORM);
+        screenFlowManager.nextScreen(ScreenFlowManager.Form.LIFT_SETTINGS_FORM);
     }
 
     public void disagree() {

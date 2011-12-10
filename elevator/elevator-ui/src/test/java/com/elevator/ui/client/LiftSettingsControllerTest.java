@@ -3,92 +3,94 @@ package com.elevator.ui.client;
 import org.junit.Before;
 import org.junit.Test;
 
-import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.assertTrue;
 
-public class ElevatorSettingsControllerTest {
+public class LiftSettingsControllerTest {
 
-    private MockElevatorServiceAsync elevatorService;
-    private MockElevatorSettingsForm elevatorSettingsForm;
-    private ElevatorSettingsController controller;
+    private MockLiftServiceAsync liftService;
+    private MockLiftSettingsForm liftSettingsForm;
+    private LiftSettingsController controller;
     private MockScreenFlowManager screenFlowManager;
 
     @Before
     public void setUp() throws Exception {
-        elevatorService = new MockElevatorServiceAsync();
-        elevatorSettingsForm = new MockElevatorSettingsForm();
+        liftService = new MockLiftServiceAsync();
+        liftSettingsForm = new MockLiftSettingsForm();
         screenFlowManager = new MockScreenFlowManager();
-        controller = new ElevatorSettingsController(elevatorService, elevatorSettingsForm, screenFlowManager);
+        controller = new LiftSettingsController(liftService, liftSettingsForm, screenFlowManager);
     }
 
     @Test
     public void shouldCallServiceWhenCreateButtonClicked() {
-        elevatorSettingsForm.setFloorsCount("10");
+        liftSettingsForm.setFloorsCount("10");
 
         controller.sendButtonClicked();
 
-        assertEquals(10, elevatorService.floorsCount.intValue());
+        assertEquals(10, liftService.floorsCount.intValue());
     }
 
     @Test
     public void shouldSayOkWhenCreateSucceed() {
-        elevatorSettingsForm.setFloorsCount("9");
+        liftSettingsForm.setFloorsCount("9");
 
         controller.sendButtonClicked();
 
-        assertTrue(elevatorSettingsForm.elevatorCreatedCalled);
-        assertEquals(9, elevatorService.floorsCount.intValue());
+        assertTrue(liftSettingsForm.liftCreatedCalled);
+        assertEquals(9, liftService.floorsCount.intValue());
     }
 
     @Test
     public void shouldValidateNonDigitInputWhenSendButtonPressed() {
-        elevatorSettingsForm.setFloorsCount("lala");
+        liftSettingsForm.setFloorsCount("lala");
 
         controller.sendButtonClicked();
 
-        assertTrue(elevatorSettingsForm.invalidIntegerValidation);
+        assertTrue(liftSettingsForm.invalidIntegerValidation);
     }
 
     @Test
     public void shouldNotCallServiceOnValidationFailure() {
-        elevatorSettingsForm.setFloorsCount("invalid");
+        liftSettingsForm.setFloorsCount("invalid");
 
         controller.sendButtonClicked();
 
-        assertNull(elevatorService.floorsCount);
+        assertNull(liftService.floorsCount);
     }
 
     @Test
     public void shouldRejectNegativeNumbersWhenSendButtonPressed() {
-        elevatorSettingsForm.setFloorsCount("-1");
+        liftSettingsForm.setFloorsCount("-1");
 
         controller.sendButtonClicked();
 
-        assertTrue(elevatorSettingsForm.negativeIntegerValidation);
+        assertTrue(liftSettingsForm.negativeIntegerValidation);
     }
 
     @Test
     public void shouldNotCallServiceWhenNegativeNumberEntered() {
-        elevatorSettingsForm.setFloorsCount("-2");
+        liftSettingsForm.setFloorsCount("-2");
 
         controller.sendButtonClicked();
 
-        assertNull(elevatorService.floorsCount);
+        assertNull(liftService.floorsCount);
     }
 
     @Test
     public void shouldSayErrorWhenCallOnServerFailed() {
         IllegalArgumentException raisedException = new IllegalArgumentException();
-        elevatorService.serverFailure = raisedException;
-        elevatorSettingsForm.setFloorsCount("1");
+        liftService.serverFailure = raisedException;
+        liftSettingsForm.setFloorsCount("1");
 
         controller.sendButtonClicked();
 
         assertEquals(raisedException, screenFlowManager.serverCallFailed);
     }
 
-    private class MockElevatorSettingsForm implements ElevatorSettingsForm {
+    private class MockLiftSettingsForm implements LiftSettingsForm {
         private String floorsCount;
-        private boolean elevatorCreatedCalled;
+        private boolean liftCreatedCalled;
         private boolean invalidIntegerValidation;
         public boolean negativeIntegerValidation;
 
@@ -100,8 +102,8 @@ public class ElevatorSettingsControllerTest {
             return floorsCount;
         }
 
-        public void elevatorCreated() {
-            elevatorCreatedCalled = true;
+        public void liftCreated() {
+            liftCreatedCalled = true;
         }
 
         public void invalidInteger() {

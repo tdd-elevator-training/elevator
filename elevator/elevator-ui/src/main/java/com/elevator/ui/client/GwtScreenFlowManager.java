@@ -7,26 +7,26 @@ import java.util.HashMap;
 
 public class GwtScreenFlowManager implements ScreenFlowManager {
 
-    private final GwtElevatorSettingsForm elevatorSettingsForm;
+    private final GwtLiftSettingsForm elevatorSettingsForm;
     private Composite currentForm;
     private HashMap<Form, Composite> forms =  new HashMap<Form, Composite>();
     private final InstallQuestionForm installQuestionForm;
-    private ElevatorDialogBox dialogBox;
+    private LiftDialogBox dialogBox;
 
-    public GwtScreenFlowManager(ElevatorServiceAsync elevatorService, Messages messages) {
-        ElevatorSettingsController controller = new ElevatorSettingsController(elevatorService, this);
-        elevatorSettingsForm = new GwtElevatorSettingsForm(controller, messages);
-        controller.setElevatorSettingsForm(elevatorSettingsForm);
-        forms.put(Form.ELEVATOR_SETTINGS_FORM, elevatorSettingsForm);
+    public GwtScreenFlowManager(LiftServiceAsync elevatorService, Messages messages) {
+        LiftSettingsController controller = new LiftSettingsController(elevatorService, this);
+        elevatorSettingsForm = new GwtLiftSettingsForm(controller, messages);
+        controller.setLiftSettingsForm(elevatorSettingsForm);
+        forms.put(Form.LIFT_SETTINGS_FORM, elevatorSettingsForm);
 
         installQuestionForm = new InstallQuestionForm(messages, new InstallQuestionController(this));
-        forms.put(Form.INSTALL_ELEVATOR_QUESTION, installQuestionForm);
+        forms.put(Form.INSTALL_LIFT_QUESTION, installQuestionForm);
 
         forms.put(Form.START_SCREEN, new StartScreenForm());
 
-        forms.put(Form.ELEVATOR_FORM, new GwtElevatorForm());
+        forms.put(Form.LIFT_FORM, new GwtLiftForm());
 
-        dialogBox = new ElevatorDialogBox();
+        dialogBox = new LiftDialogBox();
     }
 
     public void serverCallFailed(Throwable caught) {

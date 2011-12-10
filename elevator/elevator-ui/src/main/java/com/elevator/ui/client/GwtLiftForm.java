@@ -3,10 +3,10 @@ package com.elevator.ui.client;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 
-public class GwtElevatorForm extends Composite implements ElevatorForm {
+public class GwtLiftForm extends Composite implements LiftForm {
 
 
-    public GwtElevatorForm() {
+    public GwtLiftForm() {
         initWidget(new HTMLPanel("<b>Lift form - coming soon!<b>"));
     }
 

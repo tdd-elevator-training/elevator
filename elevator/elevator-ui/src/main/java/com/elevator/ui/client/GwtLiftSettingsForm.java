@@ -1,19 +1,19 @@
 package com.elevator.ui.client;
 
-import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.*;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
 
-public class GwtElevatorSettingsForm extends Composite implements ElevatorSettingsForm {
+public class GwtLiftSettingsForm extends Composite implements LiftSettingsForm {
 
     private Messages messages;
     private TextBox textBox;
     private Label validationLabel;
-    private ElevatorDialogBox dialogBox;
+    private LiftDialogBox dialogBox;
 
 
-    public GwtElevatorSettingsForm(final ElevatorSettingsController controller, Messages messages) {
+    public GwtLiftSettingsForm(final LiftSettingsController controller, Messages messages) {
         this.messages = messages;
 
         LayoutPanel layoutPanel = new LayoutPanel();
@@ -54,7 +54,7 @@ public class GwtElevatorSettingsForm extends Composite implements ElevatorSettin
         return textBox.getText();
     }
 
-    public void elevatorCreated() {
+    public void liftCreated() {
         validationLabel.setVisible(false);
         dialogBox.setTitle("Ok");
         dialogBox.setText("Ok");

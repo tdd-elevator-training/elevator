@@ -1,9 +1,9 @@
 package com.elevator.ui.client;
 
-public interface ElevatorSettingsForm {
+public interface LiftSettingsForm {
     String getFloorsCount();
 
-    void elevatorCreated();
+    void liftCreated();
 
     void invalidInteger();
 

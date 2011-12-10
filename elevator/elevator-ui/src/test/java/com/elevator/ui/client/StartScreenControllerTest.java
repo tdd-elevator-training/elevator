@@ -8,30 +8,30 @@ import static junit.framework.Assert.assertTrue;
 
 public class StartScreenControllerTest {
 
-    private MockElevatorServiceAsync elevatorService;
+    private MockLiftServiceAsync liftService;
     private MockScreenFlowManager screenFlowManager;
     private StartScreenController controller;
 
     @Before
     public void setUp() throws Exception {
-        elevatorService = new MockElevatorServiceAsync();
+        liftService = new MockLiftServiceAsync();
         screenFlowManager = new MockScreenFlowManager();
-        controller = new StartScreenController(screenFlowManager, elevatorService);
+        controller = new StartScreenController(screenFlowManager, liftService);
     }
 
     @Test
     public void shouldProposeLiftInstallationWhenLiftIsNotInstalled() {
-        elevatorService.elevatorExists = false;
+        liftService.liftExists = false;
 
         controller.selectStartScreen();
 
-        assertEquals(ScreenFlowManager.Form.INSTALL_ELEVATOR_QUESTION, screenFlowManager.getNextScreen());
+        assertEquals(ScreenFlowManager.Form.INSTALL_LIFT_QUESTION, screenFlowManager.getNextScreen());
     }
 
     @Test
     public void shouldOpenLiftFormWhenLiftIsInstalled() {
         controller.selectStartScreen();
 
-        assertEquals(ScreenFlowManager.Form.ELEVATOR_FORM, screenFlowManager.getNextScreen());
+        assertEquals(ScreenFlowManager.Form.LIFT_FORM, screenFlowManager.getNextScreen());
     }
 }

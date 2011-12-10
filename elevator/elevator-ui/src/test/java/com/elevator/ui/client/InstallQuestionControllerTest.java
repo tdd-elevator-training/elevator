@@ -20,7 +20,7 @@ public class InstallQuestionControllerTest {
     public void shouldOpenElevatorFormWhenAgreedToInstall() {
         controller.agree();
 
-        assertEquals(ScreenFlowManager.Form.ELEVATOR_SETTINGS_FORM, screenFlowManager.getNextScreen());
+        assertEquals(ScreenFlowManager.Form.LIFT_SETTINGS_FORM, screenFlowManager.getNextScreen());
     }
 
     @Test

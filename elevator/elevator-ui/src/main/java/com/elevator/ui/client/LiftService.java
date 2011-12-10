@@ -1,6 +1,6 @@
 package com.elevator.ui.client;
 
-import com.elevator.ui.shared.ElevatorPersistenceException;
+import com.elevator.ui.shared.LiftPersistenceException;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
@@ -8,10 +8,10 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
  * The client side stub for the RPC service.
  */
 @RemoteServiceRelativePath("elevator")
-public interface ElevatorService extends RemoteService {
-    void createElevator(int floorsCount) throws IllegalArgumentException, ElevatorPersistenceException;
+public interface LiftService extends RemoteService {
+    void createLift(int floorsCount) throws IllegalArgumentException, LiftPersistenceException;
 
-    boolean elevatorExists();
+    boolean liftExists();
 
     void call(int fromFloor);
 }

@@ -1,5 +1,5 @@
 package com.elevator.ui.client;
 
-public interface ElevatorForm {
+public interface LiftForm {
     void liftCalled();
 }

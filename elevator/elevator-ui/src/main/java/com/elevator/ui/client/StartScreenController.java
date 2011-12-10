@@ -1,21 +1,19 @@
 package com.elevator.ui.client;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
-
 public class StartScreenController {
-    private ScreenFlowManager.Form currentScreen = ScreenFlowManager.Form.INSTALL_ELEVATOR_QUESTION;
+    private ScreenFlowManager.Form currentScreen = ScreenFlowManager.Form.INSTALL_LIFT_QUESTION;
     private ScreenFlowManager screenFlowManager;
-    private ElevatorServiceAsync elevatorService;
+    private LiftServiceAsync elevatorService;
     private final StartScreenController.ElevatorExistsCallback callback;
 
-    public StartScreenController(ScreenFlowManager screenFlowManager, ElevatorServiceAsync elevatorService) {
+    public StartScreenController(ScreenFlowManager screenFlowManager, LiftServiceAsync elevatorService) {
         this.screenFlowManager = screenFlowManager;
         this.elevatorService = elevatorService;
         callback = new ElevatorExistsCallback();
     }
 
     public void selectStartScreen() {
-        elevatorService.elevatorExists(callback);
+        elevatorService.liftExists(callback);
     }
 
     private class ElevatorExistsCallback extends DefaultAsyncCallback<Boolean> {
@@ -26,7 +24,7 @@ public class StartScreenController {
 
         public void onSuccess(Boolean result) {
             if (result) {
-                currentScreen = ScreenFlowManager.Form.ELEVATOR_FORM;
+                currentScreen = ScreenFlowManager.Form.LIFT_FORM;
             }
             screenFlowManager.nextScreen(currentScreen);
         }
