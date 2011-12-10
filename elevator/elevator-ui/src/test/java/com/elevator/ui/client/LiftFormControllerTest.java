@@ -216,7 +216,7 @@ public class LiftFormControllerTest {
 
         assertFormState(false, enterBtn(true, true), buttonsPane(true, true));
     } 
-    //Могу зайти обратно в лифт после того как вышел
+    
     @Test
     public void shouldBeAbleToComeInWhenExitOnSomeFloor(){
         enterCabin();
@@ -227,6 +227,31 @@ public class LiftFormControllerTest {
         assertFormState(true, enterBtn(true, false), buttonsPane(true, false));
     } 
     
+    @Test
+    public void shouldSendMoveToRequestWhenFloorSelected(){
+        enterCabin();
+
+        controller.floorSelected(11);
+
+        assertEquals(11, service.movingTo);
+    } 
+    
+    @Test
+    public void shouldConfirmMoveToRequestWhenFloorSelected(){
+        enterCabin();
+        
+        controller.floorSelected(10);
+
+        assertEquals(10, form.movingToConfirmation);
+    } 
+    
+    @Test
+    public void shouldSayErrorWhenFloorSelectedOutside(){
+        controller.floorSelected(123);
+        
+        assertTrue("Error should be shown", screenFlowManager.userMessageShown);
+    }
+
     private void assertIndication(Integer ... floors) {
         assertEquals(Arrays.asList(floors), form.indicationsHistory);
     }
@@ -287,6 +312,7 @@ public class LiftFormControllerTest {
         public boolean buttonsPaneVisible;
         public boolean buttonsPaneEnabled;
         public List<Integer> indicationsHistory = new ArrayList<Integer>();
+        public int movingToConfirmation;
 
         public void liftCalled() {
            liftCalled = true;
@@ -324,6 +350,10 @@ public class LiftFormControllerTest {
 
         public void indicateFloor(int floorNumber) {
             indicationsHistory.add(floorNumber);
+        }
+
+        public void confirmedMovingTo(int floorNumber) {
+            movingToConfirmation = floorNumber;
         }
     }
 

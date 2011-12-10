@@ -59,6 +59,10 @@ public class LiftServiceImpl extends RemoteServiceServlet implements
         return lift.getFloorsCount();
     }
 
+    public void moveTo(int floorNumber) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     public Lift getLift() {
         return lift;
     }

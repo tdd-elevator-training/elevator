@@ -18,4 +18,6 @@ public interface LiftService extends RemoteService {
     void call(int fromFloor) throws LiftNotInstalledException;
 
     int getFloorsCount();
+
+    void moveTo(int floorNumber);
 }

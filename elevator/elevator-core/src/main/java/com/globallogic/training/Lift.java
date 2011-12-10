@@ -1,5 +1,6 @@
 package com.globallogic.training;
 
+import java.io.ObjectStreamException;
 import java.io.Serializable;
 
 public class Lift implements Serializable {
@@ -7,11 +8,11 @@ public class Lift implements Serializable {
 
     private int position;
     private final Door door;
-    private transient final CurrentThread currentThread;
+    private transient CurrentThread currentThread;
     private int floorsCount;
-    private transient final FloorQueue queue;
+    private transient FloorQueue queue;
     private transient boolean started;
-    private FloorListener floorListener;
+    private transient FloorListener floorListener;
     private int moveBetweenFloorsDelay;
 
     public Lift(int position, int floorsCount, Door door, CurrentThread currentThread) {
@@ -99,5 +100,11 @@ public class Lift implements Serializable {
 
     public void setMoveBetweenFloorsDelay(int miliseconds) {
         this.moveBetweenFloorsDelay = miliseconds;
+    }
+
+    private Object readResolve() throws ObjectStreamException {
+        currentThread = new NativeCurrentThread(); //warn: not tested
+        queue = new FloorQueue();
+        return this;
     }
 }

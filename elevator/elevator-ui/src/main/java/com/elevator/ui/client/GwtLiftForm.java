@@ -45,4 +45,8 @@ public class GwtLiftForm extends Composite implements LiftForm {
     public void indicateFloor(int floorNumber) {
 
     }
+
+    public void confirmedMovingTo(int floorNumber) {
+
+    }
 }

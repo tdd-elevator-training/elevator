@@ -79,4 +79,19 @@ public class LiftDaoTest {
         assertFalse(dao.elevatorExists());
     }
 
+    @Test
+    public void shouldHavNotNullCurrentThreadFieldWhenLoad() throws LiftPersistenceException {
+        dao.store(new Lift(0, 10, new RealDoor()));
+
+        Lift lift = dao.loadLift();
+
+        try {
+            lift.setStarted(true);
+            lift.call(123);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail("No exception expected: "+ e.getMessage());
+        }
+
+    } 
 }

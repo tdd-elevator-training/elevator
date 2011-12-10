@@ -18,4 +18,6 @@ public interface LiftForm {
     void setButtonsPaneState(boolean visible, boolean enabled);
 
     void indicateFloor(int floorNumber);
+
+    void confirmedMovingTo(int floorNumber);
 }

@@ -7,6 +7,7 @@ public class MockLiftServiceAsync implements LiftServiceAsync {
     public Throwable serverFailure;
     public boolean liftExists = true;
     public int fromFloor = -1;
+    public int movingTo;
 
     public void createLift(int floorsCount, AsyncCallback<Void> callback) {
         this.floorsCount = floorsCount;
@@ -23,6 +24,11 @@ public class MockLiftServiceAsync implements LiftServiceAsync {
 
     public void getFloorsCount(AsyncCallback<Integer> callback) {
         callback.onSuccess(floorsCount);
+    }
+
+    public void moveTo(int movingTo, AsyncCallback<Void> callback) {
+        this.movingTo = movingTo;
+        callback.onSuccess(null);
     }
 
     public void call(int fromFloor, AsyncCallback<Void> callback) {

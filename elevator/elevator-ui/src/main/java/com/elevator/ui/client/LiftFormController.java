@@ -74,4 +74,15 @@ public class LiftFormController {
         form.setEnterButtonState(true, insideCabin);
         form.setButtonsPaneState(true, insideCabin);
     }
+
+    public void floorSelected(final int floorNumber) {
+        if (!insideCabin) {
+            screenFlowManager.showUserError(messages.unexpectedClickFloorSelection());
+        }
+        liftServiceAsync.moveTo(floorNumber, new DefaultAsyncCallback<Void>(screenFlowManager) {
+            public void onSuccess(Void result) {
+                form.confirmedMovingTo(floorNumber);
+            }
+        });
+    }
 }
