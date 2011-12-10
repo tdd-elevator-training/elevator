@@ -25,13 +25,13 @@ public class StartScreenControllerTest {
 
         controller.selectStartScreen();
 
-        assertEquals(ScreenFlowManager.Form.INSTALL_LIFT_QUESTION, screenFlowManager.getNextScreen());
+        assertEquals(ScreenFlowManager.Form.INSTALL_ELEVATOR_QUESTION, screenFlowManager.getNextScreen());
     }
 
     @Test
     public void shouldOpenLiftFormWhenLiftIsInstalled() {
         controller.selectStartScreen();
 
-        assertEquals(ScreenFlowManager.Form.LIFT_FORM, screenFlowManager.getNextScreen());
+        assertEquals(ScreenFlowManager.Form.ELEVATOR_FORM, screenFlowManager.getNextScreen());
     }
 }

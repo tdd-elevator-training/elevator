@@ -16,14 +16,14 @@ public class GwtScreenFlowManager implements ScreenFlowManager {
         ElevatorSettingsController controller = new ElevatorSettingsController(elevatorService);
         elevatorSettingsForm = new GwtElevatorSettingsForm(controller, messages);
         controller.setElevatorSettingsForm(elevatorSettingsForm);
-        forms.put(Form.LIFT_SETTINGS_FORM, elevatorSettingsForm);
+        forms.put(Form.ELEVATOR_SETTINGS_FORM, elevatorSettingsForm);
 
         installQuestionForm = new InstallQuestionForm(messages, new InstallQuestionController(this));
-        forms.put(Form.INSTALL_LIFT_QUESTION, installQuestionForm);
+        forms.put(Form.INSTALL_ELEVATOR_QUESTION, installQuestionForm);
 
         forms.put(Form.START_SCREEN, new StartScreenForm());
 
-        forms.put(Form.LIFT_FORM, new LiftForm());
+        forms.put(Form.ELEVATOR_FORM, new ElevatorForm());
     }
 
     public void nextScreen(Form form) {
