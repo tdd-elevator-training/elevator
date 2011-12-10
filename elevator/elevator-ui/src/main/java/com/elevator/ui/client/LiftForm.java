@@ -9,7 +9,7 @@ public interface LiftForm {
 
     void setCurrentFloor(int floorNumber);
 
-    void showWaitPanel();
+    void setWaitPanelVisible(boolean visible);
 
     void buildIndicatorPane(int floorsCount);
 

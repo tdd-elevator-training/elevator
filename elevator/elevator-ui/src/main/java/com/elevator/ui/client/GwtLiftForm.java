@@ -26,7 +26,7 @@ public class GwtLiftForm extends Composite implements LiftForm {
 
     }
 
-    public void showWaitPanel() {
+    public void setWaitPanelVisible(boolean visible) {
 
     }
 

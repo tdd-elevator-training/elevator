@@ -3,9 +3,7 @@ package com.elevator.ui.client;
 import org.junit.Before;
 import org.junit.Test;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
 
 public class LiftFormControllerTest {
 
@@ -14,6 +12,7 @@ public class LiftFormControllerTest {
     private MockScreenFlowManager screenFlowManager;
     private LiftFormController controller;
     private MockLiftForm form;
+    private ServerUpdater serverUpdater;
 
     @Before
     public void setUp() throws Exception {
@@ -21,7 +20,9 @@ public class LiftFormControllerTest {
         service.floorsCount = 0;
         screenFlowManager = new MockScreenFlowManager();
         form = new MockLiftForm();
-        controller = new LiftFormController(service, screenFlowManager, form);
+        serverUpdater = new ServerUpdater();
+        controller = new LiftFormController(service, screenFlowManager, form, serverUpdater);
+        controller.onShow();
     }
 
     @Test
@@ -40,32 +41,73 @@ public class LiftFormControllerTest {
 
     @Test
     public void shouldBeOutsideWhenInitialized() {
-        assertFalse(form.enterButtonIsDown);
-        assertTrue(form.callButtonEnabled);
-        assertEquals(0, form.currentFloor);
+        assertFormState(0, false, true, true);
     }
-    
-    @Test
-    public void shouldBeWaitMessageOnlyWhenInitializedAndNotSynchronized(){
-        assertTrue(form.waitPanelEnabled);
-    } 
-    
+
     @Test
     public void shouldBuildIndicationPaneWhenInitialized(){
         service.floorsCount = 10;
 
-        new LiftFormController(service, screenFlowManager, form);
+        LiftFormController controller = new LiftFormController(service, screenFlowManager, form, serverUpdater);
+        controller.onShow();
         
         assertEquals(10, form.indicatorBuiltNumber);
-    } 
+    }
 
     @Test
     public void shouldBuildButtonsPaneWhenInitialized(){
         service.floorsCount = 11;
 
-        new LiftFormController(service, screenFlowManager, form);
-
+        LiftFormController controller = new LiftFormController(service, screenFlowManager, form, serverUpdater);
+        controller.onShow();
+        
         assertEquals(11, form.buttonsPaneBuiltNumber);
+    }
+
+    @Test
+    public void shouldHideWaitPaneWhenFirstSynchronized() {
+        controller.synchronize();
+
+        assertFalse(form.waitPanelEnabled);
+    }
+
+    @Test
+    public void shouldRegisterForServerUpdatesWhenInitialized(){
+        assertSame(controller, serverUpdater.listener);
+    }
+
+    @Test
+    public void shouldRemoveServerUpdateListenerWhenHidden() {
+        controller.onHide();
+        
+        assertNull(serverUpdater.listener);
+    }
+
+    @Test
+    public void shouldBeOutsideWhenInitializeAfterHidden() {
+        controller.synchronize();
+        controller.onHide();
+
+        controller.onShow();
+
+        assertFormState(0, false, true, true);
+    }
+
+    @Test
+    public void shouldInitializeServerListnerWhenShowAfterHide() {
+        controller.synchronize();
+        controller.onHide();
+
+        controller.onShow();
+
+        assertSame(controller, serverUpdater.listener);
+    }
+
+    private void assertFormState(int expectedCurrentFloor, boolean enterButtonIsDown, boolean callButtonEnabled, boolean waitPanelEnabled) {
+        assertEquals("Enter button is down", enterButtonIsDown, form.enterButtonIsDown);
+        assertEquals("Call button enabled", callButtonEnabled, form.callButtonEnabled);
+        assertEquals("Current floor", expectedCurrentFloor, form.currentFloor);
+        assertEquals("Wait pane enabled", waitPanelEnabled, form.waitPanelEnabled);
     }
 
     private class MockLiftForm implements LiftForm {
@@ -93,8 +135,8 @@ public class LiftFormControllerTest {
             currentFloor = floorNumber;
         }
 
-        public void showWaitPanel() {
-            waitPanelEnabled = true;
+        public void setWaitPanelVisible(boolean visible) {
+            waitPanelEnabled = visible;
         }
 
         public void buildIndicatorPane(int floorsCount) {
