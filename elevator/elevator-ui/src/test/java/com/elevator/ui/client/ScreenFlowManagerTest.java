@@ -14,12 +14,4 @@ public class ScreenFlowManagerTest {
         assertEquals("installQuestion", screenFlowManager.getNextScreen());
     }
 
-    @Test
-    public void shouldOpenElevatorFormWhenAgreedToInstall() {
-        ScreenFlowManager screenFlowManager = new ScreenFlowManager();
-        InstallQuestionController installQuestionController = new InstallQuestionController(screenFlowManager);
-        installQuestionController.agree();
-
-        assertEquals("elevatorSettingsForm", screenFlowManager.getNextScreen());
-    }
 }
