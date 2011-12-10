@@ -1,8 +1,6 @@
 package com.elevator.ui.server;
 
 import com.globallogic.training.Lift;
-import com.globallogic.training.RealDoor;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
@@ -12,11 +10,6 @@ public class SerializationElevatorDao implements ElevatorDao {
 
     public SerializationElevatorDao(File rootDataFolder) {
         this.rootDataFolder = rootDataFolder;
-    }
-
-    public void createElevator(int floorsCount) throws ElevatorPersistenceException {
-        Lift lift = new Lift(0, floorsCount, new RealDoor());
-        store(lift);
     }
 
     public void store(Lift lift) throws ElevatorPersistenceException {

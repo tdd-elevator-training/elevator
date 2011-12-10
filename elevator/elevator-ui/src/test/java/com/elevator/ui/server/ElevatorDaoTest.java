@@ -1,17 +1,13 @@
 package com.elevator.ui.server;
 
-import com.globallogic.training.ElevatorException;
 import com.globallogic.training.Lift;
+import com.globallogic.training.RealDoor;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 import static junit.framework.Assert.*;
@@ -35,7 +31,8 @@ public class ElevatorDaoTest {
 
     @Test
     public void shouldPersistElevatorWhenCreateServiceCalled() throws ElevatorPersistenceException {
-        dao.createElevator(10);
+        Lift lift = new Lift(0, 10, new RealDoor());
+        dao.store(lift);
 
         assertTrue(dao.isElevatorInstalled());
     }
@@ -50,7 +47,8 @@ public class ElevatorDaoTest {
         SerializationElevatorDao dao = new SerializationElevatorDao(new File("a:\\nonExistentPath"));
         try {
 
-            dao.createElevator(9);
+            Lift lift = new Lift(0, 9, new RealDoor());
+            dao.store(lift);
 
             fail("Exception expected");
         } catch (ElevatorPersistenceException e) {
@@ -59,7 +57,8 @@ public class ElevatorDaoTest {
 
     @Test
     public void shouldLoadLiftWhenSaved() throws ElevatorPersistenceException {
-        dao.createElevator(8);
+        Lift lift1 = new Lift(0, 8, new RealDoor());
+        dao.store(lift1);
 
         Lift lift = dao.loadLift();
 
