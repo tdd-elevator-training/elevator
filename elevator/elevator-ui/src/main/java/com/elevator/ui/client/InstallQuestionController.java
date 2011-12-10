@@ -11,4 +11,8 @@ public class InstallQuestionController {
     public void agree() {
         screenFlowManager.nextScreen("elevatorSettingsForm");
     }
+
+    public void disagree() {
+        screenFlowManager.nextScreen("startScreen");
+    }
 }
