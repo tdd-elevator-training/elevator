@@ -17,30 +17,7 @@ public class ElevatorServiceImpl extends RemoteServiceServlet implements
         ElevatorService {
 
   public void createElevator(int floorsCount) throws IllegalArgumentException {
-/*
-      Lift lift = new Lift(0, floorsCount, new RealDoor());
-      ObjectOutputStream outStream = null;
-      try {
-          outStream = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(getElevatorFile())));
-          outStream.writeObject(lift);
-      } catch (IOException e) {
-          //todo: test it
-          throw new RuntimeException(e);
-      }finally {
-          IOUtils.closeQuietly(outStream);
-      }
-*/
   }
-
-    private File getElevatorFile() {
-        return new File(createElevatorDir(), "lift.data");
-    }
-
-    private File createElevatorDir() {
-        File elevatorDir = new File(FileUtils.getUserDirectory(), ".elevator");
-        elevatorDir.mkdirs();
-        return elevatorDir;
-    }
 
     public boolean isElevatorInstalled() {
 //        return getElevatorFile().exists();
