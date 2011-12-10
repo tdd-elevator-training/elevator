@@ -1,6 +1,7 @@
 package com.elevator.ui.server;
 
 import com.globallogic.training.ElevatorException;
+import com.globallogic.training.Lift;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.After;
@@ -13,9 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
+import static junit.framework.Assert.*;
 
 public class ElevatorDaoTest {
 
@@ -56,6 +55,14 @@ public class ElevatorDaoTest {
             fail("Exception expected");
         } catch (ElevatorPersistenceException e) {
         }
+    }
 
+    @Test
+    public void shouldLoadLiftWhenSaved() throws ElevatorPersistenceException {
+        dao.createElevator(8);
+
+        Lift lift = dao.loadLift();
+
+        assertEquals(8, lift.getFloorsCount());
     }
 }

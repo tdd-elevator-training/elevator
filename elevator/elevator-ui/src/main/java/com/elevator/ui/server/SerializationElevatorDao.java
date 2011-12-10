@@ -15,7 +15,7 @@ public class SerializationElevatorDao {
     }
 
     public void createElevator(int floorsCount) throws ElevatorPersistenceException {
-      Lift lift = new Lift(0, 10, new RealDoor());
+      Lift lift = new Lift(0, floorsCount, new RealDoor());
       ObjectOutputStream outStream = null;
       try {
           outStream = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(getElevatorFile())));
@@ -38,5 +38,19 @@ public class SerializationElevatorDao {
         File elevatorDir = new File(rootDataFolder, ".elevator");
         elevatorDir.mkdirs();
         return elevatorDir;
+    }
+
+    public Lift loadLift() {
+        ObjectInputStream inputStream = null;
+        try {
+            inputStream = new ObjectInputStream(new BufferedInputStream(new FileInputStream(getElevatorFile())));
+            return (Lift) inputStream.readObject();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }finally {
+            IOUtils.closeQuietly(inputStream);
+        }
     }
 }
