@@ -32,4 +32,8 @@ public class ElevatorServiceImpl extends RemoteServiceServlet implements
         return dao.elevatorExists();
     }
 
+    public void call(int fromFloor) {
+
+    }
+
 }

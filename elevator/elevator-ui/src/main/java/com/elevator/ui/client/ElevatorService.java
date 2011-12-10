@@ -12,4 +12,6 @@ public interface ElevatorService extends RemoteService {
     void createElevator(int floorsCount) throws IllegalArgumentException, ElevatorPersistenceException;
 
     boolean elevatorExists();
+
+    void call(int fromFloor);
 }
