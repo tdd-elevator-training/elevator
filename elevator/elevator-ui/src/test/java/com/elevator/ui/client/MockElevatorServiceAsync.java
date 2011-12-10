@@ -5,6 +5,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public class MockElevatorServiceAsync implements ElevatorServiceAsync {
     public Integer floorsCount;
     public Throwable serverFailure;
+    public boolean elevatorExists = true;
 
     public void createElevator(int floorsCount, AsyncCallback<Void> callback) {
         this.floorsCount = floorsCount;
@@ -16,6 +17,6 @@ public class MockElevatorServiceAsync implements ElevatorServiceAsync {
     }
 
     public void elevatorExists(AsyncCallback<Boolean> callback) {
-        callback.onSuccess(true);
+        callback.onSuccess(elevatorExists);
     }
 }

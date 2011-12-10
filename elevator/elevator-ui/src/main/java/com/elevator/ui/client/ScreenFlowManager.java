@@ -25,7 +25,9 @@ public class ScreenFlowManager {
             }
 
             public void onSuccess(Boolean result) {
-                currentScreen = "liftForm";
+                if (result) {
+                    currentScreen = "liftForm";
+                }
             }
         });
     }

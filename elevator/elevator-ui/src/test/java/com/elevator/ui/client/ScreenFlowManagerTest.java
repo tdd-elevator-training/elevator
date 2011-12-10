@@ -19,6 +19,9 @@ public class ScreenFlowManagerTest {
 
     @Test
     public void shouldProposeLiftInstallationWhenLiftIsNotInstalled() {
+        elevatorService.elevatorExists = false;
+        screenFlowManager.selectStartScreen();
+
         assertEquals("installQuestion", screenFlowManager.getNextScreen());
     }
 
