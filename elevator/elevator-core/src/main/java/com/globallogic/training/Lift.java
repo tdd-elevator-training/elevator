@@ -10,6 +10,7 @@ public class Lift implements Serializable {
     private int floorsCount;
     private transient final FloorQueue queue;
     private transient boolean started;
+    private FloorListener floorListener;
 
     public Lift(int position, int floorsCount, Door door) {
         this.position = position;
@@ -27,7 +28,27 @@ public class Lift implements Serializable {
 
     protected void processQueue() {
         while (!queue.isEmpty()) {
-            moveLift(queue.getNextFloor(position));
+            int nextFloor = queue.getNextFloor(position);
+            int increment = position < nextFloor ? 1 : -1;
+            moveIncrementaly(nextFloor, increment);
+            moveLift();
+        }
+    }
+
+    private void moveIncrementaly(int nextFloor, int increment) {
+        if (door.isOpen()) {
+            door.close();
+        }
+        notifyListener();
+        while (position != nextFloor) {
+            position += increment;
+            notifyListener();
+        }
+    }
+
+    private void notifyListener() {
+        if (floorListener != null) {
+            floorListener.atFloor(position);
         }
     }
 
@@ -43,11 +64,7 @@ public class Lift implements Serializable {
         queue.addFloor(floor);
     }
 
-    public void moveLift(int floor) {
-        if (door.isOpen()) {
-            door.close();
-        }
-        position = floor;
+    protected void moveLift() {
         door.open(position);
     }
 
@@ -67,5 +84,9 @@ public class Lift implements Serializable {
 
     public boolean isStarted() {
         return started;
+    }
+
+    public void setFloorListener(FloorListener floorListener) {
+        this.floorListener = floorListener;
     }
 }
