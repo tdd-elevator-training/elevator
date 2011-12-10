@@ -54,7 +54,7 @@ public class LiftServiceImplTest {
     
     @Test
     public void shouldStartLiftWhenServiceStarted() throws LiftPersistenceException {
-        EasyMock.expect(dao.loadLift()).andReturn(new Lift(0, 12, new RealDoor(), new NativeCurrentThread()));
+        EasyMock.expect(dao.loadLift()).andReturn(new Lift(0, 12, new RealDoor()));
         liftExists(true);
         EasyMock.replay(dao);
 

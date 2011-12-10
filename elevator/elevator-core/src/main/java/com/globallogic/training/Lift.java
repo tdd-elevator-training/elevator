@@ -7,7 +7,7 @@ public class Lift implements Serializable {
 
     private int position;
     private final Door door;
-    private final CurrentThread currentThread;
+    private transient final CurrentThread currentThread;
     private int floorsCount;
     private transient final FloorQueue queue;
     private transient boolean started;

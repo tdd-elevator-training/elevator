@@ -7,10 +7,20 @@ public class LiftFormController {
 
     public LiftFormController(LiftServiceAsync liftServiceAsync,
                                   ScreenFlowManager screenFlowManager,
-                                  LiftForm form) {
+                                  final LiftForm form) {
         this.liftServiceAsync = liftServiceAsync;
         this.screenFlowManager = screenFlowManager;
         this.form = form;
+        form.setEnterButtonDown(false);
+        form.setCallButtonEnabled(true);
+        form.setCurrentFloor(0);
+        form.showWaitPanel();
+        liftServiceAsync.getFloorsCount(new DefaultAsyncCallback<Integer>(screenFlowManager) {
+            public void onSuccess(Integer floorsCount) {
+                form.buildIndicatorPane(floorsCount);
+                form.buildButtonsPane(floorsCount);
+            }
+        });
     }
 
     public void callPressed() {

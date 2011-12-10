@@ -21,6 +21,10 @@ public class MockLiftServiceAsync implements LiftServiceAsync {
         callback.onSuccess(liftExists);
     }
 
+    public void getFloorsCount(AsyncCallback<Integer> callback) {
+        callback.onSuccess(floorsCount);
+    }
+
     public void call(int fromFloor, AsyncCallback<Void> callback) {
         this.fromFloor = fromFloor;
         callback.onSuccess(null);

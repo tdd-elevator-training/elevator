@@ -33,7 +33,7 @@ public class LiftDaoTest {
 
     @Test
     public void shouldPersistLiftWhenCreateServiceCalled() throws LiftPersistenceException {
-        Lift lift = new Lift(0, 10, new RealDoor(), new NativeCurrentThread());
+        Lift lift = new Lift(0, 10, new RealDoor());
         dao.store(lift);
 
         assertTrue(dao.isLiftInstalled());
@@ -49,7 +49,7 @@ public class LiftDaoTest {
         SerializationLiftDao dao = new SerializationLiftDao(new File("a:\\nonExistentPath"));
         try {
 
-            Lift lift = new Lift(0, 9, new RealDoor(), new NativeCurrentThread());
+            Lift lift = new Lift(0, 9, new RealDoor());
             dao.store(lift);
 
             fail("Exception expected");
@@ -59,7 +59,7 @@ public class LiftDaoTest {
 
     @Test
     public void shouldLoadLiftWhenSaved() throws LiftPersistenceException {
-        Lift lift1 = new Lift(0, 8, new RealDoor(), new NativeCurrentThread());
+        Lift lift1 = new Lift(0, 8, new RealDoor());
         dao.store(lift1);
 
         Lift lift = dao.loadLift();
@@ -69,7 +69,7 @@ public class LiftDaoTest {
 
     @Test
     public void shouldReturnTrueWhenElevatorExists() throws LiftPersistenceException {
-        dao.store(new Lift(0, 123, new RealDoor(), new NativeCurrentThread()));
+        dao.store(new Lift(0, 123, new RealDoor()));
 
         assertTrue(dao.elevatorExists());
     }

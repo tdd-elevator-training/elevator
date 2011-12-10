@@ -16,4 +16,6 @@ public interface LiftService extends RemoteService {
     boolean liftExists();
 
     void call(int fromFloor) throws LiftNotInstalledException;
+
+    int getFloorsCount();
 }

@@ -13,4 +13,28 @@ public class GwtLiftForm extends Composite implements LiftForm {
     public void liftCalled() {
         //will implement later
     }
+
+    public void setEnterButtonDown(boolean pressed) {
+
+    }
+
+    public void setCallButtonEnabled(boolean enabled) {
+
+    }
+
+    public void setCurrentFloor(int floorNumber) {
+
+    }
+
+    public void showWaitPanel() {
+
+    }
+
+    public void buildIndicatorPane(int floorsCount) {
+
+    }
+
+    public void buildButtonsPane(int floorsCount) {
+
+    }
 }

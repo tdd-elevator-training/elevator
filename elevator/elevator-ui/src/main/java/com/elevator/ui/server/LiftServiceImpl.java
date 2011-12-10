@@ -32,7 +32,7 @@ public class LiftServiceImpl extends RemoteServiceServlet implements
         if (lift != null) {
             throw new LiftAlreadyInstalledException();
         }
-        lift = new Lift(0, floorsCount, new RealDoor(), new NativeCurrentThread());
+        lift = new Lift(0, floorsCount, new RealDoor());
         lift.setStarted(true);
         dao.store(lift);
     }
@@ -50,6 +50,10 @@ public class LiftServiceImpl extends RemoteServiceServlet implements
                     ". Maximum floor is : " + lift.getFloorsCount());
         }
         lift.call(fromFloor);
+    }
+
+    public int getFloorsCount() {
+        return 0;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public Lift getLift() {
