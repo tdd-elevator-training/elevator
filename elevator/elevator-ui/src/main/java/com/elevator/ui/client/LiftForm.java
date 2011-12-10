@@ -16,4 +16,6 @@ public interface LiftForm {
     void setEnterButtonState(boolean enabled, boolean isDown);
 
     void setButtonsPaneState(boolean visible, boolean enabled);
+
+    void indicateFloor(int floorNumber);
 }

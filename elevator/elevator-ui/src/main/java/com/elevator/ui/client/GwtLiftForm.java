@@ -41,4 +41,8 @@ public class GwtLiftForm extends Composite implements LiftForm {
     public void setButtonsPaneState(boolean visible, boolean enabled) {
 
     }
+
+    public void indicateFloor(int floorNumber) {
+
+    }
 }

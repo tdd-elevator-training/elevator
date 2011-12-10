@@ -9,6 +9,8 @@ public class LiftFormController {
     private boolean isMyFloor;
     private Messages messages;
     private boolean doorIsOpen;
+    private int previousFloor = -1;
+    private int currentFloor;
 
     public LiftFormController(LiftServiceAsync liftServiceAsync,
                               ScreenFlowManager screenFlowManager,
@@ -29,11 +31,19 @@ public class LiftFormController {
     }
 
     public void synchronize(boolean doorIsOpen, int floorNumber) {
+        if (previousFloor != floorNumber) {
+            form.indicateFloor(floorNumber);
+        }
+        if (insideCabin) {
+            currentFloor = floorNumber;
+            form.setCurrentFloor(currentFloor);
+        }
         this.doorIsOpen = doorIsOpen;
-        isMyFloor = floorNumber == 0;
+        isMyFloor = floorNumber == currentFloor;
         form.setWaitPanelVisible(false);
-        form.setEnterButtonState(isMyFloor && doorIsOpen, insideCabin);
+        form.setEnterButtonState(doorIsOpen && (isMyFloor || insideCabin), insideCabin);
         form.setButtonsPaneState(isMyFloor && doorIsOpen || insideCabin, insideCabin);
+        previousFloor = floorNumber;
     }
 
     public void onHide() {

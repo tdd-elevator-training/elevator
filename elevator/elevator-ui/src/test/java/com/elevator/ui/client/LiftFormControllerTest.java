@@ -4,6 +4,10 @@ import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static junit.framework.Assert.*;
 
 public class LiftFormControllerTest {
@@ -109,18 +113,14 @@ public class LiftFormControllerTest {
     public void shouldBeAbleToEnterAndCallWhenDoorIsOpenOnMyFloor(){
         controller.synchronize(true, 0);
 
-        assertTrue(form.callButtonEnabled);
-        assertEnterButton(true, false);
-        assertButtonsPane(true, false);
+        assertFormState(true, enterBtn(true, false), buttonsPane(true, false));
     }
 
     @Test
     public void shouldBeOnlyAbleToCallWhenNotMyFloorOutside() {
         controller.synchronize(true, 0 + 1);
 
-        assertTrue(form.callButtonEnabled);
-        assertEnterButton(false, false);
-        assertButtonsPane(false, false);
+        assertFormState(true, enterBtn(false, false), buttonsPane(false, false));
     }
 
     @Test
@@ -129,21 +129,16 @@ public class LiftFormControllerTest {
 
         controller.enterButtonClicked();
 
-        assertFalse(form.callButtonEnabled);
-        assertEnterButton(true, true);
-        assertButtonsPane(true, true);
+        assertFormState(false, enterBtn(true, true), buttonsPane(true, true));
     }
 
     @Test
     public void shouldExitWhenExitButtonPressed(){
-        controller.synchronize(true, 0);
-        controller.enterButtonClicked();
+        enterCabin();
         
         controller.enterButtonClicked();
         
-        assertTrue(form.callButtonEnabled);
-        assertEnterButton(true, false);
-        assertButtonsPane(true, false);
+        assertFormState(true, enterBtn(true, false), buttonsPane(true, false));
     } 
     
     @Test
@@ -168,26 +163,90 @@ public class LiftFormControllerTest {
     public void shouldBeOnlyAbleToCallWhenDoorIsClosed_Outside(){
         controller.synchronize(false, 0);
 
-        assertTrue(form.callButtonEnabled);
-        assertEnterButton(false, false);
-        assertButtonsPane(false, false);
+        assertFormState(true, enterBtn(false, false), buttonsPane(false, false));
     } 
     
     @Test
     public void shouldBeOnlyAbleSelectFloorWhenInsideAndClosedDoor(){
-        controller.synchronize(true, 0);
-        controller.enterButtonClicked();
+        enterCabin();
         
         controller.synchronize(false, 0);
 
-        assertFalse(form.callButtonEnabled);
-        assertEnterButton(false, true);
-        assertButtonsPane(true, true);
-    } 
+        assertFormState(false, enterBtn(false, true), buttonsPane(true, true));
+    }
 
+    @Test
+    public void shouldChangeCurrentFloorWhenMovingInsideCabin(){
+        enterCabin();
+        
+        controller.synchronize(false, 1);
+
+        assertEquals(1, form.currentFloor);
+    }
+
+    @Test
+    public void shouldNotChangeFloorWhenOutsideCabin(){
+        controller.synchronize(false, 1);
+
+        assertEquals(0, form.currentFloor);
+    }
+
+    @Test
+    public void shouldChangeFloorIndicationWhenCabinMoves() {
+        controller.synchronize(false, 3);
+        controller.synchronize(true, 2);
+        
+        assertIndication(3, 2);
+    }
+
+    @Test
+    public void shouldNotFlashIndicatorWhenCabinDidNotMove(){
+        controller.synchronize(false, 0);
+        controller.synchronize(true, 0);
+        controller.synchronize(false, 1);
+
+        assertIndication(0, 1);
+    }
+
+    @Test
+    public void shouldBeAbleToExitWhenCameToAnotherFloor(){
+        enterCabin();
+        
+        controller.synchronize(true, 1);
+
+        assertFormState(false, enterBtn(true, true), buttonsPane(true, true));
+    } 
+    //Могу зайти обратно в лифт после того как вышел
+    @Test
+    public void shouldBeAbleToComeInWhenExitOnSomeFloor(){
+        enterCabin();
+        controller.synchronize(true, 1);
+        
+        controller.enterButtonClicked();
+
+        assertFormState(true, enterBtn(true, false), buttonsPane(true, false));
+    } 
+    
+    private void assertIndication(Integer ... floors) {
+        assertEquals(Arrays.asList(floors), form.indicationsHistory);
+    }
+    
+    private void enterCabin() {
+        controller.synchronize(true, 0);
+        controller.enterButtonClicked();
+    }
+    
     private void assertButtonsPane(boolean visible, boolean enabled) {
         assertEquals("Buttons pane visible", visible, form.buttonsPaneVisible);
         assertEquals("Buttons pane enabled", enabled, form.buttonsPaneEnabled);
+    }
+
+    private void assertButtonsPane(ButtonsPane buttonsPane) {
+        assertButtonsPane(buttonsPane.visible, buttonsPane.enabled);
+    }
+
+    private void assertEnterButton(EnterButtonState enterButton) {
+        assertEnterButton(enterButton.enabled, enterButton.down);
     }
 
     private void assertEnterButton(boolean enabled, boolean isDown) {
@@ -202,6 +261,20 @@ public class LiftFormControllerTest {
         assertEquals("Wait pane enabled", waitPanelEnabled, form.waitPanelEnabled);
     }
 
+    private void assertFormState(boolean callButtonEnabled, EnterButtonState enterButton, ButtonsPane buttonsPane) {
+        assertEquals("Call button enabled", callButtonEnabled, form.callButtonEnabled);
+        assertEnterButton(enterButton);
+        assertButtonsPane(buttonsPane);
+    }
+
+    private ButtonsPane buttonsPane(boolean visible, boolean enabled) {
+        return new ButtonsPane(visible, enabled);
+    }
+
+    private EnterButtonState enterBtn(boolean enabled, boolean down) {
+        return new EnterButtonState(enabled, down);
+    }
+
     private class MockLiftForm implements LiftForm {
         private boolean liftCalled;
         public boolean enterButtonIsDown = true;
@@ -213,6 +286,7 @@ public class LiftFormControllerTest {
         public boolean enterButtonEnabled;
         public boolean buttonsPaneVisible;
         public boolean buttonsPaneEnabled;
+        public List<Integer> indicationsHistory = new ArrayList<Integer>();
 
         public void liftCalled() {
            liftCalled = true;
@@ -246,6 +320,30 @@ public class LiftFormControllerTest {
         public void setButtonsPaneState(boolean visible, boolean enabled) {
             buttonsPaneVisible = visible;
             buttonsPaneEnabled = enabled;
+        }
+
+        public void indicateFloor(int floorNumber) {
+            indicationsHistory.add(floorNumber);
+        }
+    }
+
+    private class EnterButtonState {
+        private boolean enabled;
+        private boolean down;
+
+        public EnterButtonState(boolean enabled, boolean isDown) {
+            this.enabled = enabled;
+            down = isDown;
+        }
+    }
+
+    private class ButtonsPane {
+        private boolean visible;
+        private boolean enabled;
+
+        public ButtonsPane(boolean visible, boolean enabled) {
+            this.visible = visible;
+            this.enabled = enabled;
         }
     }
 }
