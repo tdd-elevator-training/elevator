@@ -136,7 +136,20 @@ public class LiftServiceImplTest {
         } catch (LiftAlreadyInstalledException e) {
 
         }
-    } 
+    }
+    
+    @Test
+    public void shouldReturnFloorsCountWhenAsked() throws LiftAlreadyInstalledException, LiftPersistenceException {
+        service.createLift(11);
+
+        assertEquals(11, service.getFloorsCount());
+    }
+
+    @Test
+    public void shouldReturn0WhenAskedFloorsCountAndLiftNotInstalled(){
+        assertEquals(0, service.getFloorsCount());
+    }
+    
     private IExpectationSetters<Boolean> liftExists(boolean liftExists) {
         return EasyMock.expect(dao.elevatorExists()).andReturn(liftExists);
     }

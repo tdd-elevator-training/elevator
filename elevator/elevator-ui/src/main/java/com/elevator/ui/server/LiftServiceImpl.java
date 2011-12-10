@@ -53,7 +53,10 @@ public class LiftServiceImpl extends RemoteServiceServlet implements
     }
 
     public int getFloorsCount() {
-        return 0;
+        if (lift == null) {
+            return 0;
+        }
+        return lift.getFloorsCount();
     }
 
     public Lift getLift() {
