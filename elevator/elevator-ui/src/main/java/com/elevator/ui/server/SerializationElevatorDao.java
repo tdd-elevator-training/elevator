@@ -54,6 +54,11 @@ public class SerializationElevatorDao implements ElevatorDao {
     }
 
     public boolean elevatorExists() {
-        return true;
+        try {
+            loadLift();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

@@ -66,11 +66,16 @@ public class ElevatorDaoTest {
         assertEquals(8, lift.getFloorsCount());
     }
 
-    @Test //это тест на ДАО!
+    @Test
     public void shouldReturnTrueWhenElevatorExists() throws ElevatorPersistenceException {
         dao.store(new Lift(0, 123, new RealDoor()));
 
         assertTrue(dao.elevatorExists());
+    }
+
+    @Test
+    public void shouldReturnFalseWhenElevatorDoesNotExist() throws ElevatorPersistenceException {
+        assertFalse(dao.elevatorExists());
     }
 
 }

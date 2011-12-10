@@ -29,7 +29,7 @@ public class ElevatorServiceImpl extends RemoteServiceServlet implements
     }
 
     public boolean elevatorExists() {
-        return false;
+        return dao.elevatorExists();
     }
 
 }
