@@ -7,16 +7,22 @@ public class Lift implements Serializable {
 
     private int position;
     private final Door door;
+    private final CurrentThread currentThread;
     private int floorsCount;
     private transient final FloorQueue queue;
     private transient boolean started;
     private FloorListener floorListener;
+    private int moveBetweenFloorsDelay;
 
-    public Lift(int position, int floorsCount, Door door) {
+    public Lift(int position, int floorsCount, Door door, CurrentThread currentThread) {
         this.position = position;
         this.floorsCount = floorsCount;
         this.door = door;
+        this.currentThread = currentThread;
         this.queue = new FloorQueue();
+    }
+    public Lift(int position, int floorsCount, Door door) {
+        this(position, floorsCount, door, new NativeCurrentThread());
     }
 
     public void call(int floor) {
@@ -43,6 +49,7 @@ public class Lift implements Serializable {
         while (position != nextFloor) {
             position += increment;
             notifyListener();
+            currentThread.sleep(moveBetweenFloorsDelay);
         }
     }
 
@@ -88,5 +95,9 @@ public class Lift implements Serializable {
 
     public void setFloorListener(FloorListener floorListener) {
         this.floorListener = floorListener;
+    }
+
+    public void setMoveBetweenFloorsDelay(int miliseconds) {
+        this.moveBetweenFloorsDelay = miliseconds;
     }
 }

@@ -82,7 +82,7 @@ public class ThredweaverMultithreadedLiftTest {
             door.open(EasyMock.capture(openDoorCapture));
             EasyMock.expectLastCall().anyTimes();
             EasyMock.expect(door.isOpen()).andReturn(false).anyTimes();
-            lift = new Lift(7, 10, door);
+            lift = new Lift(7, 10, door, new MockCurrentThread());
             EasyMock.replay(door);
         }
 

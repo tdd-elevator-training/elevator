@@ -3,8 +3,8 @@ package com.elevator.ui.server;
 import com.elevator.ui.shared.LiftAlreadyInstalledException;
 import com.elevator.ui.shared.LiftNotInstalledException;
 import com.elevator.ui.shared.LiftPersistenceException;
-import com.globallogic.training.ElevatorException;
 import com.globallogic.training.Lift;
+import com.globallogic.training.NativeCurrentThread;
 import com.globallogic.training.RealDoor;
 import org.easymock.Capture;
 import org.easymock.EasyMock;
@@ -54,7 +54,7 @@ public class LiftServiceImplTest {
     
     @Test
     public void shouldStartLiftWhenServiceStarted() throws LiftPersistenceException {
-        EasyMock.expect(dao.loadLift()).andReturn(new Lift(0, 12, new RealDoor()));
+        EasyMock.expect(dao.loadLift()).andReturn(new Lift(0, 12, new RealDoor(), new NativeCurrentThread()));
         liftExists(true);
         EasyMock.replay(dao);
 

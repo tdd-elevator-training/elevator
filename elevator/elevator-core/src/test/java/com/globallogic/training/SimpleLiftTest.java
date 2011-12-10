@@ -1,15 +1,10 @@
 package com.globallogic.training;
 
-import org.easymock.Capture;
-import org.easymock.CaptureType;
-import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static junit.framework.Assert.*;
 
@@ -19,16 +14,14 @@ public class SimpleLiftTest {
     public static final int FLOOR_COUNT = 99;
     private MockDoor door;
     private Lift lift;
-    private FloorListenerFixture floorListenerFixture;
-    private FloorListener floorListener;
-    private Capture<Integer> atFloorCapture;
+    private MockFloorListener floorListener;
+    private MockCurrentThread currentThread;
 
     @Before
     public void setUp() throws Exception {
         door = new MockDoor();
-        floorListenerFixture = new FloorListenerFixture().setUp();
-        floorListener = floorListenerFixture.getFloorListener();
-        atFloorCapture = floorListenerFixture.getAtFloorCapture();
+        currentThread = new MockCurrentThread();
+        floorListener = new MockFloorListener();
     }
 
     @Test
@@ -294,7 +287,7 @@ public class SimpleLiftTest {
         lift.call(4);
         lift.processQueue();
 
-        assertLiftWasOnFloors(atFloorCapture, 1, 2, 3, 4);
+        assertLiftIndicatedOnFloors(1, 2, 3, 4);
     } 
 
     @Test
@@ -305,14 +298,13 @@ public class SimpleLiftTest {
         lift.call(7);
         lift.processQueue();
 
-        assertLiftWasOnFloors(atFloorCapture, 10, 9, 8, 7);
+        assertLiftIndicatedOnFloors(10, 9, 8, 7);
     }
     
     @Test
     public void shouldCloseDoorWhenMoving() {
         givenLiftWithOpenDoor(1);
 
-        MockFloorListener floorListener = new MockFloorListener();
         lift.setFloorListener(floorListener);
         lift.call(2);
         lift.processQueue();
@@ -320,53 +312,51 @@ public class SimpleLiftTest {
         assertDoorClosedAt(floorListener, 1);
     }
 
+    @Test
+    public void shouldDelayWhenMovingBetweenFloors() throws ElevatorException {
+        givenLiftWithClosedDoor(1);
+
+        lift.setMoveBetweenFloorsDelay(100);
+        lift.moveTo(3);
+        lift.processQueue();
+
+        assertDelayed(100 * 2);
+    }
+
+    private void assertDelayed(int totalExpectedDelay) {
+        assertEquals(totalExpectedDelay, currentThread.totalSleepTime);
+    }
+
     private void assertDoorClosedAt(MockFloorListener floorListener, int floorNumber) {
         assertNotNull("Door should be closed at floor: " + floorNumber, floorListener.doorTrack.get(floorNumber));
         assertFalse("Door should be closed at floor: " + floorNumber, floorListener.doorTrack.get(floorNumber));
     }
 
-    private void assertLiftWasOnFloors(Capture<Integer> atFloorCapture, Integer... expectedFloors) {
+    private void assertLiftIndicatedOnFloors(Integer... expectedFloors) {
         Assert.assertEquals(Arrays.asList(expectedFloors),
-                atFloorCapture.getValues());
+                floorListener.getVisitedFloors());
     }
     
     private void givenLiftWithOpenDoor(int position) {
-        lift = new Lift(position, FLOOR_COUNT, door);
+        lift = new Lift(position, FLOOR_COUNT, door, currentThread);
         door.isOpen = true;
     }
 
     private void givenLiftWithClosedDoor(int position) {
-        lift = new Lift(position, FLOOR_COUNT, door);
-    }
-
-    private class FloorListenerFixture {
-        private FloorListener floorListener;
-        private Capture<Integer> atFloorCapture;
-
-        public FloorListener getFloorListener() {
-            return floorListener;
-        }
-
-        public Capture<Integer> getAtFloorCapture() {
-            return atFloorCapture;
-        }
-
-        public FloorListenerFixture setUp() {
-            floorListener = EasyMock.createMock(FloorListener.class);
-            atFloorCapture = new Capture<Integer>(CaptureType.ALL);
-            floorListener.atFloor(EasyMock.capture(atFloorCapture));
-            EasyMock.expectLastCall().anyTimes();
-            EasyMock.replay(floorListener);
-            return this;
-        }
+        lift = new Lift(position, FLOOR_COUNT, door, currentThread);
     }
 
     private class MockFloorListener implements FloorListener {
         private Map<Integer, Boolean> doorTrack = new HashMap<Integer, Boolean>();
-        
+        private List<Integer> visitedFloors = new ArrayList<Integer>();
         @Override
         public void atFloor(int floorNumber) {
             doorTrack.put(floorNumber, door.isOpen);
+            visitedFloors.add(floorNumber);
+        }
+
+        public List<Integer> getVisitedFloors() {
+            return visitedFloors;
         }
     }
 }

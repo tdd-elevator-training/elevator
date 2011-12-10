@@ -5,6 +5,7 @@ import com.elevator.ui.shared.LiftAlreadyInstalledException;
 import com.elevator.ui.shared.LiftNotInstalledException;
 import com.elevator.ui.shared.LiftPersistenceException;
 import com.globallogic.training.Lift;
+import com.globallogic.training.NativeCurrentThread;
 import com.globallogic.training.RealDoor;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import org.apache.commons.io.FileUtils;
@@ -31,7 +32,7 @@ public class LiftServiceImpl extends RemoteServiceServlet implements
         if (lift != null) {
             throw new LiftAlreadyInstalledException();
         }
-        lift = new Lift(0, floorsCount, new RealDoor());
+        lift = new Lift(0, floorsCount, new RealDoor(), new NativeCurrentThread());
         lift.setStarted(true);
         dao.store(lift);
     }
