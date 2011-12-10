@@ -22,7 +22,7 @@ public class ElevatorServiceImpl extends RemoteServiceServlet implements
         this.dao = dao;
     }
 
-    public void createElevator(int floorsCount) throws IllegalArgumentException {
+    public void createElevator(int floorsCount) throws ElevatorPersistenceException {
         dao.store(new Lift(0, floorsCount, new RealDoor()));
     }
 

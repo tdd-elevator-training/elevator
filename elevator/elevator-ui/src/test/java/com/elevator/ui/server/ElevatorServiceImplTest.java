@@ -9,7 +9,7 @@ import static junit.framework.Assert.assertEquals;
 
 public class ElevatorServiceImplTest {
     @Test
-    public void shouldCallDaoWhenCreate() {
+    public void shouldCallDaoWhenCreate() throws ElevatorPersistenceException {
         ElevatorDao dao = EasyMock.createMock(ElevatorDao.class);
         Capture<Lift> liftCapture = new Capture<Lift>();
         dao.store(EasyMock.capture(liftCapture));

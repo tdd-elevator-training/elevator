@@ -7,7 +7,7 @@ import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 
-public class SerializationElevatorDao {
+public class SerializationElevatorDao implements ElevatorDao {
     private File rootDataFolder;
 
     public SerializationElevatorDao(File rootDataFolder) {
@@ -15,21 +15,26 @@ public class SerializationElevatorDao {
     }
 
     public void createElevator(int floorsCount) throws ElevatorPersistenceException {
-      Lift lift = new Lift(0, floorsCount, new RealDoor());
-      ObjectOutputStream outStream = null;
-      try {
-          outStream = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(getElevatorFile())));
-          outStream.writeObject(lift);
-      } catch (IOException e) {
-          throw new ElevatorPersistenceException("Unable to persist elevator to file " + getElevatorFile().getAbsolutePath(), e);
-      }finally {
-          IOUtils.closeQuietly(outStream);
-      }
+        Lift lift = new Lift(0, floorsCount, new RealDoor());
+        store(lift);
+    }
+
+    public void store(Lift lift) throws ElevatorPersistenceException {
+        ObjectOutputStream outStream = null;
+        try {
+            outStream = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(getElevatorFile())));
+            outStream.writeObject(lift);
+        } catch (IOException e) {
+            throw new ElevatorPersistenceException("Unable to persist elevator to file " + getElevatorFile().getAbsolutePath(), e);
+        } finally {
+            IOUtils.closeQuietly(outStream);
+        }
     }
 
     public boolean isElevatorInstalled() {
         return getElevatorFile().exists();
     }
+
     private File getElevatorFile() {
         return new File(createElevatorDir(), "lift.data");
     }
@@ -49,7 +54,7 @@ public class SerializationElevatorDao {
             throw new RuntimeException(e);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
-        }finally {
+        } finally {
             IOUtils.closeQuietly(inputStream);
         }
     }
