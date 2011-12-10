@@ -18,17 +18,4 @@ public class ScreenFlowManager {
     public void nextScreen(String screenName) {
         currentScreen = screenName;
     }
-
-    public void selectStartScreen() {
-        elevatorService.elevatorExists(new AsyncCallback<Boolean>() {
-            public void onFailure(Throwable caught) {
-            }
-
-            public void onSuccess(Boolean result) {
-                if (result) {
-                    currentScreen = "liftForm";
-                }
-            }
-        });
-    }
 }
