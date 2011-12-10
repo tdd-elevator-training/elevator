@@ -96,6 +96,8 @@
                     <runTarget>ElevatorUi.html</runTarget>
                     <hostedWebapp>${webappDirectory}</hostedWebapp>
                     <i18nMessagesBundle>com.elevator.ui.client.Messages</i18nMessagesBundle>
+                    <logLevel>DEBUG</logLevel>
+                    <extraJvmArgs>-Xmx512m</extraJvmArgs>
                 </configuration>
             </plugin>
 

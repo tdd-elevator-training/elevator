@@ -24,7 +24,7 @@ public class InstallQuestionControllerTest {
     }
 
     @Test
-    public void shouldOpenStartScreenFormWhenAgreedToInstall() {
+    public void shouldOpenStartScreenFormWhenNotAgreedToInstall() {
         controller.disagree();
 
         assertEquals(ScreenFlowManager.Form.START_SCREEN, screenFlowManager.getNextScreen());
