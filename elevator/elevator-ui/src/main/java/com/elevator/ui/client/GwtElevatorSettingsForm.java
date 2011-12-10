@@ -10,8 +10,7 @@ public class GwtElevatorSettingsForm extends Composite implements ElevatorSettin
     private Messages messages;
     private TextBox textBox;
     private Label validationLabel;
-    private DialogBox dialogBox;
-    private HTML dialogBoxMessage;
+    private ElevatorDialogBox dialogBox;
 
 
     public GwtElevatorSettingsForm(final ElevatorSettingsController controller, Messages messages) {
@@ -48,19 +47,6 @@ public class GwtElevatorSettingsForm extends Composite implements ElevatorSettin
         layoutPanel.add(button);
         layoutPanel.setWidgetLeftWidth(button, 305.0, Unit.PX, 78.0, Unit.PX);
         layoutPanel.setWidgetTopHeight(button, 167.0, Unit.PX, 24.0, Unit.PX);
-        dialogBox = new DialogBox(false);
-        VerticalPanel dialogBoxContents = new VerticalPanel();
-        dialogBoxMessage = new HTML("Click 'Close' to close");
-        button = new Button("Close", new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                dialogBox.hide();
-            }
-        });
-        SimplePanel holder = new SimplePanel();
-        holder.add(button);
-        dialogBoxContents.add(dialogBoxMessage);
-        dialogBoxContents.add(holder);
-        dialogBox.setWidget(dialogBoxContents);
     }
 
 
@@ -72,7 +58,7 @@ public class GwtElevatorSettingsForm extends Composite implements ElevatorSettin
         validationLabel.setVisible(false);
         dialogBox.setTitle("Ok");
         dialogBox.setText("Ok");
-        dialogBoxMessage.setText("Elevator created successfully");
+        dialogBox.setMessageText("Elevator created successfully");
         dialogBox.center();
     }
 
@@ -87,10 +73,4 @@ public class GwtElevatorSettingsForm extends Composite implements ElevatorSettin
         validationLabel.setVisible(true);
     }
 
-    public void serverCallFailed(Throwable caught) {
-        dialogBox.setTitle("Error");
-        dialogBox.setText("Error");
-        dialogBoxMessage.setText("Server Error: " + caught.getMessage());
-        dialogBox.center();
-    }
 }

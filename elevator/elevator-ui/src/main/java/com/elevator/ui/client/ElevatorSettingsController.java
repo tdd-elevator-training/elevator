@@ -6,14 +6,17 @@ public class ElevatorSettingsController {
 
     private ElevatorServiceAsync elevatorService;
     private ElevatorSettingsForm elevatorSettingsForm;
+    private ScreenFlowManager screenFlowManager;
 
-    public ElevatorSettingsController(ElevatorServiceAsync elevatorService, ElevatorSettingsForm elevatorSettingsForm) {
+    public ElevatorSettingsController(ElevatorServiceAsync elevatorService, ElevatorSettingsForm elevatorSettingsForm,
+                                      ScreenFlowManager screenFlowManager) {
         this.elevatorService = elevatorService;
         this.elevatorSettingsForm = elevatorSettingsForm;
+        this.screenFlowManager = screenFlowManager;
     }
 
-    public ElevatorSettingsController(ElevatorServiceAsync elevatorService) {
-        this(elevatorService, null);
+    public ElevatorSettingsController(ElevatorServiceAsync elevatorService, ScreenFlowManager screenFlowManager) {
+        this(elevatorService, null, screenFlowManager);
     }
 
     public void sendButtonClicked() {
@@ -27,7 +30,7 @@ public class ElevatorSettingsController {
             elevatorService.createElevator(floorsCount, new AsyncCallback<Void>() {
 
                 public void onFailure(Throwable caught) {
-                    elevatorSettingsForm.serverCallFailed(caught);
+                    screenFlowManager.serverCallFailed(caught);
                 }
 
                 public void onSuccess(Void result) {

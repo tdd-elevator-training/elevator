@@ -10,12 +10,14 @@ public class ElevatorSettingsControllerTest {
     private MockElevatorServiceAsync elevatorService;
     private MockElevatorSettingsForm elevatorSettingsForm;
     private ElevatorSettingsController controller;
+    private MockScreenFlowManager screenFlowManager;
 
     @Before
     public void setUp() throws Exception {
         elevatorService = new MockElevatorServiceAsync();
         elevatorSettingsForm = new MockElevatorSettingsForm();
-        controller = new ElevatorSettingsController(elevatorService, elevatorSettingsForm);
+        screenFlowManager = new MockScreenFlowManager();
+        controller = new ElevatorSettingsController(elevatorService, elevatorSettingsForm, screenFlowManager);
     }
 
     @Test
@@ -81,7 +83,7 @@ public class ElevatorSettingsControllerTest {
 
         controller.sendButtonClicked();
 
-        assertEquals(raisedException, elevatorSettingsForm.serverCallFailed);
+        assertEquals(raisedException, screenFlowManager.serverCallFailed);
     }
 
     private class MockElevatorSettingsForm implements ElevatorSettingsForm {
@@ -89,7 +91,6 @@ public class ElevatorSettingsControllerTest {
         private boolean elevatorCreatedCalled;
         private boolean invalidIntegerValidation;
         public boolean negativeIntegerValidation;
-        public Throwable serverCallFailed;
 
         public void setFloorsCount(String floorsCount) {
             this.floorsCount = floorsCount;
@@ -111,8 +112,5 @@ public class ElevatorSettingsControllerTest {
             negativeIntegerValidation = true;
         }
 
-        public void serverCallFailed(Throwable caught) {
-            serverCallFailed = caught;
-        }
     }
 }

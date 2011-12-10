@@ -9,5 +9,4 @@ public interface ElevatorSettingsForm {
 
     void negativeInteger();
 
-    void serverCallFailed(Throwable caught);
 }

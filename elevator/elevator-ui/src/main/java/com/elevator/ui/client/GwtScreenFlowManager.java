@@ -1,6 +1,7 @@
 package com.elevator.ui.client;
 
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.RootPanel;
 
 import java.util.HashMap;
@@ -11,9 +12,10 @@ public class GwtScreenFlowManager implements ScreenFlowManager {
     private Composite currentForm;
     private HashMap<Form, Composite> forms =  new HashMap<Form, Composite>();
     private final InstallQuestionForm installQuestionForm;
+    private ElevatorDialogBox dialogBox;
 
     public GwtScreenFlowManager(ElevatorServiceAsync elevatorService, Messages messages) {
-        ElevatorSettingsController controller = new ElevatorSettingsController(elevatorService);
+        ElevatorSettingsController controller = new ElevatorSettingsController(elevatorService, this);
         elevatorSettingsForm = new GwtElevatorSettingsForm(controller, messages);
         controller.setElevatorSettingsForm(elevatorSettingsForm);
         forms.put(Form.ELEVATOR_SETTINGS_FORM, elevatorSettingsForm);
@@ -24,6 +26,15 @@ public class GwtScreenFlowManager implements ScreenFlowManager {
         forms.put(Form.START_SCREEN, new StartScreenForm());
 
         forms.put(Form.ELEVATOR_FORM, new ElevatorForm());
+
+        dialogBox = new ElevatorDialogBox();
+    }
+
+    public void serverCallFailed(Throwable caught) {
+        dialogBox.setTitle("Error");
+        dialogBox.setText("Error");
+        dialogBox.setText("Server Error: " + caught.getMessage());
+        dialogBox.center();
     }
 
     public void nextScreen(Form form) {
