@@ -1,7 +1,6 @@
 package com.elevator.ui.client;
 
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.RootPanel;
 
 import java.util.HashMap;
@@ -25,7 +24,7 @@ public class GwtScreenFlowManager implements ScreenFlowManager {
 
         forms.put(Form.START_SCREEN, new StartScreenForm());
 
-        forms.put(Form.ELEVATOR_FORM, new ElevatorForm());
+        forms.put(Form.ELEVATOR_FORM, new GwtElevatorForm());
 
         dialogBox = new ElevatorDialogBox();
     }
