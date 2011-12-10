@@ -52,4 +52,8 @@ public class SerializationElevatorDao implements ElevatorDao {
             IOUtils.closeQuietly(inputStream);
         }
     }
+
+    public boolean elevatorExists() {
+        return true;
+    }
 }
