@@ -14,19 +14,17 @@ public class SerializationElevatorDao {
         this.rootDataFolder = rootDataFolder;
     }
 
-    public void createElevator(int floorsCount) {
-      Lift lift = new Lift(0, floorsCount, new RealDoor());
+    public void createElevator(int floorsCount) throws ElevatorPersistenceException {
+      Lift lift = new Lift(0, 10, new RealDoor());
       ObjectOutputStream outStream = null;
       try {
           outStream = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(getElevatorFile())));
           outStream.writeObject(lift);
       } catch (IOException e) {
-          //todo: test it
-          throw new RuntimeException(e);
+          throw new ElevatorPersistenceException("Unable to persist elevator to file " + getElevatorFile().getAbsolutePath(), e);
       }finally {
           IOUtils.closeQuietly(outStream);
       }
-
     }
 
     public boolean isElevatorInstalled() {
