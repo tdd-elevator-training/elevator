@@ -1,6 +1,5 @@
 package com.elevator.ui.client;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -83,20 +82,6 @@ public class ElevatorSettingsControllerTest {
         controller.sendButtonClicked();
 
         assertEquals(raisedException, elevatorSettingsForm.serverCallFailed);
-    }
-
-    private static class MockElevatorServiceAsync implements ElevatorServiceAsync {
-        private Integer floorsCount;
-        public Throwable serverFailure;
-
-        public void createElevator(int floorsCount, AsyncCallback<Void> callback) {
-            this.floorsCount = floorsCount;
-            if (serverFailure == null) {
-                callback.onSuccess(null);
-            } else {
-                callback.onFailure(serverFailure);
-            }
-        }
     }
 
     private class MockElevatorSettingsForm implements ElevatorSettingsForm {

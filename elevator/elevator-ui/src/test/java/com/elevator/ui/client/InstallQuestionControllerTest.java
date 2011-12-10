@@ -12,7 +12,7 @@ public class InstallQuestionControllerTest {
 
     @Before
     public void setUp() throws Exception {
-        screenFlowManager = new ScreenFlowManager();
+        screenFlowManager = new ScreenFlowManager(new MockElevatorServiceAsync());
         controller = new InstallQuestionController(screenFlowManager);
     }
 

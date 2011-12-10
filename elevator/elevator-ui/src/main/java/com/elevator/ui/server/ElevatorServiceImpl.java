@@ -28,4 +28,8 @@ public class ElevatorServiceImpl extends RemoteServiceServlet implements
         dao.store(new Lift(0, floorsCount, new RealDoor()));
     }
 
+    public boolean elevatorExists() {
+        return false;
+    }
+
 }

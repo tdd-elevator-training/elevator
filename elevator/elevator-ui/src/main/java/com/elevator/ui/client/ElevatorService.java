@@ -9,5 +9,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
  */
 @RemoteServiceRelativePath("elevator")
 public interface ElevatorService extends RemoteService {
-  void createElevator(int floorsCount) throws IllegalArgumentException, ElevatorPersistenceException;
+    void createElevator(int floorsCount) throws IllegalArgumentException, ElevatorPersistenceException;
+
+    boolean elevatorExists();
 }
