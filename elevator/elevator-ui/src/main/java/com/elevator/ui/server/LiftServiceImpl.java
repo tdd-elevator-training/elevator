@@ -1,6 +1,7 @@
 package com.elevator.ui.server;
 
 import com.elevator.ui.client.LiftService;
+import com.elevator.ui.shared.LiftNotInstalledException;
 import com.elevator.ui.shared.LiftPersistenceException;
 import com.globallogic.training.Lift;
 import com.globallogic.training.RealDoor;
@@ -35,8 +36,15 @@ public class LiftServiceImpl extends RemoteServiceServlet implements
         return dao.elevatorExists();
     }
 
-    public void call(int fromFloor) {
-
+    public void call(int fromFloor) throws LiftNotInstalledException {
+        if (lift == null) {
+            throw new LiftNotInstalledException();
+        }
+        if (fromFloor > lift.getFloorsCount()) {
+            throw new IllegalArgumentException("Called from non existnet floor: " + fromFloor +
+                    ". Maximum floor is : " + lift.getFloorsCount());
+        }
+        lift.call(fromFloor);
     }
 
     public Lift getLift() {
@@ -44,6 +52,9 @@ public class LiftServiceImpl extends RemoteServiceServlet implements
     }
 
     public void start() {
+        if (!dao.elevatorExists()) {
+            return;
+        }
         lift = dao.loadLift();
         lift.setStarted(true);
     }

@@ -1,5 +1,6 @@
 package com.elevator.ui.client;
 
+import com.elevator.ui.shared.LiftNotInstalledException;
 import com.elevator.ui.shared.LiftPersistenceException;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
@@ -13,5 +14,5 @@ public interface LiftService extends RemoteService {
 
     boolean liftExists();
 
-    void call(int fromFloor);
+    void call(int fromFloor) throws LiftNotInstalledException;
 }
