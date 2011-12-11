@@ -25,7 +25,6 @@ public class LiftServiceImpl extends RemoteServiceServlet implements
     private Lift lift;
     private final Thread liftThread;
     private AtomicInteger currentFloor = new AtomicInteger();
-    private AtomicBoolean doorIsOpen = new AtomicBoolean();
 
 
     public LiftServiceImpl() {
@@ -127,11 +126,10 @@ public class LiftServiceImpl extends RemoteServiceServlet implements
         if (lift == null) {
             return null;
         }
-        return new LiftState(currentFloor.get(), doorIsOpen.get());
+        return new LiftState(currentFloor.get(), lift.isDoorOpen());
     }
 
     public void atFloor(int floorNumber) {
-        doorIsOpen.set(lift.isDoorOpen());
         currentFloor.set(floorNumber);
     }
 }

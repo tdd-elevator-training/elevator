@@ -6,6 +6,9 @@ public class LiftState implements Serializable {
     private boolean open;
     private int floor;
 
+    public LiftState() {
+    }
+
     public LiftState(int floor, boolean open) {
         this.floor = floor;
         this.open = open;

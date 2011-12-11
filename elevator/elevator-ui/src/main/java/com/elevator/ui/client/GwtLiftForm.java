@@ -109,6 +109,7 @@ public class GwtLiftForm extends Composite implements LiftForm {
 
     public void setCallButtonEnabled(boolean enabled) {
         callbutton.setEnabled(enabled);
+        callbutton.setVisible(true);
     }
 
     public void setCurrentFloor(int floorNumber) {
