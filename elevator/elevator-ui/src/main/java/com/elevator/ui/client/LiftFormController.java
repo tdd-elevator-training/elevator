@@ -22,6 +22,12 @@ public class LiftFormController {
         this.messages = messages;
     }
 
+    public LiftFormController(LiftServiceAsync liftServiceAsync,
+                              ScreenFlowManager screenFlowManager,
+                              ServerUpdater updater, Messages messages) {
+        this(liftServiceAsync, screenFlowManager, null, updater, messages);
+    }
+
     public void callPressed() {
         liftServiceAsync.call(0, new DefaultAsyncCallback<Void>(screenFlowManager) {
             public void onSuccess(Void result) {
@@ -84,5 +90,9 @@ public class LiftFormController {
                 form.confirmedMovingTo(floorNumber);
             }
         });
+    }
+
+    public void setForm(LiftForm form) {
+        this.form = form;
     }
 }

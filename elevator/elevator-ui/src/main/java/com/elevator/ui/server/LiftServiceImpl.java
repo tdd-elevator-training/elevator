@@ -11,6 +11,9 @@ import com.globallogic.training.RealDoor;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import org.apache.commons.io.FileUtils;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+
 /**
  * The server side implementation of the RPC service.
  */
@@ -88,5 +91,17 @@ public class LiftServiceImpl extends RemoteServiceServlet implements
             return;
         }
         lift.setStarted(false);
+    }
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        start();
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        stop();
     }
 }

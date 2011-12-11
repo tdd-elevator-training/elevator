@@ -9,9 +9,10 @@ public class GwtScreenFlowManager implements ScreenFlowManager {
 
     private final GwtLiftSettingsForm elevatorSettingsForm;
     private Composite currentForm;
-    private HashMap<Form, Composite> forms =  new HashMap<Form, Composite>();
+    private HashMap<Form, Composite> forms = new HashMap<Form, Composite>();
     private final InstallQuestionForm installQuestionForm;
     private LiftDialogBox dialogBox;
+    private final LiftFormController liftFormController;
 
     public GwtScreenFlowManager(LiftServiceAsync elevatorService, Messages messages) {
         LiftSettingsController controller = new LiftSettingsController(elevatorService, this);
@@ -24,7 +25,11 @@ public class GwtScreenFlowManager implements ScreenFlowManager {
 
         forms.put(Form.START_SCREEN, new StartScreenForm());
 
-        forms.put(Form.LIFT_FORM, new GwtLiftForm());
+        liftFormController = new LiftFormController(elevatorService,
+                this, new ServerUpdater(), messages);
+        GwtLiftForm liftForm = new GwtLiftForm(liftFormController);
+        liftFormController.setForm(liftForm);
+        forms.put(Form.LIFT_FORM, liftForm);
 
         dialogBox = new LiftDialogBox();
     }
@@ -48,10 +53,22 @@ public class GwtScreenFlowManager implements ScreenFlowManager {
         if (composite == null) {
             throw new RuntimeException("Screen " + form + " is not defined!");
         }
+        if (currentForm == composite) {
+            return;
+        }
+        
         if (currentForm != null) {
-            RootPanel.get().remove(currentForm);
+            RootPanel.get().remove(currentForm);                                
+        }
+
+        if (currentForm == forms.get(Form.LIFT_FORM)) {
+            liftFormController.onHide();
         }
         currentForm = composite;
+        
+        if (form == Form.LIFT_FORM) {
+            liftFormController.onShow();
+        }
         RootPanel.get().add(currentForm);
     }
 }
