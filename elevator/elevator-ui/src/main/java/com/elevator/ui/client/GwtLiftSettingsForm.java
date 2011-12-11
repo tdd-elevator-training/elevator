@@ -47,6 +47,7 @@ public class GwtLiftSettingsForm extends Composite implements LiftSettingsForm {
         layoutPanel.add(button);
         layoutPanel.setWidgetLeftWidth(button, 305.0, Unit.PX, 78.0, Unit.PX);
         layoutPanel.setWidgetTopHeight(button, 167.0, Unit.PX, 24.0, Unit.PX);
+        dialogBox = new LiftDialogBox();
     }
 
 
@@ -59,6 +60,7 @@ public class GwtLiftSettingsForm extends Composite implements LiftSettingsForm {
         dialogBox.setTitle("Ok");
         dialogBox.setText("Ok");
         dialogBox.setMessageText("Elevator created successfully");
+        dialogBox.setModal(true);
         dialogBox.center();
     }
 

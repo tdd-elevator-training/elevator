@@ -45,6 +45,7 @@ public class LiftSettingsController {
 
         public void onSuccess(Void result) {
             liftSettingsForm.liftCreated();
+            screenFlowManager.nextScreen(ScreenFlowManager.Form.LIFT_FORM);
         }
     }
 }

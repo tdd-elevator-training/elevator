@@ -39,6 +39,7 @@ public class LiftSettingsControllerTest {
 
         assertTrue(liftSettingsForm.liftCreatedCalled);
         assertEquals(9, liftService.floorsCount.intValue());
+        assertEquals(ScreenFlowManager.Form.LIFT_FORM, screenFlowManager.getNextScreen());
     }
 
     @Test

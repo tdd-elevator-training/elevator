@@ -60,11 +60,15 @@ public class LiftServiceImpl extends RemoteServiceServlet implements
         return lift.getFloorsCount();
     }
 
-    public void moveTo(int floorNumber) throws ElevatorException {
+    public void moveTo(int floorNumber) {
         if (lift == null) {
             return;
         }
-        lift.moveTo(floorNumber);
+        try {
+            lift.moveTo(floorNumber);
+        } catch (ElevatorException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public Lift getLift() {

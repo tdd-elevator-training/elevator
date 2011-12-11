@@ -3,7 +3,6 @@ package com.elevator.ui.client;
 import com.elevator.ui.shared.LiftAlreadyInstalledException;
 import com.elevator.ui.shared.LiftNotInstalledException;
 import com.elevator.ui.shared.LiftPersistenceException;
-import com.globallogic.training.ElevatorException;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
@@ -20,5 +19,5 @@ public interface LiftService extends RemoteService {
 
     int getFloorsCount();
 
-    void moveTo(int floorNumber) throws ElevatorException;
+    void moveTo(int floorNumber);
 }
