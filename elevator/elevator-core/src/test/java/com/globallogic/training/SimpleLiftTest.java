@@ -300,7 +300,18 @@ public class SimpleLiftTest {
 
         assertLiftIndicatedOnFloors(10, 9, 8, 7);
     }
-    
+
+    @Test
+    public void shouldCallIndicatorWhenCalledFromSameFloor() {
+        givenLiftWithOpenDoor(10);
+
+        lift.setFloorListener(floorListener);
+        lift.call(10);
+        lift.processQueue();
+
+        assertLiftIndicatedOnFloors(10);
+    }
+
     @Test
     public void shouldCloseDoorWhenMoving() {
         givenLiftWithOpenDoor(1);
@@ -322,6 +333,7 @@ public class SimpleLiftTest {
 
         assertDelayed(100 * 2);
     }
+
 
     private void assertDelayed(int totalExpectedDelay) {
         assertEquals(totalExpectedDelay, currentThread.totalSleepTime);

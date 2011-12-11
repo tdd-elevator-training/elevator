@@ -26,7 +26,7 @@ public class GwtScreenFlowManager implements ScreenFlowManager {
         forms.put(Form.START_SCREEN, new StartScreenForm());
 
         liftFormController = new LiftFormController(elevatorService,
-                this, new ServerUpdater(), messages);
+                this, new GwtTimerServerUpdater(elevatorService, this), messages);
         GwtLiftForm liftForm = new GwtLiftForm(liftFormController);
         liftFormController.setForm(liftForm);
         forms.put(Form.LIFT_FORM, liftForm);

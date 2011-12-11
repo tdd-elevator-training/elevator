@@ -4,25 +4,29 @@ import com.elevator.ui.client.LiftService;
 import com.elevator.ui.shared.LiftAlreadyInstalledException;
 import com.elevator.ui.shared.LiftNotInstalledException;
 import com.elevator.ui.shared.LiftPersistenceException;
-import com.globallogic.training.ElevatorException;
-import com.globallogic.training.Lift;
-import com.globallogic.training.NativeCurrentThread;
-import com.globallogic.training.RealDoor;
+import com.elevator.ui.shared.LiftState;
+import com.globallogic.training.*;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import org.apache.commons.io.FileUtils;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * The server side implementation of the RPC service.
  */
 @SuppressWarnings("serial")
 public class LiftServiceImpl extends RemoteServiceServlet implements
-        LiftService {
+        LiftService, Runnable, FloorListener {
 
     private LiftDao dao;
     private Lift lift;
+    private final Thread liftThread;
+    private AtomicInteger currentFloor = new AtomicInteger();
+    private AtomicBoolean doorIsOpen = new AtomicBoolean();
+
 
     public LiftServiceImpl() {
         this(new SerializationLiftDao(FileUtils.getUserDirectory()));
@@ -30,6 +34,7 @@ public class LiftServiceImpl extends RemoteServiceServlet implements
 
     public LiftServiceImpl(LiftDao dao) {
         this.dao = dao;
+        liftThread = new Thread(this);
     }
 
     public void createLift(int floorsCount) throws LiftPersistenceException, LiftAlreadyInstalledException {
@@ -37,8 +42,8 @@ public class LiftServiceImpl extends RemoteServiceServlet implements
             throw new LiftAlreadyInstalledException();
         }
         lift = new Lift(0, floorsCount, new RealDoor());
-        lift.setStarted(true);
         dao.store(lift);
+        startLift(); 
     }
 
     public boolean liftExists() {
@@ -83,7 +88,12 @@ public class LiftServiceImpl extends RemoteServiceServlet implements
             return;
         }
         lift = dao.loadLift();
+        startLift();
+    }
+
+    private void startLift() {
         lift.setStarted(true);
+        liftThread.start();
     }
 
     public void stop() {
@@ -103,5 +113,25 @@ public class LiftServiceImpl extends RemoteServiceServlet implements
     public void destroy() {
         super.destroy();
         stop();
+    }
+
+    //WARN: Not tested
+    public void run() {
+        lift.setFloorListener(this);
+        lift.call(0);
+        lift.run();
+    }
+
+    //WARN: not tested properly
+    public LiftState getLiftState() {
+        if (lift == null) {
+            return null;
+        }
+        return new LiftState(currentFloor.get(), doorIsOpen.get());
+    }
+
+    public void atFloor(int floorNumber) {
+        doorIsOpen.set(lift.isDoorOpen());
+        currentFloor.set(floorNumber);
     }
 }

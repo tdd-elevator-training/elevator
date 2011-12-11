@@ -7,12 +7,11 @@ import com.globallogic.training.*;
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.easymock.IExpectationSetters;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
@@ -156,7 +155,19 @@ public class LiftServiceImplTest {
             fail();
         }
     }
-    
+
+    @Test
+    public void shouldReturnNullLiftStateWhenLiftIsNotInstalled() {
+        assertNull(service.getLiftState());
+    }
+
+    @Test
+    public void shouldReturnNotNullLiftStateWhenLiftInstalled() throws LiftAlreadyInstalledException, LiftPersistenceException {
+        service.createLift(10);
+
+        assertNotNull(service.getLiftState());
+    }
+
     private IExpectationSetters<Boolean> liftExists(boolean liftExists) {
         return EasyMock.expect(dao.elevatorExists()).andReturn(liftExists);
     }

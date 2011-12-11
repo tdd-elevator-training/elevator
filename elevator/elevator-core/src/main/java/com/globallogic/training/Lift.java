@@ -28,6 +28,7 @@ public class Lift implements Serializable {
 
     public void call(int floor) {
         if (door.isOpen() && floor == position) {
+            notifyListener();
             return;
         }
         queue.addFloor(floor);
@@ -79,6 +80,8 @@ public class Lift implements Serializable {
     public void run() {
         while (started) {
             processQueue();
+            //this should go away with actors implementation. for now have to deal with sleeps...
+            currentThread.sleep(50);
         }
     }
 
@@ -106,5 +109,9 @@ public class Lift implements Serializable {
         currentThread = new NativeCurrentThread(); //warn: not tested
         queue = new FloorQueue();
         return this;
+    }
+
+    public boolean isDoorOpen() {
+        return door.isOpen();
     }
 }
