@@ -10,15 +10,16 @@ public class GwtLiftForm extends Composite implements LiftForm {
     private final AbsolutePanel leftDoor = new AbsolutePanel();
     private LayoutPanel buttonsPane;
     private boolean doorIsOpen;
-    private final Label waitLabel;
+//    private final Label waitLabel;
     private final ToggleButton callbutton;
     private LiftFormController controller;
     private final ToggleButton enterButton;
+    private final DockLayoutPanel mainPane;
 
 
     public GwtLiftForm(LiftFormController controller) {
         this.controller = controller;
-        DockLayoutPanel mainPane = new DockLayoutPanel(Style.Unit.PX);
+        mainPane = new DockLayoutPanel(Style.Unit.PX);
         initWidget(mainPane);
 
         mainPane.setWidth("600px");
@@ -44,16 +45,31 @@ public class GwtLiftForm extends Composite implements LiftForm {
 
         buttonsPane = new LayoutPanel();
         Button floorButton1 = new Button("Floor 1");
+        floorButton1.addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
+                GwtLiftForm.this.controller.floorSelected(1);
+            }
+        });
         buttonsPane.add(floorButton1);
         buttonsPane.setWidgetLeftWidth(floorButton1, 200, Style.Unit.PX, 50.0, Style.Unit.PX);
         buttonsPane.setWidgetTopHeight(floorButton1, 10.0, Style.Unit.PX, 50.0, Style.Unit.PX);
 
         Button floorButton2 = new Button("Floor 2");
+        floorButton2.addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
+                GwtLiftForm.this.controller.floorSelected(2);
+            }
+        });
         buttonsPane.add(floorButton2);
         buttonsPane.setWidgetLeftWidth(floorButton2, 250, Style.Unit.PX, 50.0, Style.Unit.PX);
         buttonsPane.setWidgetTopHeight(floorButton2, 10.0, Style.Unit.PX, 50.0, Style.Unit.PX);
 
         enterButton = new ToggleButton("Enter");
+        enterButton.addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
+                GwtLiftForm.this.controller.enterButtonClicked();
+            }
+        });
         enterButton.getDownFace().setText("Exit");
         buttonsPane.add(enterButton);
         buttonsPane.setWidgetLeftWidth(enterButton, 200.0, Style.Unit.PX, 200.0, Style.Unit.PX);
@@ -65,18 +81,19 @@ public class GwtLiftForm extends Composite implements LiftForm {
         buttonsPane.add(rightDoor);
         setDoorsClosedConstraints();
 
+/*
         waitLabel = new Label("Please wait a second");
         waitLabel.setDirectionEstimator(true);
         waitLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
         buttonsPane.add(waitLabel);
         waitLabel.setSize("500", "700");
         waitLabel.setStyleName("waitLabel");
-        callbutton.setEnabled(false);
-        
+*/
+//        callbutton.setEnabled(false);
+        buttonsPane.getElement().getStyle().setZIndex(10);
         buttonsPane.forceLayout();
 
         mainPane.add(buttonsPane);
-
     }
 
     private void setDoorsClosedConstraints() {
@@ -84,16 +101,6 @@ public class GwtLiftForm extends Composite implements LiftForm {
         buttonsPane.setWidgetTopHeight(leftDoor, 0.0, Style.Unit.PX, 770.0, Style.Unit.PX);
         buttonsPane.setWidgetLeftWidth(rightDoor, 251.0, Style.Unit.PX, 250.0, Style.Unit.PX);
         buttonsPane.setWidgetTopHeight(rightDoor, 0.0, Style.Unit.PX, 770.0, Style.Unit.PX);
-    }
-
-    private void openDoor() {
-        if (doorIsOpen) {
-            setDoorsClosedConstraints();
-        } else {
-            setDoorsOpenConstraints();
-        }
-        buttonsPane.animate(1000);
-        doorIsOpen = !doorIsOpen;
     }
 
     private void setDoorsOpenConstraints() {
@@ -108,7 +115,7 @@ public class GwtLiftForm extends Composite implements LiftForm {
     }
 
     public void setCallButtonEnabled(boolean enabled) {
-        callbutton.setEnabled(enabled);
+//        callbutton.setEnabled(enabled);
         callbutton.setVisible(true);
     }
 
@@ -117,8 +124,17 @@ public class GwtLiftForm extends Composite implements LiftForm {
     }
 
     public void setWaitPanelVisible(boolean visible) {
+/*
+        if (waitLabel.isVisible() != visible) {
+            if (visible) {
+                waitLabel.getElement().getStyle().setZIndex(0);
+            } else {
+                waitLabel.getElement().getStyle().setZIndex(11);
+            }
+        }
         waitLabel.setVisible(visible);
-        callbutton.setEnabled(visible);
+*/
+//        callbutton.setEnabled(visible);
     }
 
     public void buildIndicatorPane(int floorsCount) {
@@ -142,7 +158,7 @@ public class GwtLiftForm extends Composite implements LiftForm {
         }
         // performance optimization
         if (visible != doorIsOpen) {
-            buttonsPane.animate(1000);
+            buttonsPane.animate(2000);
         }
         doorIsOpen = visible;
     }

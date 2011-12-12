@@ -29,7 +29,7 @@ public class LiftFormController {
     }
 
     public void callPressed() {
-        liftServiceAsync.call(0, new DefaultAsyncCallback<Void>(screenFlowManager) {
+        liftServiceAsync.call(currentFloor, new DefaultAsyncCallback<Void>(screenFlowManager) {
             public void onSuccess(Void result) {
                 form.liftCalled();
             }

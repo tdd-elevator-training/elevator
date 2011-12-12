@@ -41,6 +41,7 @@ public class LiftServiceImpl extends RemoteServiceServlet implements
             throw new LiftAlreadyInstalledException();
         }
         lift = new Lift(0, floorsCount, new RealDoor());
+        lift.setMoveBetweenFloorsDelay(2000);
         dao.store(lift);
         startLift(); 
     }
