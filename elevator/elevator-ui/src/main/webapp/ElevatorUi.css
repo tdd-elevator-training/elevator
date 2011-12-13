@@ -47,6 +47,24 @@ h1 {
     font-size:20px;
     font-weight:bold;
 }
+
+.indicatorLabel {
+    text-align:center;
+    font-weight:bold;
+    border-width:1px;
+    border-style:solid;
+    border-color:black;
+}
+
+.indicatorLabelOn {
+    text-align:center;
+    font-weight:bold;
+    background-color:red;
+    border-width:1px;
+    border-style:solid;
+    border-color:black;
+}
+
 /** Set ids using widget.getElement().setId("idOfElement") */
 #closeButton {
   margin: 15px 6px 6px;

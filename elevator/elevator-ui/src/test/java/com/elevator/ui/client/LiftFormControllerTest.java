@@ -33,14 +33,14 @@ public class LiftFormControllerTest {
 
     @Test
     public void shouldCallLiftWhenButtonPressed() {
-        controller.callPressed();
+        controller.callButtonPressed();
 
         assertEquals(0, service.fromFloor);
     }
 
     @Test
     public void shouldNotifyFormWhenCallOk() {
-        controller.callPressed();
+        controller.callButtonPressed();
 
         assertTrue(form.liftCalled);
     }
@@ -251,7 +251,17 @@ public class LiftFormControllerTest {
         
         assertTrue("Error should be shown", screenFlowManager.userMessageShown);
     }
+    @Test
+    public void shouldStayOnFloorWhenPressCallButtonAfterArrival(){
+        enterCabin();
+        controller.synchronize(true, 2);
+        
+        controller.enterButtonClicked();
+        controller.callButtonPressed();
 
+        assertEquals(2, service.fromFloor);
+    } 
+    
     private void assertIndication(Integer ... floors) {
         assertEquals(Arrays.asList(floors), form.indicationsHistory);
     }

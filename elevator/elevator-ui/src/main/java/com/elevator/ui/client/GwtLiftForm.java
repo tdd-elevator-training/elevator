@@ -15,6 +15,7 @@ public class GwtLiftForm extends Composite implements LiftForm {
     private LiftFormController controller;
     private final ToggleButton enterButton;
     private final DockLayoutPanel mainPane;
+    private final IndicatorPane indicatorPane;
 
 
     public GwtLiftForm(LiftFormController controller) {
@@ -25,23 +26,20 @@ public class GwtLiftForm extends Composite implements LiftForm {
         mainPane.setWidth("600px");
         mainPane.setHeight("800px");
 
-        FlowPanel indicatorPane = new FlowPanel();
-        Label floor1 = new Label("1");
-        indicatorPane.add(floor1);
-        indicatorPane.setStyleName("indicatorPane");
+        indicatorPane = new IndicatorPane();
         mainPane.addNorth(indicatorPane, 30);
 
         LayoutPanel callButtonPane = new LayoutPanel();
         callbutton = new ToggleButton("Call");
         callbutton.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
-                GwtLiftForm.this.controller.callPressed();
+                GwtLiftForm.this.controller.callButtonPressed();
             }
         });
         callButtonPane.add(callbutton);
-        callButtonPane.setWidgetLeftWidth(callbutton, 25, Style.Unit.PX, 50.0, Style.Unit.PX);
+        callButtonPane.setWidgetLeftWidth(callbutton, 0, Style.Unit.PX, 50.0, Style.Unit.PX);
         callButtonPane.setWidgetBottomHeight(callbutton, 375, Style.Unit.PX, 50.0, Style.Unit.PX);
-        mainPane.addEast(callButtonPane, 100);
+        mainPane.addEast(callButtonPane, 50);
 
         buttonsPane = new LayoutPanel();
         Button floorButton1 = new Button("Floor 1");
@@ -138,7 +136,7 @@ public class GwtLiftForm extends Composite implements LiftForm {
     }
 
     public void buildIndicatorPane(int floorsCount) {
-
+        indicatorPane.buildIndicators(floorsCount);
     }
 
     public void buildButtonsPane(int floorsCount) {
@@ -164,7 +162,7 @@ public class GwtLiftForm extends Composite implements LiftForm {
     }
 
     public void indicateFloor(int floorNumber) {
-        System.out.println("indicate: " + floorNumber);
+        indicatorPane.indicateFloor(floorNumber);
     }
 
     public void confirmedMovingTo(int floorNumber) {
