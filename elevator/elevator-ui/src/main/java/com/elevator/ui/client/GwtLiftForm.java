@@ -10,12 +10,13 @@ public class GwtLiftForm extends Composite implements LiftForm {
     private final AbsolutePanel leftDoor = new AbsolutePanel();
     private LayoutPanel buttonsPane;
     private boolean doorIsOpen;
-//    private final Label waitLabel;
+    //    private final Label waitLabel;
     private final ToggleButton callbutton;
     private LiftFormController controller;
     private final ToggleButton enterButton;
     private final DockLayoutPanel mainPane;
     private final IndicatorPane indicatorPane;
+    private final LayoutPanel buttonsBorder;
 
 
     public GwtLiftForm(LiftFormController controller) {
@@ -42,26 +43,8 @@ public class GwtLiftForm extends Composite implements LiftForm {
         mainPane.addEast(callButtonPane, 50);
 
         buttonsPane = new LayoutPanel();
-        Button floorButton1 = new Button("Floor 1");
-        floorButton1.addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                GwtLiftForm.this.controller.floorSelected(1);
-            }
-        });
-        buttonsPane.add(floorButton1);
-        buttonsPane.setWidgetLeftWidth(floorButton1, 200, Style.Unit.PX, 50.0, Style.Unit.PX);
-        buttonsPane.setWidgetTopHeight(floorButton1, 10.0, Style.Unit.PX, 50.0, Style.Unit.PX);
-
-        Button floorButton2 = new Button("Floor 2");
-        floorButton2.addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                GwtLiftForm.this.controller.floorSelected(2);
-            }
-        });
-        buttonsPane.add(floorButton2);
-        buttonsPane.setWidgetLeftWidth(floorButton2, 250, Style.Unit.PX, 50.0, Style.Unit.PX);
-        buttonsPane.setWidgetTopHeight(floorButton2, 10.0, Style.Unit.PX, 50.0, Style.Unit.PX);
-
+        buttonsBorder = new LayoutPanel();
+        buttonsPane.add(buttonsBorder);
         enterButton = new ToggleButton("Enter");
         enterButton.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
@@ -140,6 +123,38 @@ public class GwtLiftForm extends Composite implements LiftForm {
     }
 
     public void buildButtonsPane(int floorsCount) {
+        int buttonSize = 40;
+        int buttonSpace = buttonSize + 5 + 5;
+        int columnsCount = 3;
+        int buttonsBorderWidth = buttonSpace * columnsCount;
+        buttonsBorder.setWidth(buttonsBorderWidth + "px");
+        int rowsCount = floorsCount / columnsCount + 1;
+        int borderHeight = rowsCount * buttonSpace;
+        buttonsBorder.setHeight(borderHeight + "px");
+        int i = 0;
+        while (i < floorsCount) {
+            for (int j = 0; j < columnsCount && i < floorsCount; j++) {
+                LayoutPanel buttonSpacePane = new LayoutPanel();
+                buttonSpacePane.setWidth(buttonSpace + "px");
+                buttonSpacePane.setHeight(buttonSpace + "px");
+                Button floorButton = new Button("" + i);
+                floorButton.addClickHandler(new FloorButtonClickHandler(i));
+                buttonSpacePane.add(floorButton);
+                buttonSpacePane.setWidgetLeftWidth(floorButton, 5, Style.Unit.PX, buttonSize, Style.Unit.PX);
+                buttonSpacePane.setWidgetTopHeight(floorButton, 5,
+                        Style.Unit.PX, buttonSize, Style.Unit.PX);
+                buttonsBorder.add(buttonSpacePane);
+                buttonsBorder.setWidgetLeftWidth(buttonSpacePane, j * buttonSpace, Style.Unit.PX,
+                        buttonSpace, Style.Unit.PX);
+                buttonsBorder.setWidgetTopHeight(buttonSpacePane, borderHeight - i / columnsCount * buttonSpace - buttonSpace,
+                        Style.Unit.PX, buttonSpace, Style.Unit.PX);
+                i++;
+            }
+        }
+        buttonsBorder.setStyleName("buttonsBorder");
+        buttonsPane.setWidgetLeftWidth(buttonsBorder, 300, Style.Unit.PX, buttonsBorderWidth + 7, Style.Unit.PX);
+        buttonsPane.setWidgetTopHeight(buttonsBorder, 100, Style.Unit.PX,
+                borderHeight + 7, Style.Unit.PX);
 
     }
 
@@ -167,5 +182,17 @@ public class GwtLiftForm extends Composite implements LiftForm {
 
     public void confirmedMovingTo(int floorNumber) {
         System.out.println("confirmed moving to: " + floorNumber);
+    }
+
+    private class FloorButtonClickHandler implements ClickHandler {
+        private final int i;
+
+        public FloorButtonClickHandler(int i) {
+            this.i = i;
+        }
+
+        public void onClick(ClickEvent event) {
+            GwtLiftForm.this.controller.floorSelected(i);
+        }
     }
 }
