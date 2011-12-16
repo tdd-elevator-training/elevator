@@ -9,7 +9,7 @@ public class LiftDialogBox extends DialogBox {
     private Button button;
 
     public LiftDialogBox() {
-        super(false);
+        super(false, true);
         VerticalPanel dialogBoxContents = new VerticalPanel();
         dialogBoxMessage = new HTML("Click 'Close' to close");
         button = new Button("Close", new ClickHandler() {
@@ -27,4 +27,5 @@ public class LiftDialogBox extends DialogBox {
     public void setMessageText(String text) {
         dialogBoxMessage.setText(text);
     }
+
 }

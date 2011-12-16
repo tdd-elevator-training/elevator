@@ -22,4 +22,8 @@ public class MockScreenFlowManager implements ScreenFlowManager {
         userMessageShown = true;
     }
 
+    public void showMessage(String html) {
+
+    }
+
 }

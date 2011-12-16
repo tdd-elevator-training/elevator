@@ -17,6 +17,7 @@ public class GwtLiftForm extends Composite implements LiftForm {
     private final DockLayoutPanel mainPane;
     private final IndicatorPane indicatorPane;
     private final LayoutPanel buttonsBorder;
+    private final Label currentFloor;
 
 
     public GwtLiftForm(LiftFormController controller) {
@@ -33,6 +34,7 @@ public class GwtLiftForm extends Composite implements LiftForm {
         LayoutPanel callButtonPane = new LayoutPanel();
         callbutton = new ToggleButton("Call");
         callbutton.addClickHandler(new ClickHandler() {
+
             public void onClick(ClickEvent event) {
                 GwtLiftForm.this.controller.callButtonPressed();
             }
@@ -40,6 +42,14 @@ public class GwtLiftForm extends Composite implements LiftForm {
         callButtonPane.add(callbutton);
         callButtonPane.setWidgetLeftWidth(callbutton, 0, Style.Unit.PX, 50.0, Style.Unit.PX);
         callButtonPane.setWidgetBottomHeight(callbutton, 375, Style.Unit.PX, 50.0, Style.Unit.PX);
+        currentFloor = new Label();
+        currentFloor.setHeight("50px");
+        currentFloor.setWidth("50px");
+        currentFloor.setStyleName("currentFloor");
+        callButtonPane.add(currentFloor);
+        callButtonPane.setWidgetLeftWidth(currentFloor, 0, Style.Unit.PX, 50.0, Style.Unit.PX);
+        callButtonPane.setWidgetBottomHeight(currentFloor, 475, Style.Unit.PX, 50.0, Style.Unit.PX);
+
         mainPane.addEast(callButtonPane, 50);
 
         buttonsPane = new LayoutPanel();
@@ -96,12 +106,12 @@ public class GwtLiftForm extends Composite implements LiftForm {
     }
 
     public void setCallButtonEnabled(boolean enabled) {
-//        callbutton.setEnabled(enabled);
+        callbutton.setEnabled(enabled);
         callbutton.setVisible(true);
     }
 
     public void setCurrentFloor(int floorNumber) {
-        System.out.println("current floor: " + floorNumber);
+        currentFloor.setText(""+floorNumber);
     }
 
     public void setWaitPanelVisible(boolean visible) {

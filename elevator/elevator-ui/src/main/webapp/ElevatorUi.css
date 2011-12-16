@@ -70,7 +70,11 @@ h1 {
     border-color:#E6E6FA;
     background-color:#F8F8FF;
 }
-
+.currentFloor{
+    text-align:center;
+    font-weight:bold;
+    font-size: 30px;
+}
 /** Set ids using widget.getElement().setId("idOfElement") */
 #closeButton {
   margin: 15px 6px 6px;

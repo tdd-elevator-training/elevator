@@ -251,6 +251,7 @@ public class LiftFormControllerTest {
         
         assertTrue("Error should be shown", screenFlowManager.userMessageShown);
     }
+
     @Test
     public void shouldStayOnFloorWhenPressCallButtonAfterArrival(){
         enterCabin();

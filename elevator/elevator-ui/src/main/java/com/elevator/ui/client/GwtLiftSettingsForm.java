@@ -8,13 +8,15 @@ import com.google.gwt.event.dom.client.ClickEvent;
 public class GwtLiftSettingsForm extends Composite implements LiftSettingsForm {
 
     private Messages messages;
+    private ScreenFlowManager screenFlowManager;
     private TextBox textBox;
     private Label validationLabel;
-    private LiftDialogBox dialogBox;
 
 
-    public GwtLiftSettingsForm(final LiftSettingsController controller, Messages messages) {
+    public GwtLiftSettingsForm(final LiftSettingsController controller, Messages messages,
+                               ScreenFlowManager screenFlowManager) {
         this.messages = messages;
+        this.screenFlowManager = screenFlowManager;
 
         LayoutPanel layoutPanel = new LayoutPanel();
         initWidget(layoutPanel);
@@ -47,7 +49,6 @@ public class GwtLiftSettingsForm extends Composite implements LiftSettingsForm {
         layoutPanel.add(button);
         layoutPanel.setWidgetLeftWidth(button, 305.0, Unit.PX, 78.0, Unit.PX);
         layoutPanel.setWidgetTopHeight(button, 167.0, Unit.PX, 24.0, Unit.PX);
-        dialogBox = new LiftDialogBox();
     }
 
 
@@ -57,11 +58,7 @@ public class GwtLiftSettingsForm extends Composite implements LiftSettingsForm {
 
     public void liftCreated() {
         validationLabel.setVisible(false);
-        dialogBox.setTitle("Ok");
-        dialogBox.setText("Ok");
-        dialogBox.setMessageText("Elevator created successfully");
-        dialogBox.setModal(true);
-        dialogBox.center();
+        screenFlowManager.showMessage("Lift created!");
     }
 
     public void invalidInteger() {

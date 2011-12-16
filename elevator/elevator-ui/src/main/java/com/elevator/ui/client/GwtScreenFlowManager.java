@@ -6,7 +6,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import java.util.HashMap;
 
 public class GwtScreenFlowManager implements ScreenFlowManager {
-
+    
     private final GwtLiftSettingsForm elevatorSettingsForm;
     private Composite currentForm;
     private HashMap<Form, Composite> forms = new HashMap<Form, Composite>();
@@ -16,7 +16,7 @@ public class GwtScreenFlowManager implements ScreenFlowManager {
 
     public GwtScreenFlowManager(LiftServiceAsync elevatorService, Messages messages) {
         LiftSettingsController controller = new LiftSettingsController(elevatorService, this);
-        elevatorSettingsForm = new GwtLiftSettingsForm(controller, messages);
+        elevatorSettingsForm = new GwtLiftSettingsForm(controller, messages, this);
         controller.setLiftSettingsForm(elevatorSettingsForm);
         forms.put(Form.LIFT_SETTINGS_FORM, elevatorSettingsForm);
 
@@ -42,6 +42,13 @@ public class GwtScreenFlowManager implements ScreenFlowManager {
     }
 
     public void showUserError(String html) {
+        dialogBox.setTitle("Error");
+        dialogBox.setText("Error");
+        dialogBox.setMessageText(html);
+        dialogBox.center();
+    }
+    
+    public void showMessage(String html){
         dialogBox.setTitle("Error");
         dialogBox.setText("Error");
         dialogBox.setMessageText(html);
