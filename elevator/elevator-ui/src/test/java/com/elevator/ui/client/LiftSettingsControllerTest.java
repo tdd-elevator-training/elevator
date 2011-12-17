@@ -45,9 +45,9 @@ public class LiftSettingsControllerTest {
     }
 
     private void fillFormValues(String floorsCount, String delayBetweenFloors, String doorSpeed) {
-        liftSettingsForm.setFloorsCount(floorsCount);
-        liftSettingsForm.setDelayBetweenFloors(delayBetweenFloors);
-        liftSettingsForm.setDoorSpeed(doorSpeed);
+        liftSettingsForm.fieldValues.put("floorsCount", floorsCount);
+        liftSettingsForm.fieldValues.put("delayBetweenFloors", delayBetweenFloors);
+        liftSettingsForm.fieldValues.put("doorSpeed", doorSpeed);
     }
 
     @Test
@@ -153,10 +153,6 @@ public class LiftSettingsControllerTest {
         public boolean negativeIntegerValidation;
         private final HashMap<String,String> fieldValues = new HashMap<String, String>();
 
-        public void setFloorsCount(String floorsCount) {
-            fieldValues.put("floorsCount", floorsCount);
-        }
-
         public String getFloorsCount() {
             return fieldValues.get("floorsCount");
         }
@@ -185,12 +181,5 @@ public class LiftSettingsControllerTest {
             return fieldValues.get(fieldName);
         }
 
-        public void setDelayBetweenFloors(String delayBetweenFloors) {
-            fieldValues.put("delayBetweenFloors", delayBetweenFloors);
-        }
-
-        public void setDoorSpeed(String doorSpeed) {
-            fieldValues.put("doorSpeed", doorSpeed);
-        }
     }
 }

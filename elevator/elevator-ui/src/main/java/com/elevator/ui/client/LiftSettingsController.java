@@ -1,11 +1,14 @@
 package com.elevator.ui.client;
 
+import java.util.HashMap;
+
 public class LiftSettingsController {
 
     private LiftServiceAsync elevatorService;
     private LiftSettingsForm liftSettingsForm;
     private ScreenFlowManager screenFlowManager;
     private final LiftSettingsController.CreateElevatorCallback createElevatorCallback;
+    private final HashMap<String,Integer> fieldValues;
 
     public LiftSettingsController(LiftServiceAsync elevatorService, LiftSettingsForm liftSettingsForm,
                                   ScreenFlowManager screenFlowManager) {
@@ -13,6 +16,7 @@ public class LiftSettingsController {
         this.liftSettingsForm = liftSettingsForm;
         this.screenFlowManager = screenFlowManager;
         createElevatorCallback = new CreateElevatorCallback();
+        fieldValues = new HashMap<String, Integer>();
     }
 
     public LiftSettingsController(LiftServiceAsync elevatorService, ScreenFlowManager screenFlowManager) {
@@ -20,33 +24,44 @@ public class LiftSettingsController {
     }
 
     public void sendButtonClicked() {
-        int floorsCount = 0;
-        int delayBetweenFloors = 0;
-        int doorSpeed = 0;
-        try {
-            floorsCount = Integer.parseInt(liftSettingsForm.getFieldValue("floorsCount"));
-            if (floorsCount < 0) {
-                liftSettingsForm.negativeInteger();
-                return;
-            }
-        } catch (NumberFormatException e) {
-            liftSettingsForm.invalidInteger("floorsCount");
+        if (!parseFieldValues("floorsCount", "delayBetweenFloors", "doorSpeed")) {
             return;
         }
-        try {
-            delayBetweenFloors = Integer.parseInt(liftSettingsForm.getFieldValue("delayBetweenFloors"));
-        } catch (NumberFormatException e) {
-            liftSettingsForm.invalidInteger("delayBetweenFloors");
-            return;
-        }
-        try {
-            doorSpeed = Integer.parseInt(liftSettingsForm.getFieldValue("doorSpeed"));
-        } catch (NumberFormatException e) {
-            liftSettingsForm.invalidInteger("doorSpeed");
-            return;
 
+        if (getParsedValue("floorsCount") < 0) {
+            liftSettingsForm.negativeInteger();
+            return;
         }
-        elevatorService.updateLift(floorsCount, delayBetweenFloors, doorSpeed, createElevatorCallback);
+        elevatorService.updateLift(getParsedValue("floorsCount"),
+                getParsedValue("delayBetweenFloors"),
+                getParsedValue("doorSpeed"), createElevatorCallback);
+    }
+
+    private Integer getParsedValue(String fieldName) {
+        return fieldValues.get(fieldName);
+    }
+
+    private boolean parseFieldValues(String... fieldNames) {
+        for (String fieldName : fieldNames) {
+            if (!parseFieldValue(fieldName)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean parseFieldValue(String fieldName) {
+        try {
+            fieldValues.put(fieldName, parseStringField(fieldName));
+            return true;
+        } catch (NumberFormatException e) {
+            liftSettingsForm.invalidInteger(fieldName);
+            return false;
+        }
+    }
+
+    private int parseStringField(String fieldName) {
+        return Integer.parseInt(liftSettingsForm.getFieldValue(fieldName));
     }
 
     public void setLiftSettingsForm(LiftSettingsForm liftSettingsForm) {
