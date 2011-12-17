@@ -169,14 +169,6 @@ public class LiftSettingsControllerTest {
             negativeIntegerValidation = true;
         }
 
-        public String getDelayBetweenFloors() {
-            return fieldValues.get("delayBetweenFloors");
-        }
-
-        public String getDoorSpeed() {
-            return fieldValues.get("doorSpeed");
-        }
-
         public String getFieldValue(String fieldName) {
             return fieldValues.get(fieldName);
         }

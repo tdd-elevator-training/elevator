@@ -9,9 +9,5 @@ public interface LiftSettingsForm {
 
     void negativeInteger();
 
-    String getDelayBetweenFloors();
-
-    String getDoorSpeed();
-
     String getFieldValue(String fieldName);
 }
