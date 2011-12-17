@@ -1,6 +1,6 @@
 package com.elevator.ui.client;
 
-public class LiftFormController {
+public class LiftFormController implements FormController {
     private LiftServiceAsync liftServiceAsync;
     private ScreenFlowManager screenFlowManager;
     private LiftForm form;

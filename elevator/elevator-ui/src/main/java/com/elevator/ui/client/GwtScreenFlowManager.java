@@ -8,29 +8,31 @@ import java.util.HashMap;
 
 public class GwtScreenFlowManager implements ScreenFlowManager {
     
-    private final GwtLiftSettingsForm elevatorSettingsForm;
     private Composite currentForm;
     private HashMap<Form, Composite> forms = new HashMap<Form, Composite>();
-    private final InstallQuestionForm installQuestionForm;
-    private final LiftFormController liftFormController;
+    private HashMap<Form, Object> controllers = new HashMap<Form, Object>();
+    private Form currentFormName;
 
     public GwtScreenFlowManager(LiftServiceAsync elevatorService, Messages messages) {
-        LiftSettingsController controller = new LiftSettingsController(elevatorService, this);
-        elevatorSettingsForm = new GwtLiftSettingsForm(controller, messages, this);
-        controller.setLiftSettingsForm(elevatorSettingsForm);
-        forms.put(Form.LIFT_SETTINGS_FORM, elevatorSettingsForm);
+        LiftSettingsController liftSettingsController = new LiftSettingsController(elevatorService, this);
+        GwtLiftSettingsForm liftSettingsForm = new GwtLiftSettingsForm(liftSettingsController, messages, this);
+        liftSettingsController.setLiftSettingsForm(liftSettingsForm);
+        forms.put(Form.LIFT_SETTINGS_FORM, liftSettingsForm);
+        controllers.put(Form.LIFT_SETTINGS_FORM, liftSettingsController);
 
-        installQuestionForm = new InstallQuestionForm(messages, new InstallQuestionController(this));
+        InstallQuestionController installQuestionController = new InstallQuestionController(this);
+        InstallQuestionForm installQuestionForm = new InstallQuestionForm(messages, installQuestionController);
         forms.put(Form.INSTALL_LIFT_QUESTION, installQuestionForm);
+        controllers.put(Form.INSTALL_LIFT_QUESTION, installQuestionController);
 
         forms.put(Form.START_SCREEN, new StartScreenForm());
 
-        liftFormController = new LiftFormController(elevatorService,
+        LiftFormController liftFormController = new LiftFormController(elevatorService,
                 this, new GwtTimerServerUpdater(elevatorService, this), messages);
         GwtLiftForm liftForm = new GwtLiftForm(liftFormController);
         liftFormController.setForm(liftForm);
         forms.put(Form.LIFT_FORM, liftForm);
-
+        controllers.put(Form.LIFT_FORM, liftFormController);
     }
 
     public void serverCallFailed(Throwable caught) {
@@ -58,13 +60,14 @@ public class GwtScreenFlowManager implements ScreenFlowManager {
             RootPanel.get().remove(currentForm);                                
         }
 
-        if (currentForm == forms.get(Form.LIFT_FORM)) {
-            liftFormController.onHide();
+        if (controllers.get(currentFormName) instanceof FormController) {
+            ((FormController) controllers.get(currentFormName)).onHide();
         }
         currentForm = composite;
-        
-        if (form == Form.LIFT_FORM) {
-            liftFormController.onShow();
+        currentFormName = form;
+
+        if (controllers.get(currentFormName) instanceof FormController) {
+            ((FormController) controllers.get(currentFormName)).onShow();
         }
         RootPanel.get().add(currentForm);
     }

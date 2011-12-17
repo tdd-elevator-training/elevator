@@ -6,7 +6,7 @@ import java.util.HashMap;
 
 import static com.elevator.ui.client.LiftSettingsForm.FieldName.*;
 
-public class LiftSettingsController {
+public class LiftSettingsController implements FormController {
 
     private LiftServiceAsync service;
     private LiftSettingsForm liftSettingsForm;
@@ -79,16 +79,23 @@ public class LiftSettingsController {
                 String floorsCountStr = "1";
                 String delayBetweenFloorsStr = "0";
                 String doorSpeedStr = "0";
+                String delayAfterOpenStr = "0";
                 if (result != null) {
                     floorsCountStr = ""+result.getFloorsCount();
                     delayBetweenFloorsStr = "" + result.getDelayBetweenFloors();
                     doorSpeedStr = "" + result.getDoorSpeed();
+                    delayAfterOpenStr = "" + result.getDelayAfterOpen();
                 }
                 liftSettingsForm.setFieldValue(floorsCount, floorsCountStr);
                 liftSettingsForm.setFieldValue(delayBetweenFloors, delayBetweenFloorsStr);
                 liftSettingsForm.setFieldValue(doorSpeed, doorSpeedStr);
+                liftSettingsForm.setFieldValue(delayAfterOpen, delayAfterOpenStr);
             }
         });
+    }
+
+    public void onHide() {
+
     }
 
     private class CreateElevatorCallback extends DefaultAsyncCallback<Void> {

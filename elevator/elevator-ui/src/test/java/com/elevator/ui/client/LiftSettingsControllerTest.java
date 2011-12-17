@@ -156,25 +156,29 @@ public class LiftSettingsControllerTest {
 
     @Test
     public void shouldGetLiftParamsWhenShow() {
-        liftService.liftSettings = new LiftSettings(10, 200, 300);
+        liftService.liftSettings = new LiftSettings(10, 200, 300, 400);
 
         controller.onShow();
 
-        assertFormValues("10", "200", "300");
+        assertFormValues("10", "200", "300", "400");
     }
 
     @Test
     public void shouldSetDefaultLiftParamsWhenLiftIsNotInstalled() {
         controller.onShow();
 
-        assertFormValues("1", "0", "0");
+        assertFormValues("1", "0", "0", "0");
     }
 
 
-    private void assertFormValues(String expectedFloorsCount, String expectedDelayBetweenFloors, String expectedDoorspeed) {
+    private void assertFormValues(String expectedFloorsCount,
+                                  String expectedDelayBetweenFloors,
+                                  String expectedDoorspeed,
+                                  String expectedDelayAfterOpen) {
         assertEquals(expectedFloorsCount, liftSettingsForm.getFieldValue(floorsCount));
         assertEquals(expectedDelayBetweenFloors, liftSettingsForm.getFieldValue(delayBetweenFloors));
         assertEquals(expectedDoorspeed, liftSettingsForm.getFieldValue(doorSpeed));
+        assertEquals(expectedDelayAfterOpen, liftSettingsForm.getFieldValue(delayAfterOpen));
     }
 
     private void assertLiftParams(int floorsCount, int delayBetweenFloors, int doorSpeed, int delayAfterOpen) {

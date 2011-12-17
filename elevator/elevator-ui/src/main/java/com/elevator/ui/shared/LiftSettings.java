@@ -6,15 +6,17 @@ public class LiftSettings implements Serializable {
     private int floorsCount;
     private int delayBetweenFloors;
     private int doorSpeed;
+    private int delayAfterOpen;
 
     //for GWT
     public LiftSettings() {
     }
 
-    public LiftSettings(int floorsCount, int delayBetweenFloors, int doorSpeed) {
+    public LiftSettings(int floorsCount, int delayBetweenFloors, int doorSpeed, int delayAfterOpen) {
         this.floorsCount = floorsCount;
         this.delayBetweenFloors = delayBetweenFloors;
         this.doorSpeed = doorSpeed;
+        this.delayAfterOpen = delayAfterOpen;
     }
 
     public int getFloorsCount() {
@@ -27,5 +29,9 @@ public class LiftSettings implements Serializable {
 
     public int getDoorSpeed() {
         return doorSpeed;
+    }
+
+    public int getDelayAfterOpen() {
+        return delayAfterOpen;
     }
 }

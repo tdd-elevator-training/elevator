@@ -138,7 +138,10 @@ public class LiftServiceImpl extends RemoteServiceServlet implements
         if (lift == null) {
             return null;
         }
-        return new LiftSettings(lift.getFloorsCount(), lift.getMoveBetweenFloorsDelay(), lift.getDoor().getDoorSpeed());
+        return new LiftSettings(lift.getFloorsCount(), 
+                lift.getMoveBetweenFloorsDelay(), 
+                lift.getDoor().getDoorSpeed(),
+                lift.getDelayAfterOpen());
     }
 
     public void atFloor(int floorNumber) {
