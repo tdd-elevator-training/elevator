@@ -8,15 +8,20 @@ public class RealDoor implements Door, Serializable {
     private int doorSpeedMilliseconds;
 
     public void open(int floor) {
+        sleep();
+        open = true;
+    }
+
+    private void sleep() {
         try {
             Thread.sleep(doorSpeedMilliseconds);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
-        open = true;
     }
 
     public void close() {
+        sleep();
         open = false;
     }
 
