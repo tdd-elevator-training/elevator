@@ -29,6 +29,7 @@ public class GwtLiftSettingsForm extends Composite implements LiftSettingsForm {
         createTextField(layoutPanel, floorsCount, 86.0, messages.floorsCount());
         createTextField(layoutPanel, delayBetweenFloors, 86.0 + 30, messages.delayBetweenFloors());
         createTextField(layoutPanel, doorSpeed, 86.0 + 30 + 30, messages.doorSpeed());
+        createTextField(layoutPanel, doorSpeed, 86.0 + 30 + 30 + 30, messages.delayAfterOpen());
 
         validationLabel = new Label();
         layoutPanel.add(validationLabel);
