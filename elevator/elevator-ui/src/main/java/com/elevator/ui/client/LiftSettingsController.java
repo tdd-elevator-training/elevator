@@ -75,9 +75,17 @@ public class LiftSettingsController {
     public void onShow() {
         service.getLiftSettings(new DefaultAsyncCallback<LiftSettings>(screenFlowManager) {
             public void onSuccess(LiftSettings result) {
-                liftSettingsForm.setFieldValue(delayBetweenFloors, ""+result.getDelayBetweenFloors());
-                liftSettingsForm.setFieldValue(floorsCount, ""+result.getFloorsCount());
-                liftSettingsForm.setFieldValue(doorSpeed, ""+result.getDoorSpeed());
+                String floorsCountStr = "1";
+                String delayBetweenFloorsStr = "0";
+                String doorSpeedStr = "0";
+                if (result != null) {
+                    floorsCountStr = ""+result.getFloorsCount();
+                    delayBetweenFloorsStr = "" + result.getDelayBetweenFloors();
+                    doorSpeedStr = "" + result.getDoorSpeed();
+                }
+                liftSettingsForm.setFieldValue(floorsCount, floorsCountStr);
+                liftSettingsForm.setFieldValue(delayBetweenFloors, delayBetweenFloorsStr);
+                liftSettingsForm.setFieldValue(doorSpeed, doorSpeedStr);
             }
         });
     }
