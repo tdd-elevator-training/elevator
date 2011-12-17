@@ -61,7 +61,7 @@ public class GwtLiftSettingsForm extends Composite implements LiftSettingsForm {
         screenFlowManager.showMessage("Lift created!");
     }
 
-    public void invalidInteger() {
+    public void invalidInteger(String fieldName) {
         textBox.setFocus(true);
         validationLabel.setText(messages.invalidFloorInteger());
         validationLabel.setVisible(true);
@@ -70,6 +70,14 @@ public class GwtLiftSettingsForm extends Composite implements LiftSettingsForm {
     public void negativeInteger() {
         validationLabel.setText(messages.negativeFloor());
         validationLabel.setVisible(true);
+    }
+
+    public String getDelayBetweenFloors() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public String getDoorSpeed() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
 }

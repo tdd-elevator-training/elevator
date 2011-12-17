@@ -5,6 +5,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class MockLiftServiceAsync implements LiftServiceAsync {
     public Integer floorsCount;
+    public int delayBetweenFloors;
+    public int doorSpeed;
     public Throwable serverFailure;
     public boolean liftExists = true;
     public int fromFloor = -1;
@@ -12,6 +14,8 @@ public class MockLiftServiceAsync implements LiftServiceAsync {
 
     public void updateLift(int floorsCount, int delayBetweenFloors, int doorSpeed, AsyncCallback<Void> callback) {
         this.floorsCount = floorsCount;
+        this.delayBetweenFloors = delayBetweenFloors;
+        this.doorSpeed = doorSpeed;
         if (serverFailure == null) {
             callback.onSuccess(null);
         } else {

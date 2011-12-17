@@ -5,8 +5,11 @@ public interface LiftSettingsForm {
 
     void liftCreated();
 
-    void invalidInteger();
+    void invalidInteger(String fieldName);
 
     void negativeInteger();
 
+    String getDelayBetweenFloors();
+
+    String getDoorSpeed();
 }

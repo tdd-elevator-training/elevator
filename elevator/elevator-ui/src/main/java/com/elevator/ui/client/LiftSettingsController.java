@@ -8,7 +8,7 @@ public class LiftSettingsController {
     private final LiftSettingsController.CreateElevatorCallback createElevatorCallback;
 
     public LiftSettingsController(LiftServiceAsync elevatorService, LiftSettingsForm liftSettingsForm,
-                                      ScreenFlowManager screenFlowManager) {
+                                  ScreenFlowManager screenFlowManager) {
         this.elevatorService = elevatorService;
         this.liftSettingsForm = liftSettingsForm;
         this.screenFlowManager = screenFlowManager;
@@ -20,17 +20,33 @@ public class LiftSettingsController {
     }
 
     public void sendButtonClicked() {
+        int floorsCount = 0;
+        int delayBetweenFloors = 0;
+        int doorSpeed = 0;
         try {
-            int floorsCount = Integer.parseInt(liftSettingsForm.getFloorsCount());
+            floorsCount = Integer.parseInt(liftSettingsForm.getFloorsCount());
             if (floorsCount < 0) {
                 liftSettingsForm.negativeInteger();
                 return;
             }
-
-            elevatorService.updateLift(floorsCount, -1, -1, createElevatorCallback);
         } catch (NumberFormatException e) {
-            liftSettingsForm.invalidInteger();
+            liftSettingsForm.invalidInteger("floorsCount");
+            return;
         }
+        try {
+            delayBetweenFloors = Integer.parseInt(liftSettingsForm.getDelayBetweenFloors());
+        } catch (NumberFormatException e) {
+            liftSettingsForm.invalidInteger("delayBetweenFloors");
+            return;
+        }
+        try {
+            doorSpeed = Integer.parseInt(liftSettingsForm.getDoorSpeed());
+        } catch (NumberFormatException e) {
+            liftSettingsForm.invalidInteger("doorSpeed");
+            return;
+
+        }
+        elevatorService.updateLift(floorsCount, delayBetweenFloors, doorSpeed, createElevatorCallback);
     }
 
     public void setLiftSettingsForm(LiftSettingsForm liftSettingsForm) {

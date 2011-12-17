@@ -24,16 +24,16 @@ public class LiftSettingsControllerTest {
 
     @Test
     public void shouldCallServiceWhenCreateButtonClicked() {
-        liftSettingsForm.setFloorsCount("10");
+        fillFormValues("10", "100", "200");
 
         controller.sendButtonClicked();
 
-        assertEquals(10, liftService.floorsCount.intValue());
+        assertLiftParams(10, 100, 200);
     }
 
     @Test
     public void shouldSayOkWhenCreateSucceed() {
-        liftSettingsForm.setFloorsCount("9");
+        fillFormValues("9", "100", "200");
 
         controller.sendButtonClicked();
 
@@ -42,27 +42,77 @@ public class LiftSettingsControllerTest {
         assertEquals(ScreenFlowManager.Form.LIFT_FORM, screenFlowManager.getNextScreen());
     }
 
+    private void fillFormValues(String floorsCount, String delayBetweenFloors, String doorSpeed) {
+        liftSettingsForm.setFloorsCount(floorsCount);
+        liftSettingsForm.setDelayBetweenFloors(delayBetweenFloors);
+        liftSettingsForm.setDoorSpeed(doorSpeed);
+    }
+
     @Test
-    public void shouldValidateNonDigitInputWhenSendButtonPressed() {
-        liftSettingsForm.setFloorsCount("lala");
+    public void shouldValidateNonDigitFloorCountInputWhenSendButtonPressed() {
+        fillFormValues("lala", "100", "200");
 
         controller.sendButtonClicked();
 
-        assertTrue(liftSettingsForm.invalidIntegerValidation);
+        assertFieldIsInvalid("floorsCount");
+    }
+
+    @Test
+    public void shouldValidateNonDigitDelayBetweenFloorInputWhenSendButtonPressed() {
+        fillFormValues("1", "lala", "200");
+
+        controller.sendButtonClicked();
+
+        assertFieldIsInvalid("delayBetweenFloors");
+    }
+
+    @Test
+    public void shouldNotCallServiceOnDelayBetweenFloorsValidationFailure() {
+        fillFormValues("1", "invalid", "200");
+
+        controller.sendButtonClicked();
+
+        assertServiceNotCalled();
+    }
+
+    @Test
+    public void shouldValidateNonDigitDoorSpeedInputWhenSendButtonPressed() {
+        fillFormValues("1", "100", "lala");
+
+        controller.sendButtonClicked();
+
+        assertFieldIsInvalid("doorSpeed");
+    }
+
+    @Test
+    public void shouldNotCallServiceOnDoorSpeedValidationFailure() {
+        fillFormValues("1", "100", "invalid");
+
+        controller.sendButtonClicked();
+
+        assertServiceNotCalled();
     }
 
     @Test
     public void shouldNotCallServiceOnValidationFailure() {
-        liftSettingsForm.setFloorsCount("invalid");
+        fillFormValues("invalid", "100", "200");
 
         controller.sendButtonClicked();
 
+        assertServiceNotCalled();
+    }
+
+    private void assertFieldIsInvalid(String invalidFieldName) {
+        assertEquals(invalidFieldName, liftSettingsForm.invalidFieldName);
+    }
+
+    private void assertServiceNotCalled() {
         assertNull(liftService.floorsCount);
     }
 
     @Test
     public void shouldRejectNegativeNumbersWhenSendButtonPressed() {
-        liftSettingsForm.setFloorsCount("-1");
+        fillFormValues("-1", "100", "200");
 
         controller.sendButtonClicked();
 
@@ -71,29 +121,37 @@ public class LiftSettingsControllerTest {
 
     @Test
     public void shouldNotCallServiceWhenNegativeNumberEntered() {
-        liftSettingsForm.setFloorsCount("-2");
+        fillFormValues("-2", "100", "200");
 
         controller.sendButtonClicked();
 
-        assertNull(liftService.floorsCount);
+        assertServiceNotCalled();
     }
 
     @Test
     public void shouldSayErrorWhenCallOnServerFailed() {
         IllegalArgumentException raisedException = new IllegalArgumentException();
         liftService.serverFailure = raisedException;
-        liftSettingsForm.setFloorsCount("1");
+        fillFormValues("1", "100", "200");
 
         controller.sendButtonClicked();
 
         assertEquals(raisedException, screenFlowManager.serverCallFailed);
     }
 
+    private void assertLiftParams(int floorsCount, int delayBetweenFloors, int doorSpeed) {
+        assertEquals(floorsCount, liftService.floorsCount.intValue());
+        assertEquals(delayBetweenFloors, liftService.delayBetweenFloors);
+        assertEquals(doorSpeed, liftService.doorSpeed);
+    }
+
     private class MockLiftSettingsForm implements LiftSettingsForm {
         private String floorsCount;
         private boolean liftCreatedCalled;
-        private boolean invalidIntegerValidation;
+        private String invalidFieldName;
         public boolean negativeIntegerValidation;
+        private String delayBetweenFloors;
+        private String doorSpeed;
 
         public void setFloorsCount(String floorsCount) {
             this.floorsCount = floorsCount;
@@ -107,13 +165,28 @@ public class LiftSettingsControllerTest {
             liftCreatedCalled = true;
         }
 
-        public void invalidInteger() {
-            invalidIntegerValidation = true;
+        public void invalidInteger(String fieldName) {
+            invalidFieldName = fieldName;
         }
 
         public void negativeInteger() {
             negativeIntegerValidation = true;
         }
 
+        public String getDelayBetweenFloors() {
+            return delayBetweenFloors;
+        }
+
+        public String getDoorSpeed() {
+            return doorSpeed;
+        }
+
+        public void setDelayBetweenFloors(String delayBetweenFloors) {
+            this.delayBetweenFloors = delayBetweenFloors;
+        }
+
+        public void setDoorSpeed(String doorSpeed) {
+            this.doorSpeed = doorSpeed;
+        }
     }
 }
