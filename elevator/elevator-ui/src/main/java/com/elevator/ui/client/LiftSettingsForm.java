@@ -1,13 +1,13 @@
 package com.elevator.ui.client;
 
 public interface LiftSettingsForm {
-    String getFloorsCount();
+    enum FieldName {floorsCount, delayBetweenFloors, doorSpeed}
 
     void liftCreated();
 
-    void invalidInteger(String fieldName);
+    void invalidInteger(FieldName fieldNameName);
 
     void negativeInteger();
 
-    String getFieldValue(String fieldName);
+    String getFieldValue(FieldName fieldName);
 }

@@ -2,13 +2,15 @@ package com.elevator.ui.client;
 
 import java.util.HashMap;
 
+import static com.elevator.ui.client.LiftSettingsForm.FieldName.*;
+
 public class LiftSettingsController {
 
     private LiftServiceAsync elevatorService;
     private LiftSettingsForm liftSettingsForm;
     private ScreenFlowManager screenFlowManager;
     private final LiftSettingsController.CreateElevatorCallback createElevatorCallback;
-    private final HashMap<String,Integer> fieldValues;
+    private final HashMap<LiftSettingsForm.FieldName,Integer> fieldValues;
 
     public LiftSettingsController(LiftServiceAsync elevatorService, LiftSettingsForm liftSettingsForm,
                                   ScreenFlowManager screenFlowManager) {
@@ -16,33 +18,33 @@ public class LiftSettingsController {
         this.liftSettingsForm = liftSettingsForm;
         this.screenFlowManager = screenFlowManager;
         createElevatorCallback = new CreateElevatorCallback();
-        fieldValues = new HashMap<String, Integer>();
+        fieldValues = new HashMap<LiftSettingsForm.FieldName, Integer>();
     }
 
     public LiftSettingsController(LiftServiceAsync elevatorService, ScreenFlowManager screenFlowManager) {
         this(elevatorService, null, screenFlowManager);
     }
 
-    public void sendButtonClicked() {
-        if (!parseFieldValues("floorsCount", "delayBetweenFloors", "doorSpeed")) {
+    public void createButtonClicked() {
+        if (!parseFieldValues(floorsCount, delayBetweenFloors, doorSpeed)) {
             return;
         }
 
-        if (getParsedValue("floorsCount") < 0) {
+        if (getParsedValue(floorsCount) < 0) {
             liftSettingsForm.negativeInteger();
             return;
         }
-        elevatorService.updateLift(getParsedValue("floorsCount"),
-                getParsedValue("delayBetweenFloors"),
-                getParsedValue("doorSpeed"), createElevatorCallback);
+        elevatorService.updateLift(getParsedValue(floorsCount),
+                getParsedValue(delayBetweenFloors),
+                getParsedValue(doorSpeed), createElevatorCallback);
     }
 
-    private Integer getParsedValue(String fieldName) {
+    private Integer getParsedValue(LiftSettingsForm.FieldName fieldName) {
         return fieldValues.get(fieldName);
     }
 
-    private boolean parseFieldValues(String... fieldNames) {
-        for (String fieldName : fieldNames) {
+    private boolean parseFieldValues(LiftSettingsForm.FieldName... fieldNames) {
+        for (LiftSettingsForm.FieldName fieldName : fieldNames) {
             if (!parseFieldValue(fieldName)) {
                 return false;
             }
@@ -50,7 +52,7 @@ public class LiftSettingsController {
         return true;
     }
 
-    private boolean parseFieldValue(String fieldName) {
+    private boolean parseFieldValue(LiftSettingsForm.FieldName fieldName) {
         try {
             fieldValues.put(fieldName, parseStringField(fieldName));
             return true;
@@ -60,7 +62,7 @@ public class LiftSettingsController {
         }
     }
 
-    private int parseStringField(String fieldName) {
+    private int parseStringField(LiftSettingsForm.FieldName fieldName) {
         return Integer.parseInt(liftSettingsForm.getFieldValue(fieldName));
     }
 

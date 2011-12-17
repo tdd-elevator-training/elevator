@@ -1,10 +1,13 @@
 package com.elevator.ui.client;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.HashMap;
 
+import static com.elevator.ui.client.LiftSettingsForm.*;
+import static com.elevator.ui.client.LiftSettingsForm.FieldName.*;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
@@ -28,7 +31,7 @@ public class LiftSettingsControllerTest {
     public void shouldCallServiceWhenCreateButtonClicked() {
         fillFormValues("10", "100", "200");
 
-        controller.sendButtonClicked();
+        controller.createButtonClicked();
 
         assertLiftParams(10, 100, 200);
     }
@@ -37,7 +40,7 @@ public class LiftSettingsControllerTest {
     public void shouldSayOkWhenCreateSucceed() {
         fillFormValues("9", "100", "200");
 
-        controller.sendButtonClicked();
+        controller.createButtonClicked();
 
         assertTrue(liftSettingsForm.liftCreatedCalled);
         assertEquals(9, liftService.floorsCount.intValue());
@@ -45,34 +48,34 @@ public class LiftSettingsControllerTest {
     }
 
     private void fillFormValues(String floorsCount, String delayBetweenFloors, String doorSpeed) {
-        liftSettingsForm.fieldValues.put("floorsCount", floorsCount);
-        liftSettingsForm.fieldValues.put("delayBetweenFloors", delayBetweenFloors);
-        liftSettingsForm.fieldValues.put("doorSpeed", doorSpeed);
+        liftSettingsForm.fieldValues.put(FieldName.floorsCount, floorsCount);
+        liftSettingsForm.fieldValues.put(FieldName.delayBetweenFloors, delayBetweenFloors);
+        liftSettingsForm.fieldValues.put(FieldName.doorSpeed, doorSpeed);
     }
 
     @Test
     public void shouldValidateNonDigitFloorCountInputWhenSendButtonPressed() {
         fillFormValues("lala", "100", "200");
 
-        controller.sendButtonClicked();
+        controller.createButtonClicked();
 
-        assertFieldIsInvalid("floorsCount");
+        assertFieldIsInvalid(floorsCount);
     }
 
     @Test
     public void shouldValidateNonDigitDelayBetweenFloorInputWhenSendButtonPressed() {
         fillFormValues("1", "lala", "200");
 
-        controller.sendButtonClicked();
+        controller.createButtonClicked();
 
-        assertFieldIsInvalid("delayBetweenFloors");
+        assertFieldIsInvalid(delayBetweenFloors);
     }
 
     @Test
     public void shouldNotCallServiceOnDelayBetweenFloorsValidationFailure() {
         fillFormValues("1", "invalid", "200");
 
-        controller.sendButtonClicked();
+        controller.createButtonClicked();
 
         assertServiceNotCalled();
     }
@@ -81,16 +84,16 @@ public class LiftSettingsControllerTest {
     public void shouldValidateNonDigitDoorSpeedInputWhenSendButtonPressed() {
         fillFormValues("1", "100", "lala");
 
-        controller.sendButtonClicked();
+        controller.createButtonClicked();
 
-        assertFieldIsInvalid("doorSpeed");
+        assertFieldIsInvalid(doorSpeed);
     }
 
     @Test
     public void shouldNotCallServiceOnDoorSpeedValidationFailure() {
         fillFormValues("1", "100", "invalid");
 
-        controller.sendButtonClicked();
+        controller.createButtonClicked();
 
         assertServiceNotCalled();
     }
@@ -99,24 +102,17 @@ public class LiftSettingsControllerTest {
     public void shouldNotCallServiceOnValidationFailure() {
         fillFormValues("invalid", "100", "200");
 
-        controller.sendButtonClicked();
+        controller.createButtonClicked();
 
         assertServiceNotCalled();
     }
 
-    private void assertFieldIsInvalid(String invalidFieldName) {
-        assertEquals(invalidFieldName, liftSettingsForm.invalidFieldName);
-    }
-
-    private void assertServiceNotCalled() {
-        assertNull(liftService.floorsCount);
-    }
 
     @Test
     public void shouldRejectNegativeNumbersWhenSendButtonPressed() {
         fillFormValues("-1", "100", "200");
 
-        controller.sendButtonClicked();
+        controller.createButtonClicked();
 
         assertTrue(liftSettingsForm.negativeIntegerValidation);
     }
@@ -125,7 +121,7 @@ public class LiftSettingsControllerTest {
     public void shouldNotCallServiceWhenNegativeNumberEntered() {
         fillFormValues("-2", "100", "200");
 
-        controller.sendButtonClicked();
+        controller.createButtonClicked();
 
         assertServiceNotCalled();
     }
@@ -136,9 +132,15 @@ public class LiftSettingsControllerTest {
         liftService.serverFailure = raisedException;
         fillFormValues("1", "100", "200");
 
-        controller.sendButtonClicked();
+        controller.createButtonClicked();
 
         assertEquals(raisedException, screenFlowManager.serverCallFailed);
+    }
+
+    @Test
+    @Ignore
+    public void shouldGetLiftParamsWhenShow(){
+        assertEquals("10", liftSettingsForm.getFieldValue(floorsCount));
     }
 
     private void assertLiftParams(int floorsCount, int delayBetweenFloors, int doorSpeed) {
@@ -147,29 +149,33 @@ public class LiftSettingsControllerTest {
         assertEquals(doorSpeed, liftService.doorSpeed);
     }
 
+    private void assertFieldIsInvalid(FieldName invalidFieldName) {
+        assertEquals(invalidFieldName, liftSettingsForm.invalidFieldName);
+    }
+
+    private void assertServiceNotCalled() {
+        assertNull(liftService.floorsCount);
+    }
+
     private class MockLiftSettingsForm implements LiftSettingsForm {
         private boolean liftCreatedCalled;
-        private String invalidFieldName;
+        private FieldName invalidFieldName;
         public boolean negativeIntegerValidation;
-        private final HashMap<String,String> fieldValues = new HashMap<String, String>();
-
-        public String getFloorsCount() {
-            return fieldValues.get("floorsCount");
-        }
+        private final HashMap<FieldName,String> fieldValues = new HashMap<FieldName, String>();
 
         public void liftCreated() {
             liftCreatedCalled = true;
         }
 
-        public void invalidInteger(String fieldName) {
-            invalidFieldName = fieldName;
+        public void invalidInteger(FieldName fieldNameName) {
+            invalidFieldName = fieldNameName;
         }
 
         public void negativeInteger() {
             negativeIntegerValidation = true;
         }
 
-        public String getFieldValue(String fieldName) {
+        public String getFieldValue(FieldName fieldName) {
             return fieldValues.get(fieldName);
         }
 

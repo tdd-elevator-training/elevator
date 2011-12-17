@@ -1,6 +1,5 @@
 package com.elevator.ui.client;
 
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -41,7 +40,7 @@ public class GwtLiftSettingsForm extends Composite implements LiftSettingsForm {
         button.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
                 validationLabel.setVisible(false);
-                controller.sendButtonClicked();
+                controller.createButtonClicked();
             }
         });
         layoutPanel.add(button);
@@ -63,16 +62,12 @@ public class GwtLiftSettingsForm extends Composite implements LiftSettingsForm {
     }
 
 
-    public String getFloorsCount() {
-        return floorsCountBox.getText();
-    }
-
     public void liftCreated() {
         validationLabel.setVisible(false);
         screenFlowManager.showMessage("Lift created!");
     }
 
-    public void invalidInteger(String fieldName) {
+    public void invalidInteger(FieldName fieldNameName) {
         floorsCountBox.setFocus(true);
         validationLabel.setText(messages.invalidFloorInteger());
         validationLabel.setVisible(true);
@@ -83,8 +78,8 @@ public class GwtLiftSettingsForm extends Composite implements LiftSettingsForm {
         validationLabel.setVisible(true);
     }
 
-    public String getFieldValue(String fieldName) {
-        return null;
+    public String getFieldValue(FieldName fieldName) {
+        return textFields.get(fieldName).getText();
     }
 
 }
