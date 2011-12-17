@@ -3,12 +3,14 @@ package com.elevator.ui.server;
 import com.elevator.ui.shared.LiftAlreadyInstalledException;
 import com.elevator.ui.shared.LiftNotInstalledException;
 import com.elevator.ui.shared.LiftPersistenceException;
+import com.elevator.ui.shared.LiftSettings;
 import com.globallogic.training.*;
 import org.easymock.Capture;
 import org.easymock.CaptureType;
 import org.easymock.EasyMock;
 import org.easymock.IExpectationSetters;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static junit.framework.Assert.*;
@@ -196,6 +198,23 @@ public class LiftServiceImplTest {
         assertNotNull(service.getLiftState());
     }
 
+    @Test
+    public void shouldReturnSettingsWhenCreated() throws LiftAlreadyInstalledException, LiftPersistenceException {
+        service.updateLift(1, 100, 200);
+
+        LiftSettings settings = service.getLiftSettings();
+        
+        assertEquals(1, settings.getFloorsCount());
+        assertEquals(100, settings.getDelayBetweenFloors());
+        assertEquals(200, settings.getDoorSpeed());
+    } 
+
+    @Test
+    public void shouldReturnNullWhenLiftNotInstalled(){
+        assertNull(service.getLiftSettings());
+    } 
+    
+    
     private IExpectationSetters<Boolean> liftExists(boolean liftExists) {
         return EasyMock.expect(dao.elevatorExists()).andReturn(liftExists);
     }

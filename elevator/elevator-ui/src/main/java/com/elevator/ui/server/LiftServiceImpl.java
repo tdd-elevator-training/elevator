@@ -133,7 +133,10 @@ public class LiftServiceImpl extends RemoteServiceServlet implements
     }
 
     public LiftSettings getLiftSettings() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        if (lift == null) {
+            return null;
+        }
+        return new LiftSettings(lift.getFloorsCount(), lift.getMoveBetweenFloorsDelay(), lift.getDoor().getDoorSpeed());
     }
 
     public void atFloor(int floorNumber) {
