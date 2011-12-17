@@ -2,16 +2,13 @@ package com.elevator.ui.client;
 
 import com.elevator.ui.shared.LiftSettings;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.HashMap;
 
 import static com.elevator.ui.client.LiftSettingsForm.*;
 import static com.elevator.ui.client.LiftSettingsForm.FieldName.*;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
 
 public class LiftSettingsControllerTest {
 
@@ -30,16 +27,16 @@ public class LiftSettingsControllerTest {
 
     @Test
     public void shouldCallServiceWhenCreateButtonClicked() {
-        fillFormValues("10", "100", "200");
+        fillFormValues("10", "100", "200", "300");
 
         controller.createButtonClicked();
 
-        assertLiftParams(10, 100, 200);
+        assertLiftParams(10, 100, 200, 300);
     }
 
     @Test
     public void shouldSayOkWhenCreateSucceed() {
-        fillFormValues("9", "100", "200");
+        fillFormValues("9", "100", "200", "200");
 
         controller.createButtonClicked();
 
@@ -48,15 +45,16 @@ public class LiftSettingsControllerTest {
         assertEquals(ScreenFlowManager.Form.LIFT_FORM, screenFlowManager.getNextScreen());
     }
 
-    private void fillFormValues(String floorsCount, String delayBetweenFloors, String doorSpeed) {
+    private void fillFormValues(String floorsCount, String delayBetweenFloors, String doorSpeed, String delayAfterOpen) {
         liftSettingsForm.fieldValues.put(FieldName.floorsCount, floorsCount);
         liftSettingsForm.fieldValues.put(FieldName.delayBetweenFloors, delayBetweenFloors);
         liftSettingsForm.fieldValues.put(FieldName.doorSpeed, doorSpeed);
+        liftSettingsForm.fieldValues.put(FieldName.delayAfterOpen, delayAfterOpen);
     }
 
     @Test
     public void shouldValidateNonDigitFloorCountInputWhenSendButtonPressed() {
-        fillFormValues("lala", "100", "200");
+        fillFormValues("lala", "100", "200", "200");
 
         controller.createButtonClicked();
 
@@ -65,7 +63,7 @@ public class LiftSettingsControllerTest {
 
     @Test
     public void shouldValidateNonDigitDelayBetweenFloorInputWhenSendButtonPressed() {
-        fillFormValues("1", "lala", "200");
+        fillFormValues("1", "lala", "200", "200");
 
         controller.createButtonClicked();
 
@@ -74,7 +72,7 @@ public class LiftSettingsControllerTest {
 
     @Test
     public void shouldNotCallServiceOnDelayBetweenFloorsValidationFailure() {
-        fillFormValues("1", "invalid", "200");
+        fillFormValues("1", "invalid", "200", "200");
 
         controller.createButtonClicked();
 
@@ -83,7 +81,7 @@ public class LiftSettingsControllerTest {
 
     @Test
     public void shouldValidateNonDigitDoorSpeedInputWhenSendButtonPressed() {
-        fillFormValues("1", "100", "lala");
+        fillFormValues("1", "100", "lala", "200");
 
         controller.createButtonClicked();
 
@@ -92,7 +90,25 @@ public class LiftSettingsControllerTest {
 
     @Test
     public void shouldNotCallServiceOnDoorSpeedValidationFailure() {
-        fillFormValues("1", "100", "invalid");
+        fillFormValues("1", "100", "invalid", "200");
+
+        controller.createButtonClicked();
+
+        assertServiceNotCalled();
+    }
+
+    @Test
+    public void shouldValidateNonDigitDelayAfterOpenInputWhenSendButtonPressed() {
+        fillFormValues("1", "0", "0", "bubu");
+
+        controller.createButtonClicked();
+
+        assertFieldIsInvalid(delayAfterOpen);
+    }
+
+    @Test
+    public void shouldNotCallServiceOnDelayAfterOpenValidationFailure() {
+        fillFormValues("1", "0", "0", "invalid");
 
         controller.createButtonClicked();
 
@@ -101,7 +117,7 @@ public class LiftSettingsControllerTest {
 
     @Test
     public void shouldNotCallServiceOnValidationFailure() {
-        fillFormValues("invalid", "100", "200");
+        fillFormValues("invalid", "100", "200", "200");
 
         controller.createButtonClicked();
 
@@ -111,7 +127,7 @@ public class LiftSettingsControllerTest {
 
     @Test
     public void shouldRejectNegativeNumbersWhenSendButtonPressed() {
-        fillFormValues("-1", "100", "200");
+        fillFormValues("-1", "100", "200", "200");
 
         controller.createButtonClicked();
 
@@ -120,7 +136,7 @@ public class LiftSettingsControllerTest {
 
     @Test
     public void shouldNotCallServiceWhenNegativeNumberEntered() {
-        fillFormValues("-2", "100", "200");
+        fillFormValues("-2", "100", "200", "200");
 
         controller.createButtonClicked();
 
@@ -131,7 +147,7 @@ public class LiftSettingsControllerTest {
     public void shouldSayErrorWhenCallOnServerFailed() {
         IllegalArgumentException raisedException = new IllegalArgumentException();
         liftService.serverFailure = raisedException;
-        fillFormValues("1", "100", "200");
+        fillFormValues("1", "100", "200", "200");
 
         controller.createButtonClicked();
 
@@ -154,16 +170,18 @@ public class LiftSettingsControllerTest {
         assertFormValues("1", "0", "0");
     }
 
+
     private void assertFormValues(String expectedFloorsCount, String expectedDelayBetweenFloors, String expectedDoorspeed) {
         assertEquals(expectedFloorsCount, liftSettingsForm.getFieldValue(floorsCount));
         assertEquals(expectedDelayBetweenFloors, liftSettingsForm.getFieldValue(delayBetweenFloors));
         assertEquals(expectedDoorspeed, liftSettingsForm.getFieldValue(doorSpeed));
     }
 
-    private void assertLiftParams(int floorsCount, int delayBetweenFloors, int doorSpeed) {
+    private void assertLiftParams(int floorsCount, int delayBetweenFloors, int doorSpeed, int delayAfterOpen) {
         assertEquals(floorsCount, liftService.floorsCount.intValue());
         assertEquals(delayBetweenFloors, liftService.delayBetweenFloors);
         assertEquals(doorSpeed, liftService.doorSpeed);
+        assertEquals(delayAfterOpen, liftService.delayAfterOpen);
     }
 
     private void assertFieldIsInvalid(FieldName invalidFieldName) {

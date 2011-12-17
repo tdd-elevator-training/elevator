@@ -3,7 +3,7 @@ package com.elevator.ui.client;
 public interface LiftSettingsForm {
     void setFieldValue(FieldName fieldName, String value);
 
-    enum FieldName {floorsCount, delayBetweenFloors, doorSpeed}
+    enum FieldName {floorsCount, delayBetweenFloors, doorSpeed, delayAfterOpen}
 
     void liftCreated();
 

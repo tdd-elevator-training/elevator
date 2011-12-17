@@ -1,6 +1,8 @@
 package com.elevator.ui.shared;
 
-public class LiftSettings {
+import java.io.Serializable;
+
+public class LiftSettings implements Serializable {
     private int floorsCount;
     private int delayBetweenFloors;
     private int doorSpeed;

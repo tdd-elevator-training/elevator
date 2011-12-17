@@ -32,7 +32,7 @@ public class LiftServiceImpl extends RemoteServiceServlet implements
         liftThread = new Thread(this);
     }
 
-    public void updateLift(int floorsCount, int delayBetweenFloors, int doorSpeed) throws LiftPersistenceException, LiftAlreadyInstalledException {
+    public void updateLift(int floorsCount, int delayBetweenFloors, int doorSpeed, int delayAfterOpen) throws LiftPersistenceException, LiftAlreadyInstalledException {
         if (lift != null && lift.getFloorsCount() != floorsCount) {
             throw new LiftAlreadyInstalledException("Unable to change floors count for installed lift!");
         }
@@ -41,6 +41,7 @@ public class LiftServiceImpl extends RemoteServiceServlet implements
         }
         lift.getDoor().setDoorSpeed(doorSpeed);
         lift.setMoveBetweenFloorsDelay(delayBetweenFloors);
+        lift.setDelayAfterOpen(delayAfterOpen);
         dao.store(lift);
         if (lift.isStarted()) {
             return;

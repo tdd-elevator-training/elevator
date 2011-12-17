@@ -10,7 +10,6 @@ import org.easymock.CaptureType;
 import org.easymock.EasyMock;
 import org.easymock.IExpectationSetters;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static junit.framework.Assert.*;
@@ -35,7 +34,7 @@ public class LiftServiceImplTest {
         dao.store(EasyMock.capture(liftCapture));
         EasyMock.replay(dao);
 
-        service.updateLift(5, 2000, 1000);
+        service.updateLift(5, 2000, 1000, -1);
 
         Lift storedLift = liftCapture.getValue();
 
@@ -45,7 +44,7 @@ public class LiftServiceImplTest {
     @Test
     public void shouldStartLiftWhenInstalled() throws LiftPersistenceException, LiftAlreadyInstalledException {
 
-        service.updateLift(123, 2000, 1000);
+        service.updateLift(123, 2000, 1000, -1);
 
         Lift lift = service.getLift();
         assertTrue(lift.isStarted());
@@ -86,7 +85,7 @@ public class LiftServiceImplTest {
 
     @Test
     public void shouldCallLiftWhenCalledByUser() throws LiftPersistenceException, LiftNotInstalledException, LiftAlreadyInstalledException {
-        service.updateLift(10, 2000, 1000);
+        service.updateLift(10, 2000, 1000, -1);
 
         try {
             service.call(5);
@@ -97,7 +96,7 @@ public class LiftServiceImplTest {
     
     @Test
     public void shouldThrowExceptionWhenCalledFromNonExistentFloor() throws LiftNotInstalledException, LiftPersistenceException, LiftAlreadyInstalledException {
-        service.updateLift(10, 2000, 1000);
+        service.updateLift(10, 2000, 1000, -1);
         
         try {
             service.call(10 + 1);
@@ -109,7 +108,7 @@ public class LiftServiceImplTest {
     
     @Test
     public void shouldStopLiftWhenServiceStopped() throws LiftPersistenceException, LiftAlreadyInstalledException {
-        service.updateLift(10, 2000, 1000);
+        service.updateLift(10, 2000, 1000, -1);
 
         service.stop();
 
@@ -127,10 +126,10 @@ public class LiftServiceImplTest {
     
     @Test
     public void shouldThrowExceptionWhenUpdatingFloorCountForInstalledLift() throws LiftPersistenceException, LiftAlreadyInstalledException {
-        service.updateLift(123, 2000, 1000);
+        service.updateLift(123, 2000, 1000, -1);
 
         try {
-            service.updateLift(345, 2000, 1000);
+            service.updateLift(345, 2000, 1000, -1);
             fail();
         } catch (LiftAlreadyInstalledException e) {
         }
@@ -141,14 +140,15 @@ public class LiftServiceImplTest {
         dao.store(EasyMock.capture(liftCapture));
         EasyMock.replay(dao);
 
-        service.updateLift(123, 2000, 1000);
+        service.updateLift(123, 2000, 1000, 800);
 
-        assertLiftParams(liftCapture.getValue(), 2000, 1000);
+        assertLiftParams(liftCapture.getValue(), 2000, 1000, 800);
     }
 
-    private void assertLiftParams(Lift storedLift, int delayBetweenFloors, int doorSpeed) {
+    private void assertLiftParams(Lift storedLift, int delayBetweenFloors, int doorSpeed, int delayAfterOpen) {
         assertEquals(delayBetweenFloors, storedLift.getMoveBetweenFloorsDelay());
         assertEquals(doorSpeed, storedLift.getDoor().getDoorSpeed());
+        assertEquals(delayAfterOpen, storedLift.getDelayAfterOpen());
     }
 
     @Test
@@ -156,18 +156,18 @@ public class LiftServiceImplTest {
         dao.store(EasyMock.capture(liftCapture));
         EasyMock.expectLastCall().anyTimes();
         EasyMock.replay(dao);
-        service.updateLift(123, 2000, 1000);
+        service.updateLift(123, 2000, 1000, -1);
 
-        service.updateLift(123, 500, 700);
+        service.updateLift(123, 500, 700, 800);
 
         Lift storedLift = liftCapture.getValues().get(liftCapture.getValues().size() - 1);
-        assertLiftParams(storedLift, 500, 700);
+        assertLiftParams(storedLift, 500, 700, 800);
     }
 
 
     @Test
     public void shouldReturnFloorsCountWhenAsked() throws LiftAlreadyInstalledException, LiftPersistenceException {
-        service.updateLift(11, 2000, 1000);
+        service.updateLift(11, 2000, 1000, -1);
 
         assertEquals(11, service.getFloorsCount());
     }
@@ -193,14 +193,14 @@ public class LiftServiceImplTest {
 
     @Test
     public void shouldReturnNotNullLiftStateWhenLiftInstalled() throws LiftAlreadyInstalledException, LiftPersistenceException {
-        service.updateLift(10, 2000, 1000);
+        service.updateLift(10, 2000, 1000, -1);
 
         assertNotNull(service.getLiftState());
     }
 
     @Test
     public void shouldReturnSettingsWhenCreated() throws LiftAlreadyInstalledException, LiftPersistenceException {
-        service.updateLift(1, 100, 200);
+        service.updateLift(1, 100, 200, -1);
 
         LiftSettings settings = service.getLiftSettings();
         

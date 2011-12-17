@@ -52,12 +52,12 @@ public class GwtLiftSettingsForm extends Composite implements LiftSettingsForm {
     private void createTextField(LayoutPanel layoutPanel, FieldName fieldName, double top, String labelText) {
         Label label = new Label(labelText);
         layoutPanel.add(label);
-        layoutPanel.setWidgetLeftWidth(label, 91.0, Unit.PX, 134.0, Unit.PX);
+        layoutPanel.setWidgetLeftWidth(label, 91.0, Unit.PX, 434.0, Unit.PX);
         layoutPanel.setWidgetTopHeight(label, top + 5, Unit.PX, 18.0, Unit.PX);
 
         TextBox floorsCountBox = new TextBox();
         layoutPanel.add(floorsCountBox);
-        layoutPanel.setWidgetLeftWidth(floorsCountBox, 231.0, Unit.PX, 151.0, Unit.PX);
+        layoutPanel.setWidgetLeftWidth(floorsCountBox, 431.0, Unit.PX, 151.0, Unit.PX);
         layoutPanel.setWidgetTopHeight(floorsCountBox, top, Unit.PX, 26.0, Unit.PX);
         textFields.put(fieldName, floorsCountBox);
     }

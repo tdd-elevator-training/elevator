@@ -28,7 +28,7 @@ public class LiftSettingsController {
     }
 
     public void createButtonClicked() {
-        if (!parseFieldValues(floorsCount, delayBetweenFloors, doorSpeed)) {
+        if (!parseFieldValues(floorsCount, delayBetweenFloors, doorSpeed, delayAfterOpen)) {
             return;
         }
 
@@ -38,7 +38,8 @@ public class LiftSettingsController {
         }
         service.updateLift(getParsedValue(floorsCount),
                 getParsedValue(delayBetweenFloors),
-                getParsedValue(doorSpeed), createElevatorCallback);
+                getParsedValue(doorSpeed),
+                getParsedValue(delayAfterOpen), createElevatorCallback);
     }
 
     private Integer getParsedValue(LiftSettingsForm.FieldName fieldName) {

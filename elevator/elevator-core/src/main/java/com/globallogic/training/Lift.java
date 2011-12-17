@@ -124,4 +124,8 @@ public class Lift implements Serializable {
     public void setDelayAfterOpen(int delayAfterOpen) {
         this.delayAfterOpen = delayAfterOpen;
     }
+
+    public int getDelayAfterOpen() {
+        return delayAfterOpen;
+    }
 }
