@@ -3,6 +3,8 @@ package com.elevator.ui.client;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.HashMap;
+
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
@@ -146,19 +148,17 @@ public class LiftSettingsControllerTest {
     }
 
     private class MockLiftSettingsForm implements LiftSettingsForm {
-        private String floorsCount;
         private boolean liftCreatedCalled;
         private String invalidFieldName;
         public boolean negativeIntegerValidation;
-        private String delayBetweenFloors;
-        private String doorSpeed;
+        private final HashMap<String,String> fieldValues = new HashMap<String, String>();
 
         public void setFloorsCount(String floorsCount) {
-            this.floorsCount = floorsCount;
+            fieldValues.put("floorsCount", floorsCount);
         }
 
         public String getFloorsCount() {
-            return floorsCount;
+            return fieldValues.get("floorsCount");
         }
 
         public void liftCreated() {
@@ -174,19 +174,23 @@ public class LiftSettingsControllerTest {
         }
 
         public String getDelayBetweenFloors() {
-            return delayBetweenFloors;
+            return fieldValues.get("delayBetweenFloors");
         }
 
         public String getDoorSpeed() {
-            return doorSpeed;
+            return fieldValues.get("doorSpeed");
+        }
+
+        public String getFieldValue(String fieldName) {
+            return fieldValues.get(fieldName);
         }
 
         public void setDelayBetweenFloors(String delayBetweenFloors) {
-            this.delayBetweenFloors = delayBetweenFloors;
+            fieldValues.put("delayBetweenFloors", delayBetweenFloors);
         }
 
         public void setDoorSpeed(String doorSpeed) {
-            this.doorSpeed = doorSpeed;
+            fieldValues.put("doorSpeed", doorSpeed);
         }
     }
 }

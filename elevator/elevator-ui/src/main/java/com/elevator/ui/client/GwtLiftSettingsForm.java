@@ -80,4 +80,8 @@ public class GwtLiftSettingsForm extends Composite implements LiftSettingsForm {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
+    public String getFieldValue(String fieldName) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
 }

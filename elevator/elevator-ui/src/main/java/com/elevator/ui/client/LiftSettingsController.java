@@ -24,7 +24,7 @@ public class LiftSettingsController {
         int delayBetweenFloors = 0;
         int doorSpeed = 0;
         try {
-            floorsCount = Integer.parseInt(liftSettingsForm.getFloorsCount());
+            floorsCount = Integer.parseInt(liftSettingsForm.getFieldValue("floorsCount"));
             if (floorsCount < 0) {
                 liftSettingsForm.negativeInteger();
                 return;
@@ -34,13 +34,13 @@ public class LiftSettingsController {
             return;
         }
         try {
-            delayBetweenFloors = Integer.parseInt(liftSettingsForm.getDelayBetweenFloors());
+            delayBetweenFloors = Integer.parseInt(liftSettingsForm.getFieldValue("delayBetweenFloors"));
         } catch (NumberFormatException e) {
             liftSettingsForm.invalidInteger("delayBetweenFloors");
             return;
         }
         try {
-            doorSpeed = Integer.parseInt(liftSettingsForm.getDoorSpeed());
+            doorSpeed = Integer.parseInt(liftSettingsForm.getFieldValue("doorSpeed"));
         } catch (NumberFormatException e) {
             liftSettingsForm.invalidInteger("doorSpeed");
             return;

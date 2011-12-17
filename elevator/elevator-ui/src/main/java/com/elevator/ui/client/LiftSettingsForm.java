@@ -12,4 +12,6 @@ public interface LiftSettingsForm {
     String getDelayBetweenFloors();
 
     String getDoorSpeed();
+
+    String getFieldValue(String fieldName);
 }
