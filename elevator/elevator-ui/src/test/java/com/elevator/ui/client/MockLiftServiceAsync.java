@@ -10,7 +10,7 @@ public class MockLiftServiceAsync implements LiftServiceAsync {
     public int fromFloor = -1;
     public int movingTo;
 
-    public void createLift(int floorsCount, AsyncCallback<Void> callback) {
+    public void updateLift(int floorsCount, int delayBetweenFloors, int doorSpeed, AsyncCallback<Void> callback) {
         this.floorsCount = floorsCount;
         if (serverFailure == null) {
             callback.onSuccess(null);

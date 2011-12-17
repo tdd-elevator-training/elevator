@@ -27,7 +27,7 @@ public class LiftSettingsController {
                 return;
             }
 
-            elevatorService.createLift(floorsCount, createElevatorCallback);
+            elevatorService.updateLift(floorsCount, -1, -1, createElevatorCallback);
         } catch (NumberFormatException e) {
             liftSettingsForm.invalidInteger();
         }
