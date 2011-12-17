@@ -22,7 +22,8 @@ public class GwtTimerServerUpdater extends ServerUpdater {
             public void run() {
                 liftServiceAsync.getLiftState(new DefaultAsyncCallback<LiftState>(screenFlowManager) {
                     public void onSuccess(LiftState result) {
-                        GwtTimerServerUpdater.this.listener.synchronize(result.isOpen(), result.getFloor(), 0);
+                        GwtTimerServerUpdater.this.listener.synchronize(
+                                result.isOpen(), result.getFloor(), result.getDoorSpeed());
                     }
                 });
             }

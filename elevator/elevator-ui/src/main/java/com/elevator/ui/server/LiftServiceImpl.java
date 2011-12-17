@@ -129,7 +129,8 @@ public class LiftServiceImpl extends RemoteServiceServlet implements
         if (lift == null) {
             return null;
         }
-        return new LiftState(currentFloor.get(), lift.getDoor().isOpen());
+        Door door = lift.getDoor();
+        return new LiftState(currentFloor.get(), door.isOpen(), door.getDoorSpeed());
     }
 
     public LiftSettings getLiftSettings() {

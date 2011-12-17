@@ -4,14 +4,16 @@ import java.io.Serializable;
 
 public class LiftState implements Serializable {
     private boolean open;
+    private int doorSpeed;
     private int floor;
 
     public LiftState() {
     }
 
-    public LiftState(int floor, boolean open) {
+    public LiftState(int floor, boolean open, int doorSpeed) {
         this.floor = floor;
         this.open = open;
+        this.doorSpeed = doorSpeed;
     }
 
     public boolean isOpen() {
@@ -20,5 +22,9 @@ public class LiftState implements Serializable {
 
     public int getFloor() {
         return floor;
+    }
+
+    public int getDoorSpeed() {
+        return doorSpeed;
     }
 }
