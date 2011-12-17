@@ -12,7 +12,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
  */
 @RemoteServiceRelativePath("elevator")
 public interface LiftService extends RemoteService {
-    void createLift(int floorsCount) throws IllegalArgumentException, LiftPersistenceException, LiftAlreadyInstalledException;
+    void updateLift(int floorsCount, int delayBetweenFloors, int doorSpeed) throws IllegalArgumentException, LiftPersistenceException, LiftAlreadyInstalledException;
 
     boolean liftExists();
 

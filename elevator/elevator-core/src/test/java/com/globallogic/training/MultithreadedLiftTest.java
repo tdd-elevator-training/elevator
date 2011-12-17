@@ -53,6 +53,16 @@ public class MultithreadedLiftTest {
         public boolean isOpen() {
             return false;
         }
+
+        @Override
+        public void setDoorSpeed(int milliseconds) {
+
+        }
+
+        @Override
+        public int getDoorSpeed() {
+            return 0;
+        }
     }
 
     @Test

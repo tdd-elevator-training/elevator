@@ -11,7 +11,6 @@ import org.apache.commons.io.FileUtils;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -36,14 +35,20 @@ public class LiftServiceImpl extends RemoteServiceServlet implements
         liftThread = new Thread(this);
     }
 
-    public void createLift(int floorsCount) throws LiftPersistenceException, LiftAlreadyInstalledException {
-        if (lift != null) {
-            throw new LiftAlreadyInstalledException();
+    public void updateLift(int floorsCount, int delayBetweenFloors, int doorSpeed) throws LiftPersistenceException, LiftAlreadyInstalledException {
+        if (lift != null && lift.getFloorsCount() != floorsCount) {
+            throw new LiftAlreadyInstalledException("Unable to change floors count for installed lift!");
         }
-        lift = new Lift(0, floorsCount, new RealDoor());
-        lift.setMoveBetweenFloorsDelay(2000);
+        if (lift == null) {
+            lift = new Lift(0, floorsCount, new RealDoor());
+        }
+        lift.getDoor().setDoorSpeed(doorSpeed);
+        lift.setMoveBetweenFloorsDelay(delayBetweenFloors);
         dao.store(lift);
-        startLift(); 
+        if (lift.isStarted()) {
+            return;
+        }
+        startLift();
     }
 
     public boolean liftExists() {
@@ -127,7 +132,7 @@ public class LiftServiceImpl extends RemoteServiceServlet implements
         if (lift == null) {
             return null;
         }
-        return new LiftState(currentFloor.get(), lift.isDoorOpen());
+        return new LiftState(currentFloor.get(), lift.getDoor().isOpen());
     }
 
     public void atFloor(int floorNumber) {

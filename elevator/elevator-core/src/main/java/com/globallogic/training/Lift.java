@@ -107,16 +107,20 @@ public class Lift implements Serializable {
         this.moveBetweenFloorsDelay = miliseconds;
     }
 
+    public int getMoveBetweenFloorsDelay() {
+        return moveBetweenFloorsDelay;
+    }
+
     private Object readResolve() throws ObjectStreamException {
         currentThread = new NativeCurrentThread(); //warn: not tested
         queue = new FloorQueue();
         return this;
     }
 
-    public boolean isDoorOpen() {
-        return door.isOpen();
+    public Door getDoor() {
+        return door;
     }
-
+            
     public void setDelayAfterOpen(int delayAfterOpen) {
         this.delayAfterOpen = delayAfterOpen;
     }

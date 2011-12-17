@@ -7,4 +7,8 @@ public interface Door {
     void close();
 
     boolean isOpen();
+
+    void setDoorSpeed(int milliseconds);
+
+    int getDoorSpeed();
 }

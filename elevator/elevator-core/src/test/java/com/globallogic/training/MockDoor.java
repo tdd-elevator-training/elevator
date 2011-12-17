@@ -29,6 +29,16 @@ class MockDoor implements Door {
         return isOpen;
     }
 
+    @Override
+    public void setDoorSpeed(int milliseconds) {
+
+    }
+
+    @Override
+    public int getDoorSpeed() {
+        return 0;
+    }
+
     void assertIsOpen() {
         assertTrue("Expected door is open but was close", isOpen);
     }
