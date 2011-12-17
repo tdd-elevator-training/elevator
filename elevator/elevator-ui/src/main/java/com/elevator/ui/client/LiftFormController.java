@@ -36,7 +36,7 @@ public class LiftFormController {
         });
     }
 
-    public void synchronize(boolean doorIsOpen, int floorNumber) {
+    public void synchronize(boolean doorIsOpen, int floorNumber, int doorSpeed) {
         if (previousFloor != floorNumber) {
             form.indicateFloor(floorNumber);
         }
@@ -50,6 +50,7 @@ public class LiftFormController {
         form.setEnterButtonState(doorIsOpen && (isMyFloor || insideCabin), insideCabin);
         form.setButtonsPaneState(isMyFloor && doorIsOpen || insideCabin, insideCabin);
         previousFloor = floorNumber;
+        form.setDoorSpeed(doorSpeed);
     }
 
     public void onHide() {

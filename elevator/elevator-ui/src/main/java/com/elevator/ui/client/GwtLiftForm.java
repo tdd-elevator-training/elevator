@@ -18,6 +18,7 @@ public class GwtLiftForm extends Composite implements LiftForm {
     private final IndicatorPane indicatorPane;
     private final LayoutPanel buttonsBorder;
     private final Label currentFloor;
+    private int doorSpeed;
 
 
     public GwtLiftForm(LiftFormController controller) {
@@ -181,7 +182,7 @@ public class GwtLiftForm extends Composite implements LiftForm {
         }
         // performance optimization
         if (visible != doorIsOpen) {
-            buttonsPane.animate(2000);
+            buttonsPane.animate(doorSpeed);
         }
         doorIsOpen = visible;
     }
@@ -192,6 +193,10 @@ public class GwtLiftForm extends Composite implements LiftForm {
 
     public void confirmedMovingTo(int floorNumber) {
         System.out.println("confirmed moving to: " + floorNumber);
+    }
+
+    public void setDoorSpeed(int doorSpeed) {
+        this.doorSpeed = doorSpeed;
     }
 
     private class FloorButtonClickHandler implements ClickHandler {

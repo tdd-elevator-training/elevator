@@ -72,7 +72,7 @@ public class LiftFormControllerTest {
 
     @Test
     public void shouldHideWaitPaneWhenFirstSynchronized() {
-        controller.synchronize(true, 0);
+        controller.synchronize(true, 0, 0);
 
         assertFalse(form.waitPanelEnabled);
     }
@@ -91,7 +91,7 @@ public class LiftFormControllerTest {
 
     @Test
     public void shouldBeOutsideWhenInitializeAfterHidden() {
-        controller.synchronize(true, 0);
+        controller.synchronize(true, 0, 0);
         controller.onHide();
 
         controller.onShow();
@@ -101,7 +101,7 @@ public class LiftFormControllerTest {
 
     @Test
     public void shouldInitializeServerListnerWhenShowAfterHide() {
-        controller.synchronize(true, 0);
+        controller.synchronize(true, 0, 0);
         controller.onHide();
 
         controller.onShow();
@@ -111,21 +111,21 @@ public class LiftFormControllerTest {
 
     @Test
     public void shouldBeAbleToEnterAndCallWhenDoorIsOpenOnMyFloor(){
-        controller.synchronize(true, 0);
+        controller.synchronize(true, 0, 0);
 
         assertFormState(true, enterBtn(true, false), buttonsPane(true, false));
     }
 
     @Test
     public void shouldBeOnlyAbleToCallWhenNotMyFloorOutside() {
-        controller.synchronize(true, 0 + 1);
+        controller.synchronize(true, 0 + 1, 0);
 
         assertFormState(true, enterBtn(false, false), buttonsPane(false, false));
     }
 
     @Test
     public void shouldBeAbleSelectFloorAndExitWhenInsideAndDoorIsOpen(){
-        controller.synchronize(true, 0);
+        controller.synchronize(true, 0, 0);
 
         controller.enterButtonClicked();
 
@@ -143,7 +143,7 @@ public class LiftFormControllerTest {
     
     @Test
     public void shouldSayErrorWhenClickEnterButton_And_Outside(){
-        controller.synchronize(true, 0 +1);
+        controller.synchronize(true, 0 +1, 0);
         
         controller.enterButtonClicked();
 
@@ -152,7 +152,7 @@ public class LiftFormControllerTest {
     
     @Test
     public void shouldSayErrorWhenClickEnterButton_And_DoorIsClosed() {
-        controller.synchronize(false, 0);
+        controller.synchronize(false, 0, 0);
         
         controller.enterButtonClicked();
 
@@ -161,7 +161,7 @@ public class LiftFormControllerTest {
 
     @Test
     public void shouldBeOnlyAbleToCallWhenDoorIsClosed_Outside(){
-        controller.synchronize(false, 0);
+        controller.synchronize(false, 0, 0);
 
         assertFormState(true, enterBtn(false, false), buttonsPane(false, false));
     } 
@@ -170,7 +170,7 @@ public class LiftFormControllerTest {
     public void shouldBeOnlyAbleSelectFloorWhenInsideAndClosedDoor(){
         enterCabin();
         
-        controller.synchronize(false, 0);
+        controller.synchronize(false, 0, 0);
 
         assertFormState(false, enterBtn(false, true), buttonsPane(true, true));
     }
@@ -179,31 +179,31 @@ public class LiftFormControllerTest {
     public void shouldChangeCurrentFloorWhenMovingInsideCabin(){
         enterCabin();
         
-        controller.synchronize(false, 1);
+        controller.synchronize(false, 1, 0);
 
         assertEquals(1, form.currentFloor);
     }
 
     @Test
     public void shouldNotChangeFloorWhenOutsideCabin(){
-        controller.synchronize(false, 1);
+        controller.synchronize(false, 1, 0);
 
         assertEquals(0, form.currentFloor);
     }
 
     @Test
     public void shouldChangeFloorIndicationWhenCabinMoves() {
-        controller.synchronize(false, 3);
-        controller.synchronize(true, 2);
+        controller.synchronize(false, 3, 0);
+        controller.synchronize(true, 2, 0);
         
         assertIndication(3, 2);
     }
 
     @Test
     public void shouldNotFlashIndicatorWhenCabinDidNotMove(){
-        controller.synchronize(false, 0);
-        controller.synchronize(true, 0);
-        controller.synchronize(false, 1);
+        controller.synchronize(false, 0, 0);
+        controller.synchronize(true, 0, 0);
+        controller.synchronize(false, 1, 0);
 
         assertIndication(0, 1);
     }
@@ -212,7 +212,7 @@ public class LiftFormControllerTest {
     public void shouldBeAbleToExitWhenCameToAnotherFloor(){
         enterCabin();
         
-        controller.synchronize(true, 1);
+        controller.synchronize(true, 1, 0);
 
         assertFormState(false, enterBtn(true, true), buttonsPane(true, true));
     } 
@@ -220,7 +220,7 @@ public class LiftFormControllerTest {
     @Test
     public void shouldBeAbleToComeInWhenExitOnSomeFloor(){
         enterCabin();
-        controller.synchronize(true, 1);
+        controller.synchronize(true, 1, 0);
         
         controller.enterButtonClicked();
 
@@ -255,12 +255,19 @@ public class LiftFormControllerTest {
     @Test
     public void shouldStayOnFloorWhenPressCallButtonAfterArrival(){
         enterCabin();
-        controller.synchronize(true, 2);
+        controller.synchronize(true, 2, 0);
         
         controller.enterButtonClicked();
         controller.callButtonPressed();
 
         assertEquals(2, service.fromFloor);
+    } 
+
+    @Test
+    public void shouldTellFormDoorSpeedWhenSynchronized(){
+        controller.synchronize(false, 0, 100);
+
+        assertEquals(100, form.doorSpeed);
     } 
     
     private void assertIndication(Integer ... floors) {
@@ -268,7 +275,7 @@ public class LiftFormControllerTest {
     }
     
     private void enterCabin() {
-        controller.synchronize(true, 0);
+        controller.synchronize(true, 0, 0);
         controller.enterButtonClicked();
     }
     
@@ -324,6 +331,7 @@ public class LiftFormControllerTest {
         public boolean buttonsPaneEnabled;
         public List<Integer> indicationsHistory = new ArrayList<Integer>();
         public int movingToConfirmation;
+        public int doorSpeed;
 
         public void liftCalled() {
            liftCalled = true;
@@ -365,6 +373,10 @@ public class LiftFormControllerTest {
 
         public void confirmedMovingTo(int floorNumber) {
             movingToConfirmation = floorNumber;
+        }
+
+        public void setDoorSpeed(int doorSpeed) {
+            this.doorSpeed = doorSpeed;
         }
     }
 

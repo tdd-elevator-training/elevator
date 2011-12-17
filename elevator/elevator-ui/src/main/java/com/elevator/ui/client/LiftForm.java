@@ -20,4 +20,6 @@ public interface LiftForm {
     void indicateFloor(int floorNumber);
 
     void confirmedMovingTo(int floorNumber);
+
+    void setDoorSpeed(int doorSpeed);
 }
