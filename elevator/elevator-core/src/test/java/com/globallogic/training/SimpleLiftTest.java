@@ -334,6 +334,16 @@ public class SimpleLiftTest {
         assertDelayed(100 * 2);
     }
 
+    @Test
+    public void shouldDelayBetweenOpenAndClose() throws ElevatorException {
+        givenLiftWithClosedDoor(1);
+
+        lift.setDelayAfterOpen(100);
+        lift.call(1);
+        lift.processQueue();
+        
+        assertDelayed(100);
+    } 
 
     private void assertDelayed(int totalExpectedDelay) {
         assertEquals(totalExpectedDelay, currentThread.totalSleepTime);

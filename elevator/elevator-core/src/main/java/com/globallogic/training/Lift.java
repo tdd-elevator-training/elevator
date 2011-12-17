@@ -14,6 +14,7 @@ public class Lift implements Serializable {
     private transient boolean started;
     private transient FloorListener floorListener;
     private int moveBetweenFloorsDelay;
+    private int delayAfterOpen;
 
     public Lift(int position, int floorsCount, Door door, CurrentThread currentThread) {
         this.position = position;
@@ -75,6 +76,7 @@ public class Lift implements Serializable {
 
     protected void moveLift() {
         door.open(position);
+        currentThread.sleep(delayAfterOpen);
     }
 
     public void run() {
@@ -113,5 +115,9 @@ public class Lift implements Serializable {
 
     public boolean isDoorOpen() {
         return door.isOpen();
+    }
+
+    public void setDelayAfterOpen(int delayAfterOpen) {
+        this.delayAfterOpen = delayAfterOpen;
     }
 }
