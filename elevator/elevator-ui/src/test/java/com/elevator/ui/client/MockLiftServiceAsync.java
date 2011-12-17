@@ -1,5 +1,6 @@
 package com.elevator.ui.client;
 
+import com.elevator.ui.shared.LiftSettings;
 import com.elevator.ui.shared.LiftState;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -11,6 +12,7 @@ public class MockLiftServiceAsync implements LiftServiceAsync {
     public boolean liftExists = true;
     public int fromFloor = -1;
     public int movingTo;
+    public LiftSettings liftSettings;
 
     public void updateLift(int floorsCount, int delayBetweenFloors, int doorSpeed, AsyncCallback<Void> callback) {
         this.floorsCount = floorsCount;
@@ -38,6 +40,10 @@ public class MockLiftServiceAsync implements LiftServiceAsync {
 
     public void getLiftState(AsyncCallback<LiftState> callback) {
         //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void getLiftSettings(AsyncCallback<LiftSettings> callback) {
+        callback.onSuccess(liftSettings);
     }
 
     public void call(int fromFloor, AsyncCallback<Void> callback) {

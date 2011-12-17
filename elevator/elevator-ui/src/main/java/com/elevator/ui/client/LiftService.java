@@ -1,9 +1,6 @@
 package com.elevator.ui.client;
 
-import com.elevator.ui.shared.LiftAlreadyInstalledException;
-import com.elevator.ui.shared.LiftNotInstalledException;
-import com.elevator.ui.shared.LiftPersistenceException;
-import com.elevator.ui.shared.LiftState;
+import com.elevator.ui.shared.*;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
@@ -23,4 +20,6 @@ public interface LiftService extends RemoteService {
     void moveTo(int floorNumber);
 
     LiftState getLiftState();
+
+    LiftSettings getLiftSettings();
 }

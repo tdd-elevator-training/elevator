@@ -1,12 +1,14 @@
 package com.elevator.ui.client;
 
+import com.elevator.ui.shared.LiftSettings;
+
 import java.util.HashMap;
 
 import static com.elevator.ui.client.LiftSettingsForm.FieldName.*;
 
 public class LiftSettingsController {
 
-    private LiftServiceAsync elevatorService;
+    private LiftServiceAsync service;
     private LiftSettingsForm liftSettingsForm;
     private ScreenFlowManager screenFlowManager;
     private final LiftSettingsController.CreateElevatorCallback createElevatorCallback;
@@ -14,7 +16,7 @@ public class LiftSettingsController {
 
     public LiftSettingsController(LiftServiceAsync elevatorService, LiftSettingsForm liftSettingsForm,
                                   ScreenFlowManager screenFlowManager) {
-        this.elevatorService = elevatorService;
+        this.service = elevatorService;
         this.liftSettingsForm = liftSettingsForm;
         this.screenFlowManager = screenFlowManager;
         createElevatorCallback = new CreateElevatorCallback();
@@ -34,7 +36,7 @@ public class LiftSettingsController {
             liftSettingsForm.negativeInteger();
             return;
         }
-        elevatorService.updateLift(getParsedValue(floorsCount),
+        service.updateLift(getParsedValue(floorsCount),
                 getParsedValue(delayBetweenFloors),
                 getParsedValue(doorSpeed), createElevatorCallback);
     }
@@ -68,6 +70,16 @@ public class LiftSettingsController {
 
     public void setLiftSettingsForm(LiftSettingsForm liftSettingsForm) {
         this.liftSettingsForm = liftSettingsForm;
+    }
+
+    public void onShow() {
+        service.getLiftSettings(new DefaultAsyncCallback<LiftSettings>(screenFlowManager) {
+            public void onSuccess(LiftSettings result) {
+                liftSettingsForm.setFieldValue(delayBetweenFloors, ""+result.getDelayBetweenFloors());
+                liftSettingsForm.setFieldValue(floorsCount, ""+result.getFloorsCount());
+                liftSettingsForm.setFieldValue(doorSpeed, ""+result.getDoorSpeed());
+            }
+        });
     }
 
     private class CreateElevatorCallback extends DefaultAsyncCallback<Void> {

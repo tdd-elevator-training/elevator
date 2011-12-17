@@ -7,13 +7,14 @@ import com.google.gwt.event.dom.client.ClickEvent;
 
 import java.util.HashMap;
 
+import static com.elevator.ui.client.LiftSettingsForm.FieldName.*;
+
 public class GwtLiftSettingsForm extends Composite implements LiftSettingsForm {
 
     private Messages messages;
     private ScreenFlowManager screenFlowManager;
-    private TextBox floorsCountBox;
     private Label validationLabel;
-    private final HashMap<String,TextBox> textFields = new HashMap<String, TextBox>();
+    private final HashMap<FieldName,TextBox> textFields = new HashMap<FieldName, TextBox>();
 
 
     public GwtLiftSettingsForm(final LiftSettingsController controller, Messages messages,
@@ -25,9 +26,9 @@ public class GwtLiftSettingsForm extends Composite implements LiftSettingsForm {
         initWidget(layoutPanel);
         layoutPanel.setSize("416px", "322px");
 
-        createTextField(layoutPanel, "floorsCount", 86.0, messages.floorsCount());
-        createTextField(layoutPanel, "delayBetweenFloors", 86.0 + 30, messages.delayBetweenFloors());
-        createTextField(layoutPanel, "doorSpeed", 86.0 + 30 + 30, messages.doorSpeed());
+        createTextField(layoutPanel, floorsCount, 86.0, messages.floorsCount());
+        createTextField(layoutPanel, delayBetweenFloors, 86.0 + 30, messages.delayBetweenFloors());
+        createTextField(layoutPanel, doorSpeed, 86.0 + 30 + 30, messages.doorSpeed());
 
         validationLabel = new Label();
         layoutPanel.add(validationLabel);
@@ -48,7 +49,7 @@ public class GwtLiftSettingsForm extends Composite implements LiftSettingsForm {
         layoutPanel.setWidgetTopHeight(button, 167.0 + 30 + 30, Unit.PX, 24.0, Unit.PX);
     }
 
-    private void createTextField(LayoutPanel layoutPanel, String fieldName, double top, String labelText) {
+    private void createTextField(LayoutPanel layoutPanel, FieldName fieldName, double top, String labelText) {
         Label label = new Label(labelText);
         layoutPanel.add(label);
         layoutPanel.setWidgetLeftWidth(label, 91.0, Unit.PX, 134.0, Unit.PX);
@@ -62,13 +63,22 @@ public class GwtLiftSettingsForm extends Composite implements LiftSettingsForm {
     }
 
 
+    public void setFieldValue(FieldName fieldName, String value) {
+        getField(fieldName).setText(value);
+
+    }
+
+    private TextBox getField(FieldName fieldName) {
+        return textFields.get(fieldName);
+    }
+
     public void liftCreated() {
         validationLabel.setVisible(false);
         screenFlowManager.showMessage("Lift created!");
     }
 
-    public void invalidInteger(FieldName fieldNameName) {
-        floorsCountBox.setFocus(true);
+    public void invalidInteger(FieldName fieldName) {
+        getField(fieldName).setFocus(true);
         validationLabel.setText(messages.invalidFloorInteger());
         validationLabel.setVisible(true);
     }
@@ -79,7 +89,7 @@ public class GwtLiftSettingsForm extends Composite implements LiftSettingsForm {
     }
 
     public String getFieldValue(FieldName fieldName) {
-        return textFields.get(fieldName).getText();
+        return getField(fieldName).getText();
     }
 
 }

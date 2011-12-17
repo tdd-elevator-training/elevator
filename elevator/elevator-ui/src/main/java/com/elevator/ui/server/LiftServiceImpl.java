@@ -1,10 +1,7 @@
 package com.elevator.ui.server;
 
 import com.elevator.ui.client.LiftService;
-import com.elevator.ui.shared.LiftAlreadyInstalledException;
-import com.elevator.ui.shared.LiftNotInstalledException;
-import com.elevator.ui.shared.LiftPersistenceException;
-import com.elevator.ui.shared.LiftState;
+import com.elevator.ui.shared.*;
 import com.globallogic.training.*;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import org.apache.commons.io.FileUtils;
@@ -133,6 +130,10 @@ public class LiftServiceImpl extends RemoteServiceServlet implements
             return null;
         }
         return new LiftState(currentFloor.get(), lift.getDoor().isOpen());
+    }
+
+    public LiftSettings getLiftSettings() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public void atFloor(int floorNumber) {

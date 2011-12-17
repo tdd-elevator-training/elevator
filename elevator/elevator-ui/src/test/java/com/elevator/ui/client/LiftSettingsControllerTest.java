@@ -1,5 +1,6 @@
 package com.elevator.ui.client;
 
+import com.elevator.ui.shared.LiftSettings;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -138,9 +139,14 @@ public class LiftSettingsControllerTest {
     }
 
     @Test
-    @Ignore
-    public void shouldGetLiftParamsWhenShow(){
+    public void shouldGetLiftParamsWhenShow() {
+        liftService.liftSettings = new LiftSettings(10, 200, 300);
+
+        controller.onShow();
+        
         assertEquals("10", liftSettingsForm.getFieldValue(floorsCount));
+        assertEquals("200", liftSettingsForm.getFieldValue(delayBetweenFloors));
+        assertEquals("300", liftSettingsForm.getFieldValue(doorSpeed));
     }
 
     private void assertLiftParams(int floorsCount, int delayBetweenFloors, int doorSpeed) {
@@ -163,12 +169,16 @@ public class LiftSettingsControllerTest {
         public boolean negativeIntegerValidation;
         private final HashMap<FieldName,String> fieldValues = new HashMap<FieldName, String>();
 
+        public void setFieldValue(FieldName fieldName, String value) {
+            fieldValues.put(fieldName, value);
+        }
+
         public void liftCreated() {
             liftCreatedCalled = true;
         }
 
-        public void invalidInteger(FieldName fieldNameName) {
-            invalidFieldName = fieldNameName;
+        public void invalidInteger(FieldName fieldName) {
+            invalidFieldName = fieldName;
         }
 
         public void negativeInteger() {
