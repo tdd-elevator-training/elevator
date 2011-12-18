@@ -8,8 +8,8 @@ public class RealDoor implements Door, Serializable {
     private int doorSpeedMilliseconds;
 
     public void open(int floor) {
-        sleep();
         open = true;
+        sleep();
     }
 
     private void sleep() {
@@ -21,8 +21,8 @@ public class RealDoor implements Door, Serializable {
     }
 
     public void close() {
-        sleep();
         open = false;
+        sleep();
     }
 
     public boolean isOpen() {

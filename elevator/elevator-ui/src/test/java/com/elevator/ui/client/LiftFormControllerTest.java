@@ -269,7 +269,7 @@ public class LiftFormControllerTest {
 
         assertEquals(100, form.doorSpeed);
     } 
-    
+
     private void assertIndication(Integer ... floors) {
         assertEquals(Arrays.asList(floors), form.indicationsHistory);
     }
@@ -332,6 +332,7 @@ public class LiftFormControllerTest {
         public List<Integer> indicationsHistory = new ArrayList<Integer>();
         public int movingToConfirmation;
         public int doorSpeed;
+        public String innderDoorState;
 
         public void liftCalled() {
            liftCalled = true;

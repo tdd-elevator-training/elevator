@@ -19,6 +19,8 @@ public class GwtLiftForm extends Composite implements LiftForm {
     private final LayoutPanel buttonsBorder;
     private final Label currentFloor;
     private int doorSpeed;
+    private boolean buttonsEnabled;
+    private Label message;
 
 
     public GwtLiftForm(LiftFormController controller) {
@@ -66,6 +68,11 @@ public class GwtLiftForm extends Composite implements LiftForm {
         buttonsPane.add(enterButton);
         buttonsPane.setWidgetLeftWidth(enterButton, 200.0, Style.Unit.PX, 200.0, Style.Unit.PX);
         buttonsPane.setWidgetTopHeight(enterButton, 700.0, Style.Unit.PX, 50.0, Style.Unit.PX);
+
+        message = new Label();
+        buttonsPane.add(message);
+        buttonsPane.setWidgetTopHeight(message, 100, Style.Unit.PX, 20, Style.Unit.PX);
+        buttonsPane.setWidgetLeftWidth(message, 20, Style.Unit.PX, 200, Style.Unit.PX);
 
         leftDoor.setStyleName("doorPane");
         buttonsPane.add(leftDoor);
@@ -185,6 +192,7 @@ public class GwtLiftForm extends Composite implements LiftForm {
             buttonsPane.animate(doorSpeed);
         }
         doorIsOpen = visible;
+        buttonsEnabled = enabled;
     }
 
     public void indicateFloor(int floorNumber) {
@@ -192,7 +200,7 @@ public class GwtLiftForm extends Composite implements LiftForm {
     }
 
     public void confirmedMovingTo(int floorNumber) {
-        System.out.println("confirmed moving to: " + floorNumber);
+        message.setText("Moving to: "+ floorNumber);
     }
 
     public void setDoorSpeed(int doorSpeed) {
@@ -200,14 +208,18 @@ public class GwtLiftForm extends Composite implements LiftForm {
     }
 
     private class FloorButtonClickHandler implements ClickHandler {
-        private final int i;
+        private final int floorNumber;
 
-        public FloorButtonClickHandler(int i) {
-            this.i = i;
+        public FloorButtonClickHandler(int floorNumber) {
+            this.floorNumber = floorNumber;
         }
 
         public void onClick(ClickEvent event) {
-            GwtLiftForm.this.controller.floorSelected(i);
+            if (!buttonsEnabled) {
+                GwtLiftForm.this.message.setText("Please enter the cabin");
+                return;
+            }
+            GwtLiftForm.this.controller.floorSelected(floorNumber);
         }
     }
 }
